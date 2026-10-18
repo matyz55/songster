@@ -928,3 +928,7 @@ Wersja próbna wyglądu 6.0: pojedynek na żywo mieści się na telefonie trzyma
 ## 5.50.1 – 18.10.2026 (`ed99053`)
 
 - Wersja próbna wyglądu 6.0: kontrola „bez przewijania” dopuszcza przewijanie samej osi czasu, gdy ma ona więcej niż 10 kart (oś do 10 kart musi mieścić się w całości); w narzędziu przeglądu ekranów nowe zrzuty osi z 10 i 14 kartami.
+
+## 5.50.2 – 18.10.2026 (`HASH`)
+
+- Wersja próbna wyglądu 6.0: poprawka – przycisk „Dalej →” w ustawieniach trybu (telefon, tablet) znów przechodzi do następnego kroku; wcześniej płynne przesunięcie cofało się do pierwszego kroku.
