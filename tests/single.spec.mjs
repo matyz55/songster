@@ -336,3 +336,17 @@ test('Pojedynek dekad: przy „Losowo” para dekad zmienia się co piosenkę, w
     await ready(page);
   }
 });
+
+test('wygląd 6.0: „Dalej →” w ustawieniach trybu przechodzi do następnego kroku (także z płynnym przewijaniem)', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 640 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  await page.evaluate(() => localStorage.setItem('songster.ui6', '1'));
+  await page.reload();
+  await page.click('#btn-single');
+  await page.click('.mode[data-mode=solo]');
+  await page.click('.ui6-snext');
+  await expect.poll(() => page.evaluate(() => [...document.querySelectorAll('.ui6-sstep-b')].map((b) => b.getAttribute('aria-current'))), { timeout: 3000 }).toEqual(['false', 'true']);
+  await page.waitForTimeout(1000);
+  expect(await page.evaluate(() => [...document.querySelectorAll('.ui6-sstep-b')].map((b) => b.getAttribute('aria-current')))).toEqual(['false', 'true']);
+});
