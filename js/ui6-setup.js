@@ -40,6 +40,7 @@ if (UI6 && $('#screen-setup')) {
   back.after(prevB);
   start.before(nextB);
   let cur = 0;
+  let jumpUntil = 0; // do kiedy trwa płynne przesunięcie do wybranego kroku
   let live = STEPS;
   const offs = (s) => s.el.getBoundingClientRect().left - track.getBoundingClientRect().left;
   const wide = () => matchMedia('(min-width: 1000px) and (min-aspect-ratio: 4/3) and (min-height: 560px)').matches;
@@ -167,11 +168,16 @@ if (UI6 && $('#screen-setup')) {
     if (w) { box.scrollLeft = 0; sizeWide(); return; }
     const target = live[cur];
     if (!target) return;
-    box.scrollTo({ left: offs(target), behavior: smooth && !matchMedia('(prefers-reduced-motion: reduce)').matches ? 'smooth' : 'auto' });
+    const anim = smooth && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // płynne przesunięcie: zdarzenia przewijania w trakcie ruchu nie mogą „cofnąć” wybranego kroku
+    jumpUntil = anim ? Date.now() + 900 : 0;
+    box.scrollTo({ left: offs(target), behavior: anim ? 'smooth' : 'auto' });
   }
   // przeglądarka sama przesuwa pasek, gdy fokus (Tab) trafi do innego kroku – zaznaczamy ten krok
+  box.addEventListener('scrollend', () => { jumpUntil = 0; });
   box.addEventListener('scroll', () => {
     if (scr.classList.contains('ui6-swide')) { if (box.scrollLeft) box.scrollLeft = 0; return; }
+    if (Date.now() < jumpUntil) return;
     const i = live.findIndex((s) => Math.abs(offs(s) - box.scrollLeft) < box.clientWidth / 2);
     if (i >= 0 && i !== cur) { cur = i; paint(false); }
   }, { passive: true });
