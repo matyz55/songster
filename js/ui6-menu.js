@@ -1,6 +1,6 @@
 'use strict';
 // Songster 6.0 – menu: zmiany układu dla nowego wyglądu (działa tylko przy UI6)
-// Ekran startowy (duży wybór: sam / razem / duży ekran, ostatnio grany tryb), ustawienia i statystyki na stronach z zakładkami,
+// Ekran startowy (duży wybór: sam / razem, duży ekran pod 📺 w pasku, ostatnio grany tryb), ustawienia i statystyki na stronach z zakładkami,
 // kariera w siatce, okna: zasady (jeden tryb na raz), duży ekran, własna lista piosenek.
 if (UI6) {
   /* ---------- ekran startowy ---------- */
@@ -16,11 +16,9 @@ if (UI6) {
       [T('Oś czasu'), T('Na czas'), T('Jaka to melodia'), T('Kariera'), T('Wyzwanie dnia'), T('Impreza')], T('Wybierz tryb'));
     setTile($('#btn-multi'), '👥', T('Gramy razem'), T('2–16 osób przy jednym urządzeniu albo na własnych telefonach.'),
       [T('Oś czasu'), T('Drużyny'), T('Współpraca'), T('Kto pierwszy?'), T('Impreza')], T('Dodaj graczy'));
-    const tv = $('#btn-tv-home');
-    tv.className = 'mode ctx';
-    setTile(tv, '📺', T('Duży ekran'), T('Telewizor lub rzutnik, telefony graczy jako piloty.'),
-      [T('Kod QR'), T('Bez instalacji'), T('Telefony jako piloty')], T('Połącz ekran'));
-    pick.append(tv);
+    // duży ekran: bez osobnego kafelka – ikona 📺 w górnym pasku (na ekranie startowym z podpisem, gdy jest miejsce)
+    $('#btn-tv-home').classList.add('hidden');
+    $('#btn-tv').append(el('span', { class: 'ui6-tv-label' }, T('Duży ekran')));
     pick.classList.add('ui6-pick');
 
     // pasek pod kafelkami: baza piosenek, ostatnia gra (jedno stuknięcie), moje statystyki

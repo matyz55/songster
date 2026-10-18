@@ -174,9 +174,24 @@ html.ui6 #lobby-list .p-fixed { flex: 1 1 auto; min-width: 0; padding: 0 .4em; f
 html.ui6 #lobby-list .p-phone { flex: none; font-size: .8rem; }
 html.ui6 #screen-lobby .player-btns { flex: none; }
 html.ui6 #screen-lobby .ui6-lplayers > p.muted { flex: none; }
-/* pionowy telefon: krótki opis znika, zostaje QR z kodem */
+/* pionowy telefon: krótki opis znika, zostaje QR z kodem (mniejszy); lista graczy w dwóch kolumnach,
+   „+ Gracz na tym urządzeniu” pod listą na całą szerokość (w wierszu nagłówka się nie mieści) */
 @media (max-aspect-ratio: 4/3) and (max-width: 700px) {
   html.ui6 #screen-lobby .ui6-lqr > p.muted, html.ui6 #screen-lobby .ui6-lplayers > p.muted { display: none; }
+  html.ui6 #screen-lobby .ui6-lqr { gap: .3em; padding: 10px 12px; }
+  html.ui6 #screen-lobby .ui6-lqr > h2 { font-size: .95rem; }
+  html.ui6 #lobby-room { gap: 14px; }
+  html.ui6 #lobby-room .room-qr { width: min(8rem, 34vw); height: min(8rem, 34vw); padding: 5px; }
+  html.ui6 #lobby-room .room-code b { font-size: 1.9em; }
+  html.ui6 #screen-lobby .ui6-lplayers { padding: 10px 12px; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto auto; grid-template-areas: "head" "list" "nav" "btns"; }
+  html.ui6 #screen-lobby .ui6-lplayers > .player-btns { margin: 0; display: flex; }
+  html.ui6 #screen-lobby .ui6-lplayers > .player-btns > button { flex: 1 1 auto; }
+  html.ui6 #screen-lobby .ui6-lpages { --colw: 9rem; }
+  html.ui6 #lobby-list .player-row { gap: 4px; margin-bottom: 6px; }
+  html.ui6 #lobby-list .player-row input { min-width: 0; padding-left: .6em; padding-right: .4em; }
+  html.ui6 #lobby-list .player-row button { width: 40px; min-width: 40px; }
+  html.ui6 #screen-lobby > .actions > button { padding-left: .6em; padding-right: .6em; }
+  html.ui6 #screen-lobby > .actions > #btn-lobby-back { flex: 0 1 auto; }
 }
 /* poziomo: QR na środku po lewej (duży), gracze po prawej */
 @media (min-aspect-ratio: 4/3) {

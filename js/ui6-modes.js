@@ -56,7 +56,8 @@ if (UI6 && $('#screen-modes')) {
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
     const gap = parseFloat(getComputedStyle(scr).rowGap) || 10;
     const minW = rem * 12; const minH = rem * 4.6;
-    const maxW = rem * 64; const maxH = (tw) => Math.max(minH, Math.min(tw / 2.5, rem * 18));
+    // mało trybów: kafelki nie szersze niż ok. 42rem i nie wyższe niż 12.5rem – bez wielkich pustych pól na PC
+    const maxW = rem * 42; const maxH = (tw) => Math.max(minH, Math.min(tw / 2.6, rem * 12.5));
     pw = W;
     flat = [];
     for (const g of groups) {
