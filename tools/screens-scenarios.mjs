@@ -118,6 +118,35 @@ function gameScenario(mode, title, opts = {}) {
   };
 }
 
+// długa oś: n kart u każdego gracza (różne lata, po kolei) – oś do 10 kart ma być widoczna w całości, dłuższa przewija się sama
+async function fillTimelines(page, n) {
+  await page.evaluate((k) => {
+    const used = new Set([state.current && state.current.y]);
+    const pool = window.SONGS.filter((s) => !used.has(s.y) && used.add(s.y));
+    state.players.forEach((p, pi) => {
+      const pick = pool.filter((_, i) => i % state.players.length === pi).slice(0, k).sort((a, b) => a.y - b.y);
+      p.timeline = pick.map((s, i) => (i === 0 ? { y: s.y, start: true } : s));
+    });
+    render();
+  }, n);
+}
+function longTimeline(id, title, { ctx = 'single', n = 3, cards }) {
+  return {
+    id, group: 'Oś czasu', title,
+    async run({ newPage, capture }) {
+      const page = await newPage();
+      await startMode(page, ctx === 'multi' ? 'multi' : 'solo', { ctx, n, rounds: 3 });
+      await ready(page);
+      await fillTimelines(page, cards);
+      await capture(page, { id: `${id}-1-start`, group: this.group, title: `${title} – nowa piosenka`, desc: `Na osi ${cards} kart – przed odsłuchem.` });
+      await page.evaluate(() => { const p = activePlayer(); onSlotClick(correctSlot(p.timeline, state.current.y)); });
+      await capture(page, { id: `${id}-2-placed`, group: this.group, title: `${title} – karta położona`, desc: 'Gracz wybrał miejsce, przed zatwierdzeniem.' });
+      await answer(page, true);
+      await capture(page, { id: `${id}-3-ok`, group: this.group, title: `${title} – odkryta karta`, desc: 'Odkryta karta po dobrej odpowiedzi.' });
+    },
+  };
+}
+
 /* ---------- ekrany ogólne ---------- */
 const general = [
   { id: 'start', group: 'Start i menu', title: 'Ekran startowy', async run({ newPage, capture }) {
@@ -228,6 +257,9 @@ const setups = [
 const games = [
   gameScenario('solo', 'Oś czasu – 1 gracz', { group: 'Oś czasu', placed: true }),
   gameScenario('timed', 'Na czas', { group: 'Oś czasu' }),
+  longTimeline('gra-os10', 'Oś czasu – 10 kart', { cards: 10 }),
+  longTimeline('gra-os14', 'Oś czasu – 14 kart (przewijanie osi)', { cards: 14 }),
+  longTimeline('gra-os10-multi', 'Oś czasu – multiplayer, po 10 kart', { ctx: 'multi', cards: 10 }),
   gameScenario('multi', 'Oś czasu – multiplayer', { group: 'Oś czasu', ctx: 'multi', placed: true }),
   gameScenario('teams', 'Oś czasu – drużyny', { group: 'Oś czasu', ctx: 'multi', n: 4 }),
   gameScenario('coop', 'Współpraca', { group: 'Oś czasu', ctx: 'multi' }),

@@ -131,6 +131,9 @@ function ui6Check() {
   const scope = [root, ...root.querySelectorAll('*'), ...$$('dialog[open]'), ...$$('dialog[open] *')];
   for (const e of scope) {
     if (!e.offsetParent || e.closest('.ui6-pages')) continue;
+    // długa oś czasu (więcej niż 10 kart) może przewijać się sama – oznacza ją atrybut data-ui6-scroll (ustawia skrypt osi);
+    // oś do 10 kart musi być widoczna w całości
+    if (e.closest('[data-ui6-scroll]')) { out.scrollOk = (out.scrollOk || 0) + 1; continue; }
     const cs = getComputedStyle(e);
     if (!/(hidden|clip|auto|scroll)/.test(cs.overflowY + cs.overflowX)) continue;
     if (e.scrollHeight > e.clientHeight + 2 || e.scrollWidth > e.clientWidth + 2) {
