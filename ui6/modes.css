@@ -48,7 +48,7 @@ html.ui6 .ui6-mtab-v { position: absolute; top: -6px; right: -4px; font-size: ma
   html.ui6 .ui6-mtabs { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-columns: auto; gap: 5px; }
   html.ui6 .ui6-mtab { min-height: 42px; padding: 3px 5px; gap: .35em; justify-content: flex-start; font-size: 13px; line-height: 1.15; border-radius: calc(var(--radius) * .6); }
   html.ui6 .ui6-mtab-i { font-size: 1.05rem; flex: none; }
-  html.ui6 .ui6-mtab-t { white-space: normal; text-align: left; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  html.ui6 .ui6-mtab-t { white-space: normal; text-align: left; overflow: visible; hyphens: auto; }
   html.ui6 .ui6-mtab-n { display: none; }
 }
 
@@ -119,7 +119,7 @@ html.ui6 .ui6-mnav.ui6-off { visibility: hidden; }
   html.ui6 #screen-modes > .ui6-mnav { grid-area: nav; justify-self: center; }
   html.ui6 .ui6-mtabs { grid-auto-flow: row; grid-auto-rows: minmax(calc(var(--tap) * 1.15), auto); grid-auto-columns: auto; align-content: start; }
   html.ui6 .ui6-mtab { justify-content: flex-start; padding: .4em .8em; font-size: 1rem; text-align: left; }
-  html.ui6 .ui6-mtab-t { flex: 1 1 auto; text-align: left; }
+  html.ui6 .ui6-mtab-t { flex: 1 1 auto; text-align: left; white-space: normal; overflow: visible; line-height: 1.2; }
 }
 /* telefon poziomo: mało wysokości – zakładki na całą wysokość po lewej, tytuł (albo gracze w multi) nad kafelkami */
 @media (min-aspect-ratio: 4/3) and (max-height: 500px) {
@@ -138,7 +138,7 @@ html.ui6 .ui6-mnav.ui6-off { visibility: hidden; }
   html.ui6 #screen-modes > .actions { display: none; }
   html.ui6 .ui6-mtabs { grid-auto-rows: minmax(0, 1fr); align-content: stretch; }
   html.ui6 .ui6-mtab { min-height: 36px; }
-  html.ui6 .ui6-mtab-t { white-space: normal; line-height: 1.1; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  html.ui6 .ui6-mtab-t { white-space: normal; line-height: 1.1; overflow: visible; }
 }
 
 /* =================== lobby multiplayera =================== */
