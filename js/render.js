@@ -336,12 +336,9 @@ function renderActions() {
       btns.push(el('button', { class: 'primary', onclick: nextTurn }, last ? T('Zobacz wyniki →') : (state.players.length > 1 ? T('Następny gracz →') : T('Następna piosenka →'))));
     }
   } else if (state.phase === 'listen' || state.phase === 'placed') {
-    // „Kup kartę” zawsze pierwszy (po lewej) – przed i po odkryciu w tym samym miejscu; główna akcja zawsze na końcu
-    btns.push(el('button', {
-      class: 'ghost buy-card', disabled: p.tokens < BUY_COST || !state.deck.size,
-      title: T('Za 3 żetony odtwarzana piosenka trafia od razu na właściwe miejsce Twojej osi'),
-      onclick: buyCard,
-    }, T('Kup tę kartę (🪙 {0})', BUY_COST)));
+    // główna akcja („Zatwierdź”, po odkryciu „Następny…”) zawsze pierwsza – po lewej, jak ▶ Odtwórz;
+    // „Kup kartę” zawsze ostatni – przed i po odkryciu w tym samym miejscu
+    btns.push(el('button', { class: 'primary', disabled: state.slot == null, onclick: onConfirmPlacement }, T('✔ Zatwierdź i odkryj')));
     if (isMulti()) {
       const canChallenge = state.players.some((pl, i) => i !== state.turn && pl.tokens >= 1);
       btns.push(el('button', {
@@ -349,7 +346,11 @@ function renderActions() {
         onclick: () => { state.phase = 'challenge'; render(); },
       }, T('⚔ Wyzwanie')));
     }
-    btns.push(el('button', { class: 'primary', disabled: state.slot == null, onclick: onConfirmPlacement }, T('✔ Zatwierdź i odkryj')));
+    btns.push(el('button', {
+      class: 'ghost buy-card', disabled: p.tokens < BUY_COST || !state.deck.size,
+      title: T('Za 3 żetony odtwarzana piosenka trafia od razu na właściwe miejsce Twojej osi'),
+      onclick: buyCard,
+    }, T('Kup tę kartę (🪙 {0})', BUY_COST)));
   } else if (state.phase === 'challenge' && state.challengeMode === 'all') {
     // wszyscy naraz: kolejni wyzywający dołączają (1 żeton), każdy wskazuje swoje miejsce
     state.players.forEach((pl, i) => {
@@ -393,13 +394,10 @@ function renderActions() {
   } else if (state.phase === 'revealed' && state.skipped) {
     btns.push(el('button', { class: 'primary', onclick: afterSkip }, T('Dalej – nowa piosenka →')));
   } else if (state.phase === 'revealed') {
-    if (isTimeline()) {
-      btns.push(el('button', {
-        class: 'ghost buy-card', disabled: p.tokens < BUY_COST || !state.deck.size,
-        title: T('Za 3 żetony dobierasz losową kartę z talii, która od razu trafia na właściwe miejsce osi'),
-        onclick: buyCard,
-      }, T('Kup losową kartę (🪙 {0})', BUY_COST)));
-    }
+    const over = state.mode === 'solo' && (p.lives <= 0 || (!state.endless && p.timeline.length >= state.winTarget));
+    btns.push(el('button', { class: 'primary', onclick: nextTurn },
+      over ? T('Zobacz podsumowanie →') : (isSoloLike() ? T('Następna piosenka →')
+        : (state.mode === 'teams' ? T('Następna drużyna →') : T('Następny gracz →')))));
     // żeton „przy stole” – gdy tytułu i wykonawcy nie sprawdza gra
     if (isMulti() && !(guessFields().title && guessFields().artist)) {
       btns.push(el('button', {
@@ -409,10 +407,13 @@ function renderActions() {
         : (state.mode === 'teams' ? T('🪙 Drużyna odgadła wykonawcę i tytuł') : T('🪙 Odgadł(a) wykonawcę i tytuł'))));
     }
     if (state.swapOffer) btns.push(...swapButtons(p));
-    const over = state.mode === 'solo' && (p.lives <= 0 || (!state.endless && p.timeline.length >= state.winTarget));
-    btns.push(el('button', { class: 'primary', onclick: nextTurn },
-      over ? T('Zobacz podsumowanie →') : (isSoloLike() ? T('Następna piosenka →')
-        : (state.mode === 'teams' ? T('Następna drużyna →') : T('Następny gracz →')))));
+    if (isTimeline()) {
+      btns.push(el('button', {
+        class: 'ghost buy-card', disabled: p.tokens < BUY_COST || !state.deck.size,
+        title: T('Za 3 żetony dobierasz losową kartę z talii, która od razu trafia na właściwe miejsce osi'),
+        onclick: buyCard,
+      }, T('Kup losową kartę (🪙 {0})', BUY_COST)));
+    }
   }
   // nie przebudowujemy listy „Ułóż piątkę” w trakcie przeciągania (zgubiłoby chwyt)
   if (!$('#actions .drag-active')) $('#actions').replaceChildren(...btns);

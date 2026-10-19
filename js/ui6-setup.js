@@ -1,20 +1,20 @@
 'use strict';
-// Songster 6.0 – ustawienia gry jako krótki kreator: Gracze → Piosenki → Opcje trybu.
+// Songster 6.0 – ustawienia gry jako krótki kreator: Gracze i poziom trudności → Piosenki i zasady.
 // Sekcje (.card) zostają tymi samymi elementami – setup.js dalej pokazuje i chowa ich części (data-for, data-hide-for, data-ctx).
 // Kroki leżą obok siebie w pasku przesuwanym w bok (ukryte kroki nadal są „widoczne” dla podsumowania na dużym ekranie);
 // treść kroku, która się nie mieści, przechodzi na kolejne strony (ui6Paginate).
 // Na szerokim ekranie nie ma przechodzenia między krokami: kroki stoją obok siebie jako trzy (dwa) panele z nagłówkiem
-// „1 Gracze · 2 Piosenki · 3 Opcje trybu”; każdy panel dostaje tyle kolumn, ile potrzebuje jego treść (Piosenki zwykle dwie),
+// „1 Gracze i poziom · 2 Piosenki i zasady”; każdy panel dostaje tyle kolumn, ile potrzebuje jego treść (Piosenki zwykle dwie),
 // więc sekcje są pogrupowane tematycznie, a nie rozsypane po siatce jak formularz.
 // „Graj od razu” (#btn-start) jest na każdym kroku. Działa tylko przy UI6.
 if (UI6 && $('#screen-setup')) {
   const scr = $('#screen-setup');
   const cards = $$('#screen-setup > section.card');
   const [pl, songs, play, level, rules] = [$('#sec-players'), ...cards.filter((c) => c.id !== 'sec-players')];
+  // dwa kroki: na pierwszej karcie gracze (jeden gracz – imię) i poziom trudności, na drugiej piosenki i zasady trybu
   const STEPS = [
-    { name: 'Gracze', icon: '👥', cards: [pl] },
-    { name: 'Piosenki', icon: '🎵', cards: [songs, level] },
-    { name: 'Opcje trybu', icon: '⚙️', cards: [play, rules] },
+    { name: 'Gracze i poziom', icon: '👥', cards: [pl, level] },
+    { name: 'Piosenki i zasady', icon: '🎵', cards: [songs, play, rules] },
   ];
   const bar = el('nav', { class: 'ui6-ssteps', 'aria-label': T('Kroki') });
   const box = el('div', { class: 'ui6-pages ui6-sbox' });
@@ -32,7 +32,6 @@ if (UI6 && $('#screen-setup')) {
     s.pager = ui6Paginate(s.el, s.cards, { cls: 'ui6-spages' });
     s.flow = s.pager.flow;
   }
-  const opt = STEPS[2];
   const back = $('#btn-back');
   const start = $('#btn-start');
   const prevB = el('button', { type: 'button', class: 'ghost ui6-sprev', 'aria-label': T('← Wstecz'), onclick: () => step(cur - 1) }, T('← Wstecz'));
@@ -44,12 +43,8 @@ if (UI6 && $('#screen-setup')) {
   let live = STEPS;
   const offs = (s) => s.el.getBoundingClientRect().left - track.getBoundingClientRect().left;
   const wide = () => matchMedia('(min-width: 1000px) and (min-aspect-ratio: 4/3) and (min-height: 560px)').matches;
-  // karty kroku w kolejności (jeden gracz – imię na początku „Opcji”)
-  const stepCards = (s) => {
-    if (s === STEPS[0]) return playCtx === 'multi' ? [pl] : [];
-    if (s === opt) return playCtx === 'multi' ? s.cards : [pl, ...s.cards];
-    return s.cards;
-  };
+  // jeden gracz: poziom trudności na samej górze pierwszej karty (imię niżej); kilku graczy – najpierw lista graczy
+  const stepCards = (s) => (s === STEPS[0] && playCtx !== 'multi' ? [level, pl] : s.cards);
   function place() {
     for (const s of STEPS) s.flow.append(...stepCards(s));
     // nagłówek sekcji taki sam jak nazwa kroku („Piosenki”) – chowamy, żeby nie było dwóch takich samych (CSS)

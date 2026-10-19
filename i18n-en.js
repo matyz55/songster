@@ -1323,5 +1323,7 @@ window.I18N_EN = {
  "Zgadnij piosenkę": "Guess the song",
  "Wiedza o muzyce": "Music knowledge",
  "Impreza i karaoke": "Party and karaoke",
- "Kariera i wyzwanie dnia": "Career and daily challenge"
+ "Kariera i wyzwanie dnia": "Career and daily challenge",
+ "Gracze i poziom": "Players and level",
+ "Piosenki i zasady": "Songs and rules"
 };
