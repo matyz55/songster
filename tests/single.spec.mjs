@@ -350,3 +350,14 @@ test('wygląd 6.0: „Dalej →” w ustawieniach trybu przechodzi do następneg
   await page.waitForTimeout(1000);
   expect(await page.evaluate(() => [...document.querySelectorAll('.ui6-sstep-b')].map((b) => b.getAttribute('aria-current')))).toEqual(['false', 'true']);
 });
+
+test('oś czasu: „Kup kartę” w tym samym miejscu przed i po odkryciu (pierwszy przycisk)', async ({ page }) => {
+  await page.goto('/');
+  await start(page, 'solo');
+  await ready(page);
+  const first = () => page.evaluate(() => document.querySelector('#actions button').textContent);
+  expect(await first()).toContain('Kup tę kartę');
+  await page.evaluate(() => { const p = activePlayer(); onSlotClick(correctSlot(p.timeline, state.current.y)); onConfirmPlacement(); });
+  await expect.poll(() => page.evaluate(() => state.phase)).toBe('revealed');
+  expect(await first()).toContain('Kup losową kartę');
+});

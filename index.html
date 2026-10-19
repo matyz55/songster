@@ -127,29 +127,19 @@
         <b>Oś czasu – multiplayer</b>
         <span class="muted">Każdy układa swoją oś. Wyzwania i żetony – kto pierwszy zbierze karty, wygrywa.</span>
       </button>
-      <button class="mode" data-mode="coop" data-ctx="multi">
-        <span class="mode-icon">🤝</span>
-        <b>Współpraca</b>
-        <span class="muted">Wszyscy razem przeciw grze: wspólna oś czasu i wspólne pomyłki, odpowiadacie po kolei.</span>
-      </button>
       <button class="mode" data-mode="teams" data-ctx="multi">
         <span class="mode-icon">🎉</span>
         <b>Oś czasu – drużyny</b>
         <span class="muted">Drużyny ze wspólną osią czasu. Członkowie drużyny odpowiadają na zmianę.</span>
       </button>
+      <button class="mode" data-mode="coop" data-ctx="multi">
+        <span class="mode-icon">🤝</span>
+        <b>Współpraca</b>
+        <span class="muted">Wszyscy razem przeciw grze: wspólna oś czasu i wspólne pomyłki, odpowiadacie po kolei.</span>
+      </button>
     </div>
-    <h3 class="mode-group">Impreza</h3>
+    <h3 class="mode-group">Impreza i karaoke</h3>
     <div class="modes">
-      <button class="mode" data-mode="live" data-ctx="multi">
-        <span class="mode-icon">⚡</span>
-        <b>Pojedynek na żywo</b>
-        <span class="muted">Dwóch graczy, ta sama piosenka, odpowiedzi naraz (najlepiej na telefonach): kto szybciej rozpozna piosenkę – 2 pkt, drugi – 1 pkt. Gra do 10 punktów.</span>
-      </button>
-      <button class="mode party-tile" data-mode="tour" data-ctx="multi">
-        <span class="mode-icon">⚔️</span>
-        <b>Turniej</b>
-        <span class="muted">Drabinka pojedynków 1 na 1 dla 3–16 graczy: każdy mecz to krótka minigra wybrana w ustawieniach, zwycięzca przechodzi dalej aż do finału.</span>
-      </button>
       <button class="mode party-tile" data-mode="party" data-ctx="single multi">
         <span class="mode-icon">🥳</span>
         <b>Impreza – minigry</b>
@@ -165,99 +155,23 @@
         <b>Sztafeta karaoke</b>
         <span class="muted">Jedna piosenka, kilka przerw w różnych miejscach – przy każdej odpowiada kolejny gracz. Dobrze dokończony wers to punkt.</span>
       </button>
-    </div>
-    <h3 class="mode-group">Szybkie gry</h3>
-    <div class="modes">
-      <button class="mode" data-mode="hilo" data-ctx="single">
-        <span class="mode-icon">↕️</span>
-        <b>Starsza czy nowsza?</b>
-        <span class="muted">Czy ta piosenka jest starsza, czy nowsza od poprzedniej? Seria bez pomyłki – dobra na telefon w jednej ręce.</span>
+      <button class="mode party-tile" data-mode="tour" data-ctx="multi">
+        <span class="mode-icon">⚔️</span>
+        <b>Turniej</b>
+        <span class="muted">Drabinka pojedynków 1 na 1 dla 3–16 graczy: każdy mecz to krótka minigra wybrana w ustawieniach, zwycięzca przechodzi dalej aż do finału.</span>
       </button>
-      <button class="mode" data-mode="duel" data-ctx="single multi">
-        <span class="mode-icon">🥊</span>
-        <b>Pojedynek dekad</b>
-        <span class="muted">Dwie dekady, jedna piosenka: z której jest? Łatwy tryb dla dzieci i osób spoza tematu.</span>
-      </button>
-    </div>
-    <h3 class="mode-group">Quizy</h3>
-    <div class="modes">
-      <button class="mode daily-tile" data-mode="career" data-ctx="single">
-        <span class="mode-icon">🗺️</span>
-        <b>Kariera</b>
-        <span class="muted">Kolejne etapy w różnych trybach – od łatwych przebojów po finałową wspinaczkę przez dekady. Za wynik dostajesz gwiazdki, a gwiazdka odblokowuje następny etap.</span>
-      </button>
-      <button class="mode daily-tile" data-mode="daily" data-ctx="single">
-        <span class="mode-icon">📆</span>
-        <b>Wyzwanie dnia</b>
-        <span class="muted">10 piosenek – ten sam zestaw dla wszystkich danego dnia. Wpisz rok wydania i porównaj wynik ze znajomymi.</span>
-      </button>
-      <button class="mode" data-mode="year" data-ctx="single multi">
-        <span class="mode-icon">📅</span>
-        <b>Rok co do roku</b>
-        <span class="muted">Wpisz rok wydania piosenki. Dokładnie – 3 pkt, do 2 lat różnicy – 1 pkt.</span>
-      </button>
-      <button class="mode" data-mode="artist" data-ctx="single multi">
-        <span class="mode-icon">🎙️</span>
-        <b>Kto to śpiewa?</b>
-        <span class="muted">Czterech wykonawców do wyboru – łatwe, dobre dla dzieci i na duży ekran.</span>
-      </button>
-      <button class="mode" data-mode="seconds" data-ctx="multi">
-        <span class="mode-icon">⏱️</span>
-        <b>Licytacja sekund</b>
-        <span class="muted">Widzicie profil piosenki (rok, kraj, gatunek, autor tekstu) i licytujecie w dół, ile sekund wystarczy na tytuł. Najkrótsza stawka gra – trafienie 2 pkt, pudło – punkt dla poprzedniego licytującego.</span>
+      <button class="mode" data-mode="live" data-ctx="multi">
+        <span class="mode-icon">⚡</span>
+        <b>Pojedynek na żywo</b>
+        <span class="muted">Dwóch graczy, ta sama piosenka, odpowiedzi naraz (najlepiej na telefonach): kto szybciej rozpozna piosenkę – 2 pkt, drugi – 1 pkt. Gra do 10 punktów.</span>
       </button>
       <button class="mode" data-mode="bomb" data-ctx="multi">
         <span class="mode-icon">💣</span>
         <b>Gorąca bomba</b>
         <span class="muted">Razem z muzyką zaczyna tykać bomba. Kto ją trzyma, odpowiada na szybkie pytanie o piosenkę – dobrze: bomba idzie dalej, źle: 3 s blokady. U kogo wybuchnie, traci serce.</span>
       </button>
-      <button class="mode" data-mode="royale" data-ctx="multi">
-        <span class="mode-icon">🏁</span>
-        <b>Ostatni na placu boju</b>
-        <span class="muted">Wszyscy naraz wpisują rok tej samej piosenki (najlepiej na telefonach). Kto pomyli się najbardziej, traci serce – wygrywa ostatni przy stole.</span>
-      </button>
-      <button class="mode" data-mode="who" data-ctx="single multi">
-        <span class="mode-icon">🕵️</span>
-        <b>Kto za tym stoi?</b>
-        <span class="muted">Kto napisał tekst, skomponował muzykę, wyprodukował nagranie? Z jakiego albumu, skąd pochodzi wykonawca, jak naprawdę się nazywa? Cztery odpowiedzi do wyboru.</span>
-      </button>
-      <button class="mode" data-mode="screen" data-ctx="single multi">
-        <span class="mode-icon">🎬</span>
-        <b>Z jakiego to ekranu?</b>
-        <span class="muted">Leci piosenka z filmu, serialu albo gry – wskaż, skąd ją znasz. Cztery tytuły do wyboru.</span>
-      </button>
-      <button class="mode" data-mode="chain" data-ctx="single multi">
-        <span class="mode-icon">🔗</span>
-        <b>Łańcuch skojarzeń</b>
-        <span class="muted">Bez muzyki – na wiedzę. Każda kolejna piosenka łączy się z poprzednią: ten sam rok, kraj, autor, producent, festiwal albo film. Podpowiedź mówi, co je łączy – wybierz właściwą z czterech.</span>
-      </button>
-      <button class="mode" data-mode="climb" data-ctx="single multi">
-        <span class="mode-icon">🏔️</span>
-        <b>Dekadowa wspinaczka</b>
-        <span class="muted">Od lat 60. do dziś: podaj rok piosenki z Twojej dekady (do 2 lat różnicy), a wejdziesz o dekadę wyżej. Pomyłka cofa. Kto pierwszy dotrze do współczesności?</span>
-      </button>
-      <button class="mode" data-mode="country" data-ctx="single multi">
-        <span class="mode-icon">🌍</span>
-        <b>Skąd jest wykonawca?</b>
-        <span class="muted">Wpisz kraj wykonawcy – albo wybierz jeden z czterech z flagami.</span>
-      </button>
-      <button class="mode" data-mode="sort5" data-ctx="single multi">
-        <span class="mode-icon">🔢</span>
-        <b>Ułóż piątkę</b>
-        <span class="muted">Pięć krótkich fragmentów do ułożenia od najstarszego do najnowszego – masz na to 90 sekund.</span>
-      </button>
-      <button class="mode" data-mode="bingo" data-ctx="single multi">
-        <span class="mode-icon">🟩</span>
-        <b>Bingo muzyczne</b>
-        <span class="muted">Plansza 3×3, 4×4 albo 5×5 z kategoriami (dekady, gatunki, kraje…). Przy każdej piosence zaznacz pasujące pole – cały wiersz, kolumna albo przekątna to BINGO.</span>
-      </button>
-      <button class="mode" data-mode="bid" data-ctx="single multi">
-        <span class="mode-icon">💰</span>
-        <b>Licytacja</b>
-        <span class="muted">Najpierw postaw 1–3 pkt na swoją pewność, potem wskaż dekadę. Dobrze – zyskujesz stawkę, źle – tracisz.</span>
-      </button>
     </div>
-    <h3 class="mode-group">Zgadywanie</h3>
+    <h3 class="mode-group">Zgadnij piosenkę</h3>
     <div class="modes">
       <button class="mode" data-mode="melody" data-ctx="single multi">
         <span class="mode-icon">🎤</span>
@@ -269,30 +183,119 @@
         <b>Melodia krok po kroku</b>
         <span class="muted">Najpierw tylko 1 sekunda, potem 2, 4 i 8 s. Im szybciej zgadniesz, tym więcej punktów.</span>
       </button>
-      <button class="mode" data-mode="mashup" data-ctx="single multi">
-        <span class="mode-icon">🎛️</span>
-        <b>Mikser</b>
-        <span class="muted">Dwie piosenki grają naraz przez 10 sekund – wpisz oba tytuły (albo obu wykonawców). Punkt za każdą.</span>
+      <button class="mode" data-mode="words" data-ctx="single multi">
+        <span class="mode-icon">📝</span>
+        <b>Pierwsze słowa</b>
+        <span class="muted">Najpierw tylko trzy pierwsze słowa piosenki, potem pierwszy wers, dwa wersy i na końcu fragment muzyki. Im szybciej zgadniesz, tym więcej punktów.</span>
       </button>
       <button class="mode" data-mode="cover" data-ctx="single multi">
         <span class="mode-icon">🌫️</span>
         <b>Okładka z mgły</b>
         <span class="muted">Najpierw sama rozmyta okładka płyty – bez dźwięku. Z każdym krokiem ostrzejszy obraz i dłuższy fragment.</span>
       </button>
-      <button class="mode" data-mode="words" data-ctx="single multi">
-        <span class="mode-icon">📝</span>
-        <b>Pierwsze słowa</b>
-        <span class="muted">Najpierw tylko trzy pierwsze słowa piosenki, potem pierwszy wers, dwa wersy i na końcu fragment muzyki. Im szybciej zgadniesz, tym więcej punktów.</span>
-      </button>
       <button class="mode" data-mode="mirror" data-ctx="single multi">
         <span class="mode-icon">🪞</span>
         <b>Krzywe zwierciadło</b>
         <span class="muted">Piosenka zza ściany, na helu, zwolniona albo od tyłu – z każdym krokiem mniej zniekształceń.</span>
       </button>
+      <button class="mode" data-mode="mashup" data-ctx="single multi">
+        <span class="mode-icon">🎛️</span>
+        <b>Mikser</b>
+        <span class="muted">Dwie piosenki grają naraz przez 10 sekund – wpisz oba tytuły (albo obu wykonawców). Punkt za każdą.</span>
+      </button>
       <button class="mode" data-mode="buzz" data-ctx="multi">
         <span class="mode-icon">🔔</span>
         <b>Kto pierwszy?</b>
         <span class="muted">Każdy ma swój przycisk (na tym urządzeniu albo na swoim telefonie). Kto pierwszy naciśnie, ten odpowiada – za błąd traci punkt.</span>
+      </button>
+      <button class="mode" data-mode="seconds" data-ctx="multi">
+        <span class="mode-icon">⏱️</span>
+        <b>Licytacja sekund</b>
+        <span class="muted">Widzicie profil piosenki (rok, kraj, gatunek, autor tekstu) i licytujecie w dół, ile sekund wystarczy na tytuł. Najkrótsza stawka gra – trafienie 2 pkt, pudło – punkt dla poprzedniego licytującego.</span>
+      </button>
+    </div>
+    <h3 class="mode-group">Kariera i wyzwanie dnia</h3>
+    <div class="modes">
+      <button class="mode daily-tile" data-mode="career" data-ctx="single">
+        <span class="mode-icon">🗺️</span>
+        <b>Kariera</b>
+        <span class="muted">Kolejne etapy w różnych trybach – od łatwych przebojów po finałową wspinaczkę przez dekady. Za wynik dostajesz gwiazdki, a gwiazdka odblokowuje następny etap.</span>
+      </button>
+      <button class="mode daily-tile" data-mode="daily" data-ctx="single">
+        <span class="mode-icon">📆</span>
+        <b>Wyzwanie dnia</b>
+        <span class="muted">10 piosenek – ten sam zestaw dla wszystkich danego dnia. Wpisz rok wydania i porównaj wynik ze znajomymi.</span>
+      </button>
+    </div>
+    <h3 class="mode-group">Rok i dekada</h3>
+    <div class="modes">
+      <button class="mode" data-mode="year" data-ctx="single multi">
+        <span class="mode-icon">📅</span>
+        <b>Rok co do roku</b>
+        <span class="muted">Wpisz rok wydania piosenki. Dokładnie – 3 pkt, do 2 lat różnicy – 1 pkt.</span>
+      </button>
+      <button class="mode" data-mode="hilo" data-ctx="single">
+        <span class="mode-icon">↕️</span>
+        <b>Starsza czy nowsza?</b>
+        <span class="muted">Czy ta piosenka jest starsza, czy nowsza od poprzedniej? Seria bez pomyłki – dobra na telefon w jednej ręce.</span>
+      </button>
+      <button class="mode" data-mode="duel" data-ctx="single multi">
+        <span class="mode-icon">🥊</span>
+        <b>Pojedynek dekad</b>
+        <span class="muted">Dwie dekady, jedna piosenka: z której jest? Łatwy tryb dla dzieci i osób spoza tematu.</span>
+      </button>
+      <button class="mode" data-mode="climb" data-ctx="single multi">
+        <span class="mode-icon">🏔️</span>
+        <b>Dekadowa wspinaczka</b>
+        <span class="muted">Od lat 60. do dziś: podaj rok piosenki z Twojej dekady (do 2 lat różnicy), a wejdziesz o dekadę wyżej. Pomyłka cofa. Kto pierwszy dotrze do współczesności?</span>
+      </button>
+      <button class="mode" data-mode="sort5" data-ctx="single multi">
+        <span class="mode-icon">🔢</span>
+        <b>Ułóż piątkę</b>
+        <span class="muted">Pięć krótkich fragmentów do ułożenia od najstarszego do najnowszego – masz na to 90 sekund.</span>
+      </button>
+      <button class="mode" data-mode="bid" data-ctx="single multi">
+        <span class="mode-icon">💰</span>
+        <b>Licytacja</b>
+        <span class="muted">Najpierw postaw 1–3 pkt na swoją pewność, potem wskaż dekadę. Dobrze – zyskujesz stawkę, źle – tracisz.</span>
+      </button>
+      <button class="mode" data-mode="royale" data-ctx="multi">
+        <span class="mode-icon">🏁</span>
+        <b>Ostatni na placu boju</b>
+        <span class="muted">Wszyscy naraz wpisują rok tej samej piosenki (najlepiej na telefonach). Kto pomyli się najbardziej, traci serce – wygrywa ostatni przy stole.</span>
+      </button>
+    </div>
+    <h3 class="mode-group">Wiedza o muzyce</h3>
+    <div class="modes">
+      <button class="mode" data-mode="artist" data-ctx="single multi">
+        <span class="mode-icon">🎙️</span>
+        <b>Kto to śpiewa?</b>
+        <span class="muted">Czterech wykonawców do wyboru – łatwe, dobre dla dzieci i na duży ekran.</span>
+      </button>
+      <button class="mode" data-mode="who" data-ctx="single multi">
+        <span class="mode-icon">🕵️</span>
+        <b>Kto za tym stoi?</b>
+        <span class="muted">Kto napisał tekst, skomponował muzykę, wyprodukował nagranie? Z jakiego albumu, skąd pochodzi wykonawca, jak naprawdę się nazywa? Cztery odpowiedzi do wyboru.</span>
+      </button>
+      <button class="mode" data-mode="country" data-ctx="single multi">
+        <span class="mode-icon">🌍</span>
+        <b>Skąd jest wykonawca?</b>
+        <span class="muted">Wpisz kraj wykonawcy – albo wybierz jeden z czterech z flagami.</span>
+      </button>
+      <button class="mode" data-mode="screen" data-ctx="single multi">
+        <span class="mode-icon">🎬</span>
+        <b>Z jakiego to ekranu?</b>
+        <span class="muted">Leci piosenka z filmu, serialu albo gry – wskaż, skąd ją znasz. Cztery tytuły do wyboru.</span>
+      </button>
+      <button class="mode" data-mode="chain" data-ctx="single multi">
+        <span class="mode-icon">🔗</span>
+        <b>Łańcuch skojarzeń</b>
+        <span class="muted">Bez muzyki – na wiedzę. Każda kolejna piosenka łączy się z poprzednią: ten sam rok, kraj, autor, producent, festiwal albo film. Podpowiedź mówi, co je łączy – wybierz właściwą z czterech.</span>
+      </button>
+      <button class="mode" data-mode="bingo" data-ctx="single multi">
+        <span class="mode-icon">🟩</span>
+        <b>Bingo muzyczne</b>
+        <span class="muted">Plansza 3×3, 4×4 albo 5×5 z kategoriami (dekady, gatunki, kraje…). Przy każdej piosence zaznacz pasujące pole – cały wiersz, kolumna albo przekątna to BINGO.</span>
       </button>
     </div>
     <div class="actions">
