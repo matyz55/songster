@@ -233,6 +233,8 @@ function playPartyGame() {
   const pt = state.party;
   const n = pt.rows.length;
   while (pt.idx < pt.plan.length) {
+    // wygląd 6.0: plansza zapowiedzi rundy (teleturniej) – po „Zaczynamy!” wraca tu i startuje minigrę
+    if (UI6 && party6.intro(pt, playPartyGame)) return;
     const g = PARTY_GAMES[pt.plan[pt.idx]];
     state.mode = g.mode(n);
     // dłuższe minigry: więcej piosenek, więcej kart do zebrania, więcej czasu
@@ -243,6 +245,11 @@ function playPartyGame() {
     if (startGame({ party: pt.plan[pt.idx], ...opts })) return;
     pt.idx += 1; // za mało piosenek dla tej minigry – następna
   }
+  // wygląd 6.0: na koniec finał „Ostatnie odliczanie” – po nim partyFinish()
+  if (UI6 && party6.finale(pt, partyFinish)) return;
+  partyFinish();
+}
+function partyFinish() {
   state.mode = 'party';
   $('#ranking').replaceChildren();
   partyStandings(true);
@@ -267,18 +274,23 @@ function partyAfterGame() {
   });
   // pominięta minigra – bez punktów
   if (state.miniSkipped) gained.fill(0);
+  // wygląd 6.0: modyfikator rundy (podwójne punkty, wszystko albo nic…)
+  if (UI6) party6.score(pt, gained);
   gained.forEach((g, i) => { pt.points[i] += g; });
   pt.last = gained;
   pt.idx += 1;
   // impreza na czas: po upływie czasu ta minigra była ostatnia
   if (pt.until && Date.now() >= pt.until) pt.plan = pt.plan.slice(0, pt.idx);
-  partyStandings(pt.idx >= pt.plan.length);
+  // wygląd 6.0: po ostatniej minigrze jeszcze finał
+  partyStandings(pt.idx >= pt.plan.length && !(UI6 && party6.wantsFinal(pt)));
 }
 function partyStandings(final) {
   const pt = state.party;
   pt.done = final;
   const g = PARTY_GAMES[pt.plan[Math.max(0, pt.idx - 1)]];
-  const order = pt.rows.map((r, i) => ({ name: r.name, pts: pt.points[i], last: pt.last[i] || 0 })).sort((a, b) => b.pts - a.pts);
+  const order = pt.rows.map((r, i) => ({ i, name: r.name, pts: pt.points[i], last: pt.last[i] || 0 })).sort((a, b) => b.pts - a.pts);
+  // finał „Ostatnie odliczanie” (wygląd 6.0): kolejność według tego, kto dłużej został na placu
+  if (pt.finalRank) order.sort((a, b) => pt.finalRank[a.i] - pt.finalRank[b.i]);
   const title = $('#winner-title');
   const kicker = el('p', { class: 'party-kicker' }, final ? T('🥳 Koniec imprezy!') : pt.until ? T('🥳 Minigra {0}: {1} {2}', pt.idx, g.icon, T(g.name))
     : T('🥳 Minigra {0} z {1}: {2} {3}', pt.idx, pt.plan.length, g.icon, T(g.name)));
@@ -288,8 +300,8 @@ function partyStandings(final) {
       title.textContent = order[0].pts > prev ? T('🏆 Nowy rekord imprezy: {0} pkt (poprzedni: {1})!', order[0].pts, prev)
         : T('Wynik imprezy: {0} pkt (rekord: {1}).', order[0].pts, prev);
     } else {
-      const tie = order.length > 1 && order[1].pts === order[0].pts;
-      title.textContent = tie ? T('🤝 Remis! ({0} pkt)', order[0].pts) : T('🏆 Imprezę wygrywa {0} ({1} pkt)!', order[0].name, order[0].pts);
+      const tie = !pt.finalRank && order.length > 1 && order[1].pts === order[0].pts;
+      title.textContent = pt.finalRank ? T('🏆 Imprezę wygrywa {0} – ostatni na placu w finale!', order[0].name) : tie ? T('🤝 Remis! ({0} pkt)', order[0].pts) : T('🏆 Imprezę wygrywa {0} ({1} pkt)!', order[0].name, order[0].pts);
     }
     fx('win');
     celebrate();
