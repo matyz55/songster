@@ -959,3 +959,13 @@ Wersja próbna wyglądu 6.0: pojedynek na żywo mieści się na telefonie trzyma
 
 - Oś czasu: główna akcja („✔ Zatwierdź i odkryj”, po odkryciu „Następna piosenka/gracz →”) jest zawsze pierwsza – po lewej, tak jak ▶ Odtwórz; „Kup kartę” zawsze ostatni, w tym samym miejscu przed i po odkryciu.
 - Wersja próbna wyglądu 6.0: ustawienia przed grą w dwóch krokach – „Gracze i poziom” (poziom trudności na pierwszej karcie, przy jednym graczu na samej górze) i „Piosenki i zasady” (dawne „Piosenki” i „Opcje trybu” razem).
+
+## 5.54.0 – 19.10.2026 (`HASH`)
+
+Wersja próbna wyglądu 6.0 – „Impreza – minigry” jako teleturniej (bez 6.0 impreza bez zmian):
+- Prowadzący 🎙️ zapowiada każdą rundę i komentuje wyniki, zwracając się do graczy po imieniu.
+- Przed każdą minigrą plansza „Runda 2 z 5” z zasadą gry, za co są punkty i odliczaniem 3-2-1.
+- Modyfikatory rund: runda otwierająca, Podwójne punkty, Złodziej punktów (zwycięzca zabiera punkty wybranemu rywalowi), Wszystko albo nic, Szansa dla maruderów, a przedostatnia runda za podwójną stawkę.
+- Po rundzie tablica wyników z rosnącymi paskami, przyrostem punktów i awansami ▲▼.
+- Finał „Ostatnie odliczanie”: punkty zamieniają się w sekundy, czas ucieka wszystkim naraz, szybkie pytania (kto śpiewa, rok, dekada, starsza piosenka) – dobra odpowiedź dodaje czas, zła zabiera; kto spadnie do zera, odpada, ostatni wygrywa imprezę. Przy jednym graczu finał na rekord.
+- Duży ekran i telefony graczy pokazują w tym czasie klasyfikację jak dotąd; finał rozgrywa się na urządzeniu gospodarza.
