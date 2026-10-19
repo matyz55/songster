@@ -960,7 +960,7 @@ Wersja próbna wyglądu 6.0: pojedynek na żywo mieści się na telefonie trzyma
 - Oś czasu: główna akcja („✔ Zatwierdź i odkryj”, po odkryciu „Następna piosenka/gracz →”) jest zawsze pierwsza – po lewej, tak jak ▶ Odtwórz; „Kup kartę” zawsze ostatni, w tym samym miejscu przed i po odkryciu.
 - Wersja próbna wyglądu 6.0: ustawienia przed grą w dwóch krokach – „Gracze i poziom” (poziom trudności na pierwszej karcie, przy jednym graczu na samej górze) i „Piosenki i zasady” (dawne „Piosenki” i „Opcje trybu” razem).
 
-## 5.54.0 – 19.10.2026 (`HASH`)
+## 5.54.0 – 19.10.2026 (`56e3f97`)
 
 Wersja próbna wyglądu 6.0 – „Impreza – minigry” jako teleturniej (bez 6.0 impreza bez zmian):
 - Prowadzący 🎙️ zapowiada każdą rundę i komentuje wyniki, zwracając się do graczy po imieniu.
