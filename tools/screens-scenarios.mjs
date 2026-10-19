@@ -396,11 +396,53 @@ const events = [
     await home(page);
     await page.evaluate(() => store.set('partyGames', ['artist', 'year', 'hilo']));
     await startMode(page, 'party', { ctx: 'multi', n: 3 });
+    // wygląd 6.0: impreza jako teleturniej – plansza zapowiedzi, tablica wyników, finał „Ostatnie odliczanie”
+    const ui6 = await page.evaluate(() => typeof UI6 !== 'undefined' && UI6);
+    const p6 = (kind) => page.waitForSelector(`#p6[open][data-kind=${kind}]`, { timeout: 15000 });
+    const p6go = async () => { await page.click('#p6 .p6-go'); await page.click('#p6 .p6-acts .ghost'); };
+    if (ui6) {
+      await p6('intro');
+      await capture(page, { id: 'party-0-zapowiedz', group: this.group, title: 'Impreza 6.0 – zapowiedź rundy', desc: 'Runda 1 z 5: ikona, zasada, modyfikator, prowadzący, „Zaczynamy!”.' });
+      await p6go();
+    }
     await ready(page);
     await capture(page, { id: 'party-1-minigra', group: this.group, title: 'Impreza – minigra', desc: 'Pasek „Minigra 1 z 5”.' });
-    await endNow(page);
+    if (ui6) {
+      await page.evaluate(() => { state.players.forEach((p, i) => { p.score = 3 - i; }); });
+      await endNow(page);
+      await p6('board');
+      await page.waitForTimeout(1500);
+      await capture(page, { id: 'party-2a-tablica', group: this.group, title: 'Impreza 6.0 – tablica wyników po rundzie', desc: 'Przyrost punktów, miejsca, komentarz prowadzącego.' });
+      await page.click('#p6 .p6-acts .ghost');
+    } else await endNow(page);
     await capture(page, { id: 'party-2-przerwa', group: this.group, title: 'Impreza – klasyfikacja po minigrze', desc: 'Przerwa między minigrami.' });
-    await page.click('#btn-party-stop');
+    if (ui6) {
+      // druga runda ze złodziejem punktów: Gracz 3 wygrywa i wybiera ofiarę
+      await page.evaluate(() => { state.party.mods[1] = 'thief'; document.querySelector('#btn-party-next').click(); });
+      await p6('intro');
+      await capture(page, { id: 'party-2b-zapowiedz-zlodziej', group: this.group, title: 'Impreza 6.0 – zapowiedź rundy z modyfikatorem', desc: 'Złodziej punktów.' });
+      await p6go();
+      await ready(page);
+      await page.evaluate(() => { state.players.forEach((p) => { p.score = 0; }); state.players[2].score = 5; });
+      await endNow(page);
+      await page.waitForSelector('#p6 .p6-victim', { timeout: 15000 });
+      await capture(page, { id: 'party-2c-zlodziej', group: this.group, title: 'Impreza 6.0 – złodziej punktów', desc: 'Zwycięzca rundy wybiera, komu zabrać punkty.' });
+      await page.click('#p6 .p6-victim');
+      // od razu finał (pozostałe rundy pominięte)
+      await page.evaluate(() => { state.party.plan = state.party.plan.slice(0, state.party.idx); });
+      await page.click('#p6 .p6-next');
+      await p6('final');
+      await capture(page, { id: 'party-4-final-zasady', group: this.group, title: 'Impreza 6.0 – finał: zasady', desc: 'Punkty zamieniają się w sekundy na podestach.' });
+      await page.click('#p6 .p6-go');
+      await page.waitForSelector('#p6 .p6-opt', { timeout: 15000 });
+      // zatrzymany zegar – zrzut na wszystkich urządzeniach w tym samym stanie
+      await page.evaluate(() => { clearInterval(party6.fin.iv); });
+      await capture(page, { id: 'party-5-final', group: this.group, title: 'Impreza 6.0 – finał „Ostatnie odliczanie”', desc: 'Podesty z sekundami, pytanie dla gracza, cztery odpowiedzi.' });
+      await page.evaluate(() => { const f = party6.fin; f.secs = f.secs.map((x, i) => (i === 2 ? x : 0)); party6.answer(-1); });
+      await p6('podium');
+      await capture(page, { id: 'party-6-podium', group: this.group, title: 'Impreza 6.0 – zwycięzca finału', desc: 'Podium po finale.' });
+      await page.click('#p6 .p6-go');
+    } else await page.click('#btn-party-stop');
     await capture(page, { id: 'party-3-koniec', group: this.group, title: 'Impreza – koniec', desc: 'Klasyfikacja końcowa.' });
   } },
   { id: 'tour', group: 'Impreza i turniej', title: 'Turniej', timeout: 180000, async run({ newPage, capture }) {
