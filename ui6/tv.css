@@ -1,7 +1,7 @@
 /* Songster 6.0 – duży ekran (telewizor) i telefon gracza (tv.html). Wszystkie reguły tylko przy html.ui6.
    tv.html nie ładuje ui6/base.css (tam .card i button znaczą co innego) – potrzebne tokeny są powtórzone tutaj.
    Duży ekran: czcionka liczona w tv.js (fit) – wszystko w em, więc całość skaluje się razem i mieści bez przewijania.
-   Telefon gracza: „kontroler” na całe okno – stałe strefy, duże przyciski, długie osie zwijane do grzbietów (js/ui6-tv.js). */
+   Telefon gracza: „kontroler” na całe okno – stałe strefy, duże przyciski, oś do 10 kart w całości, dłuższa przewijana (js/ui6-tv.js). */
 html.ui6 {
   --bg: #0f0d17;
   --panel: #1b1828;
@@ -308,7 +308,7 @@ html.ui6 body.player .u6-main.tight.pick .ht-actions { flex-wrap: nowrap; }
 html.ui6 body.player .u6-main.tight.pick .ht-actions button { flex: 1 1 0; min-width: 0; font-size: .85em; padding: 4px 6px; }
 html.ui6 body.player .u6-main.tight .ht-controls button, html.ui6 body.player .u6-main.tight .ht-actions button { min-height: 46px; padding: 6px 10px; }
 
-/* panel osi: zakładki (twoja oś / gracz z turą / pozostali) i oś zwijana do grzbietów */
+/* panel osi: zakładki (twoja oś / gracz z turą / pozostali) i oś czasu */
 html.ui6 body.player .u6-panel { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 6px;
   background: var(--glass), var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 8px 10px; }
 html.ui6 body.player .u6-panel.hidden { display: none; }
@@ -325,30 +325,85 @@ html.ui6 body.player .u6-who button { min-height: 36px; padding: 0 10px; font-si
 html.ui6 body.player .u6-who button.on { color: var(--text); border-color: var(--accent-2); }
 html.ui6 body.player .u6-view { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
 html.ui6 body.player .u6-view > section { display: contents; }
-html.ui6 body.player .u6-view .vtl, html.ui6 body.player .ht-card .vtl.u6-acc { flex: 1 1 auto; min-height: 0; gap: 4px; overflow: hidden; justify-content: center; }
+html.ui6 body.player .u6-view .vtl { flex: 1 1 auto; min-height: 0; gap: 4px; overflow: hidden; justify-content: safe center; }
 html.ui6 body.player .vtl.watch { border: 0; padding: 0; border-radius: 0; }
-html.ui6 body.player .u6-acc > .vtl-title { margin-bottom: auto; }
-html.ui6 body.player .u6-acc > :last-child { margin-bottom: auto; }
 html.ui6 body.player .vtl-title { flex: none; font-size: .8em; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 html.ui6 body.player .vtl-hint { flex: none; font-size: .7em; line-height: 1.2; }
 html.ui6 body.player .vrow { flex: none; min-height: 44px; padding: 4px 12px; gap: 10px; border-radius: 12px; }
 html.ui6 body.player .vrow .y { font-size: 1.3em; min-width: 2.9em; }
 html.ui6 body.player .vrow.vmys { box-shadow: 0 0 0 2px #fff inset, 0 0 1em rgba(255, 61, 127, .45); }
 html.ui6 body.player .vslot { flex: none; min-height: 44px; padding: 6px 12px; border-radius: 12px; }
-/* grzbiety: karty i miejsca daleko od wybranego miejsca – sam rok (albo cienka kreska) */
-html.ui6 body.player .vtl .u6-sp {
-  min-height: 0; height: var(--sp, 24px); padding: 0 10px; border-radius: 6px; font-size: .8em; overflow: hidden; cursor: pointer;
-  box-shadow: none; outline: 0; border-width: 1px;
+/* oś: wysokość kart (--rh), miejsc „＋” (--sh) i odstęp (--g) liczy js/ui6-tv.js – do 10 kart wszystko widać w całości */
+html.ui6 body.player .vtl.u6-fit { position: relative; gap: var(--g, 4px); }
+html.ui6 body.player .vtl.u6-fit > * { box-sizing: border-box; }
+html.ui6 body.player .vtl.u6-fit > .vrow { flex: none; height: var(--rh, 44px); min-height: 0; margin: 0; padding-top: 0; padding-bottom: 0; overflow: hidden; }
+html.ui6 body.player .vtl.u6-fit > .vrow.vcard { column-gap: 10px; border: 1px solid rgba(255, 255, 255, .06); box-shadow: 0 2px 8px rgba(0, 0, 0, .25); }
+html.ui6 body.player .vtl.u6-fit > .vrow .y { font-size: clamp(17px, calc(var(--rh, 44px) * .4), 25px); line-height: 1; }
+html.ui6 body.player .vtl.u6-fit > .vrow .ta b { line-height: 1.2; }
+html.ui6 body.player .vtl.u6-fit > .vrow .ta small { line-height: 1.2; }
+html.ui6 body.player .vtl.u6-fit > .vslot { flex: none; height: var(--sh, 44px); min-height: 0; margin: 0; padding-top: 0; padding-bottom: 0; }
+html.ui6 body.player .vtl.u6-fit > .vtl-title, html.ui6 body.player .vtl.u6-fit > .vtl-hint { margin: 0; }
+/* karta w jednej linii: „rok  tytuł – wykonawca  flaga” */
+html.ui6 body.player .vtl.u6-c1 > .vrow.vcard { grid-template-columns: 3.1em minmax(0, 1fr) auto; padding: 0 10px; border-radius: 9px; }
+html.ui6 body.player .vtl.u6-c1 > .vrow .ta { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; }
+html.ui6 body.player .vtl.u6-c1 > .vrow .ta > * { display: inline; font-size: inherit; }
+html.ui6 body.player .vtl.u6-c1 > .vrow .ta b { font-weight: 700; }
+html.ui6 body.player .vtl.u6-c1 > .vrow .ta b + small::before { content: ' – '; }
+html.ui6 body.player .vtl.u6-c1 > .vrow .ta .vstart-lbl { font-size: 12px; }
+html.ui6 body.player .vtl.u6-c1 > .vrow .flag { height: 14px; }
+html.ui6 body.player .vtl.u6-c1 > .vrow.vmys, html.ui6 body.player .vtl.u6-c1 > .vrow.vmark { border-radius: 9px; font-size: 15px; }
+/* cienkie „＋” między kartami: widoczna kreska, a cel dotyku sięga połowy odstępu z każdej strony */
+html.ui6 body.player .vtl.u6-thin > .vslot { position: relative; border-width: 1px; border-radius: 8px; font-size: 13px; line-height: 1; }
+html.ui6 body.player .vtl.u6-thin > .vslot::before { content: ''; position: absolute; left: 0; right: 0; top: -6px; bottom: -6px; }
+html.ui6 body.player .vtl.u6-thin > .vslot:first-of-type::before { top: 0; }
+html.ui6 body.player .vtl.u6-thin > .vslot:last-of-type::before { bottom: 0; }
+html.ui6 body.player .vtl.u6-hair > .vslot { font-size: 0; border: 0; border-radius: 4px;
+  background: linear-gradient(90deg, transparent, rgba(45, 226, 230, .75) 18%, rgba(45, 226, 230, .75) 82%, transparent); }
+html.ui6 body.player .vtl.u6-hair > .vslot::after { content: '＋'; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  font-size: 10px; line-height: 12px; padding: 0 6px; border-radius: 6px; color: #12101a; background: var(--accent-2); font-weight: 900; }
+html.ui6 body.player .vtl.u6-hair > .vslot.chosen { background: var(--accent-2); }
+html.ui6 body.player .vtl.u6-nohint > .vtl-hint { display: none; }
+/* dwie kolumny (szeroki panel): karty płyną z góry na dół, potem w drugiej kolumnie */
+html.ui6 body.player .vtl.u6-two { flex-wrap: wrap; align-content: stretch; column-gap: 8px; justify-content: flex-start; }
+html.ui6 body.player .vtl.u6-two > * { width: calc(50% - 4px); }
+html.ui6 body.player .vtl.u6-two > .vrow.vcard { grid-template-columns: 2.6em minmax(0, 1fr) auto; column-gap: 6px; padding: 0 8px; border-radius: 9px; }
+html.ui6 body.player .vtl.u6-two > .vrow .y { font-size: 17px; }
+html.ui6 body.player .vtl.u6-two > .vrow .ta b { font-size: 13px; }
+html.ui6 body.player .vtl.u6-two > .vrow .ta small { font-size: 12px; }
+html.ui6 body.player .vtl.u6-two > .vrow .flag { height: 12px; }
+/* długa oś (więcej niż 10 kart): przewija się tylko oś, krawędzie lekko wygaszone */
+html.ui6 body.player .vtl.u6-long { overflow-y: auto; justify-content: flex-start; overscroll-behavior: contain; scrollbar-width: thin;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 14px, #000 calc(100% - 14px), transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 14px, #000 calc(100% - 14px), transparent); padding: 6px 0; }
+/* krótka oś (kilka kart): panel tylko na oś, wolne miejsce dostaje karta tury */
+html.ui6 body.player .u6-main.short > .u6-panel { flex: 0 1 auto; }
+html.ui6 body.player .u6-main.short .u6-view { flex: 0 1 auto; }
+html.ui6 body.player .u6-main.short .u6-view .vtl { flex: none; }
+html.ui6 body.player .u6-main.short > .ht-card { flex: 1 1 auto; }
+html.ui6 body.player .u6-main:is(.solo, .short) > .ht-card.u6-roomy { justify-content: center; }
+html.ui6 body.player .ht-card.u6-roomy .ht-vinyl .lbl { width: 32%; height: 32%; font-size: 1.4em; }
+/* wybór miejsca na ciasnym ekranie: karta tury to nagłówek i rząd przycisków (▶ Odtwórz · ⏭ Pomiń · ✔ Zatwierdź) */
+html.ui6 body.player .u6-main.mini > .ht-card { flex-direction: row; flex-wrap: wrap; align-content: flex-start; gap: 6px; padding: 8px 10px; }
+html.ui6 body.player .u6-main.mini > .ht-card > *, html.ui6 body.player .u6-main.mini > .ht-card > .u6-col > * { flex: 1 1 100%; min-width: 0; }
+html.ui6 body.player .u6-main.mini > .ht-card :is(.ht-controls, .ht-actions:not(.p-choices)) { display: contents; }
+html.ui6 body.player .u6-main.mini > .ht-card :is(.ht-controls, .ht-actions) > button { flex: 1 1 auto; width: auto; min-width: 0; min-height: 44px; margin: 0; padding: 4px 6px; font-size: 13px; white-space: nowrap; }
+html.ui6 body.player .u6-main.mini > .ht-card .ht-controls > .p-play { order: 1; }
+html.ui6 body.player .u6-main.mini > .ht-card .ht-controls > .ghost { order: 2; }
+html.ui6 body.player .u6-main.mini > .ht-card .ht-actions > button { order: 3; }
+html.ui6 body.player .u6-main.mini .ht-mystery { min-height: 0; }
+html.ui6 body.player .u6-main.mini .ht-vinyl, html.ui6 body.player .u6-main.mini .ht-status, html.ui6 body.player .u6-main.mini .ht-hint { display: none; }
+html.ui6 body.player .u6-main.mini .ht-body { flex: 1 1 auto; }
+html.ui6 body.player .u6-main.mini .ht-head h2 { font-size: 1em; }
+/* ▶ Odtwórz jako sama ikonka – cały rząd przycisków mieści się w jednej linii (napis zostaje dla czytników ekranu) */
+html.ui6 body.player .u6-main.mini > .ht-card .ht-controls > .p-play { flex: 0 0 52px; font-size: 0; padding: 0; }
+html.ui6 body.player .u6-main.mini > .ht-card .ht-controls > .p-play::before { content: '▶'; font-size: 18px; }
+html.ui6 body.player .u6-main.mini > .ht-card .ht-controls > .p-play.on::before { content: '⏸'; }
+@media (orientation: landscape) {
+  html.ui6 body.player .u6-main.split.lean > .ht-card { flex: 0 0 40%; }
+  html.ui6 body.player .u6-main.split.lean.mini > .ht-card { flex-basis: 30%; align-content: center; }
+  html.ui6 body.player .u6-main.split.lean > .u6-panel { flex: 1 1 0; }
+  html.ui6 body.player .u6-main.split.lean .ht-controls button { font-size: 13px; padding: 4px 6px; min-width: 0; }
 }
-html.ui6 body.player .vtl .u6-sp .y { font-size: 1em; min-width: 3.2em; }
-html.ui6 body.player .vtl .u6-sp > :not(.y) { display: none; }
-html.ui6 body.player .vtl .vslot.u6-sp { height: var(--sps, 6px); padding: 0; border-radius: 3px; font-size: 0; border-width: 0; background: rgba(45, 226, 230, .45); }
-html.ui6 body.player .vtl .u6-hide { display: none; }
-html.ui6 body.player .vtl .u6-grp {
-  flex: none; min-height: 0; height: 28px; padding: 0 10px; border-radius: 8px; font-size: .78em; font-weight: 700; color: var(--gold);
-  background: repeating-linear-gradient(180deg, rgba(255, 255, 255, .07) 0 3px, transparent 3px 6px), var(--panel-2); border: 1px solid var(--line);
-}
-html.ui6 body.player .u6-gaps { display: none; }
 /* tryb pisania (klawiatura ekranowa): zostaje pole odpowiedzi i podpowiedzi */
 html.ui6.kbd body.player .u6-panel, html.ui6.kbd body.player .u6-bar, html.ui6.kbd body.player .ht-mystery, html.ui6.kbd body.player .cover-fog,
 html.ui6.kbd body.player .ht-hint, html.ui6.kbd body.player .ht-steps { display: none; }
@@ -523,8 +578,12 @@ html.ui6 body.player .year-form > button.primary { border: 0; background: var(--
 html.ui6 body.player .year-form > button.primary:disabled { opacity: .4; box-shadow: none; }
 html.ui6 body.player .year-form > button.ghost { background: transparent; border: 1px solid var(--line); color: var(--text); }
 
-/* ---------- telefon: oś zwijana do grzbietów – bez marginesów (liczy je js/ui6-tv.js), nadmiar nigdy nie zasłania tytułu ---------- */
-html.ui6 body.player .vtl.u6-acc > .vrow { margin: 0; }
-html.ui6 body.player .vtl.u6-acc > .vtl-title { margin-top: 0; }
-html.ui6 body.player .u6-view .vtl, html.ui6 body.player .ht-card .vtl.u6-acc { justify-content: safe center; }
 html.ui6 body.player .vrow .vstart-lbl { font-size: 13px; letter-spacing: .3px; }
+/* ---------- duży ekran: oś dłuższa niż 10 kart przesuwa się w bok (js/ui6-tv.js), wygaszona krawędź pokazuje dalsze karty ---------- */
+html.ui6 body:not(.player) .tl.u6-long { position: relative; justify-content: safe center; overflow-x: auto; scrollbar-width: none; padding: .3em .4em; }
+html.ui6 body:not(.player) .tl.u6-long::-webkit-scrollbar { display: none; }
+html.ui6 body:not(.player) .tl.u6-long.u6-more-r { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 3em), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 3em), transparent); }
+html.ui6 body:not(.player) .tl.u6-long.u6-more-l { -webkit-mask-image: linear-gradient(90deg, transparent, #000 3em); mask-image: linear-gradient(90deg, transparent, #000 3em); }
+html.ui6 body:not(.player) .tl.u6-long.u6-more-l.u6-more-r {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 3em, #000 calc(100% - 3em), transparent); mask-image: linear-gradient(90deg, transparent, #000 3em, #000 calc(100% - 3em), transparent);
+}
