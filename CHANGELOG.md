@@ -924,3 +924,16 @@ Wersja próbna wyglądu 6.0: pojedynek na żywo mieści się na telefonie trzyma
 - „Tak to leciało!”: na dole ekranu nowy dyskretny przycisk „film pokazuje tekst – zmień film” – gra od razu bierze inny film tej piosenki (albo inną piosenkę), a film trafia do zgłoszeń i nie pojawi się w kolejnych grach. Zgłoszenia z gry są teraz też w raporcie w Ustawieniach.
 - Sprawdzarka filmów: film, który nie ruszył, dostaje drugą, dłuższą próbę, a sprawdzanie czeka, gdy karta przeglądarki jest w tle (wcześniej takie filmy wychodziły jako niedziałające).
 - Usunięte 77 filmów z raportu gracza; katalog ma teraz 317 piosenek.
+
+## 5.50.1 – 18.10.2026 (`ed99053`)
+
+- Wersja próbna wyglądu 6.0: kontrola „bez przewijania” dopuszcza przewijanie samej osi czasu, gdy ma ona więcej niż 10 kart (oś do 10 kart musi mieścić się w całości); w narzędziu przeglądu ekranów nowe zrzuty osi z 10 i 14 kartami.
+
+## 5.50.2 – 18.10.2026 (`240bdf1`)
+
+- Wersja próbna wyglądu 6.0: poprawka – przycisk „Dalej →” w ustawieniach trybu (telefon, tablet) znów przechodzi do następnego kroku; wcześniej płynne przesunięcie cofało się do pierwszego kroku.
+
+## 5.51.0 – 19.10.2026 (`1e1afac`)
+
+- Wybór trybu: tryby podzielone na 6 grup według tego, co się w nich robi – Oś czasu, Impreza i karaoke, Zgadnij piosenkę, Kariera i wyzwanie dnia, Rok i dekada, Wiedza o muzyce (wcześniej jedna duża grupa „Quizy” z 15 różnymi trybami).
+- Oś czasu: „Kup kartę” jest zawsze pierwszym przyciskiem – przed odkryciem („Kup tę kartę”) i po odkryciu („Kup losową kartę”) w tym samym miejscu; główna akcja zawsze na końcu.

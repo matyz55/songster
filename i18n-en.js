@@ -1318,5 +1318,10 @@ window.I18N_EN = {
  "{0} piosenek": "{0} songs",
  "film pokazuje tekst – zmień film": "video shows the lyrics – change video",
  "Ten film nie pojawi się w kolejnych grach.": "This video won't appear in future games.",
- "Film pokazywał tekst piosenki.": "The video showed the lyrics."
+ "Film pokazywał tekst piosenki.": "The video showed the lyrics.",
+ "Rok i dekada": "Year and decade",
+ "Zgadnij piosenkę": "Guess the song",
+ "Wiedza o muzyce": "Music knowledge",
+ "Impreza i karaoke": "Party and karaoke",
+ "Kariera i wyzwanie dnia": "Career and daily challenge"
 };
