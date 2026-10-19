@@ -176,6 +176,7 @@ if (UI6) {
         if (!c.classList.contains('start')) c.title = `${y ? y.textContent : ''} · ${t ? t.textContent : ''} – ${a ? a.textContent : ''}`;
       }
     }
+    let wideSong = null;
     function setTl(lv, scroll) {
       tl.classList.remove(...TL_CLS);
       tl.classList.add(...TL_LEVELS[lv]);
@@ -183,7 +184,8 @@ if (UI6) {
       tl.querySelectorAll('.tcard .t, .tcard .a').forEach((e) => { if (compact) e.dataset.ui6Trunc = ''; else delete e.dataset.ui6Trunc; });
       if (scroll) tl.setAttribute('data-ui6-scroll', ''); else tl.removeAttribute('data-ui6-scroll');
       // dwie kolumny osi potrzebują szerszej lewej kolumny
-      turn.classList.toggle('g-tlwide', TL_LEVELS[lv].includes('ui6-cols2'));
+      // (ta sama piosenka: po odkryciu układ kolumn zostaje, żeby przyciski nie skakały)
+      turn.classList.toggle('g-tlwide', TL_LEVELS[lv].includes('ui6-cols2') || (wideSong != null && wideSong === state.current));
     }
     // najpierw oś (od najmniej zwartej), potem kolejne poziomy gęstości karty tury
     function fitAll() {
@@ -201,9 +203,10 @@ if (UI6) {
           for (const d of [null, ...LEVELS]) {
             turn.classList.remove(...LEVELS);
             if (d) turn.classList.add(...LEVELS.slice(0, LEVELS.indexOf(d) + 1));
+            // najmniej zwarta oś, która się mieści (zwarta oś nie pomoże, gdy za dużo jest reszty karty tury)
             for (const lv of scroll ? [2] : lvs) {
               setTl(lv, scroll);
-              if (!turnOver() && (scroll || !tlOver())) return true;
+              if (scroll || !tlOver()) { if (!turnOver()) return true; break; }
             }
           }
           return false;
@@ -211,10 +214,12 @@ if (UI6) {
         turn.classList.remove(...LEVELS);
         setTl(0, false);
         // bez osi albo z osią, która się mieści – od razu; za długa (ponad 10 kart) – przewija się sama
-        if (!tryAll(false)) {
+        const ok = tryAll(false);
+        if (!ok) {
           if (cards > TL_MAX) tryAll(true);
           else { turn.classList.add(...LEVELS); setTl(lvs[lvs.length - 1], false); }
         }
+        if (ok && tl.classList.contains('ui6-cols2')) wideSong = state.current;
         if (tl.hasAttribute('data-ui6-scroll')) focusTl(h);
         fitSuggest();
       } finally {
