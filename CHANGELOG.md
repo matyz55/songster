@@ -933,7 +933,7 @@ Wersja próbna wyglądu 6.0: pojedynek na żywo mieści się na telefonie trzyma
 
 - Wersja próbna wyglądu 6.0: poprawka – przycisk „Dalej →” w ustawieniach trybu (telefon, tablet) znów przechodzi do następnego kroku; wcześniej płynne przesunięcie cofało się do pierwszego kroku.
 
-## 5.51.0 – 19.10.2026 (`HASH`)
+## 5.51.0 – 19.10.2026 (`1e1afac`)
 
 - Wybór trybu: tryby podzielone na 6 grup według tego, co się w nich robi – Oś czasu, Impreza i karaoke, Zgadnij piosenkę, Kariera i wyzwanie dnia, Rok i dekada, Wiedza o muzyce (wcześniej jedna duża grupa „Quizy” z 15 różnymi trybami).
 - Oś czasu: „Kup kartę” jest zawsze pierwszym przyciskiem – przed odkryciem („Kup tę kartę”) i po odkryciu („Kup losową kartę”) w tym samym miejscu; główna akcja zawsze na końcu.
