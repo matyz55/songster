@@ -67,7 +67,13 @@ const tagged = (s) => (s.tg || []).some((t) => ['trojka', 'opole', 'memy'].inclu
 const TOP = process.env.TOP === undefined ? 600 : Number(process.env.TOP);
 const score0 = (s) => (s.p || 0) + (s.y >= 2015 ? 10 : 0) + ((s.f || []).some((f) => f === 'tp' || f.startsWith('tp:')) ? 15 : 0)
   + ((s.tg || []).includes('opole') ? 5 : 0);
-const candidates = SONGS.filter((s) => s.c === 'PL').sort((a, b) => score0(b) - score0(a)).slice(0, TOP || Infinity);
+// piosenki wskazane przez właściciela gry (playlisty „Tak to leciało!”) – tools/lyrics-data/wanted.json: [„Wykonawca|Tytuł”, …];
+// zawsze w kandydatach i szukane jako pierwsze
+const WANTED = new Set(JSON.parse(existsSync(new URL('tools/lyrics-data/wanted.json', dir)) ? readFileSync(new URL('tools/lyrics-data/wanted.json', dir), 'utf8') : '[]'));
+const wantedFirst = (s) => (WANTED.has(`${s.a}|${s.t}`) ? 1000 : 0);
+const candidates = [...new Set([...SONGS.filter((s) => s.c === 'PL' && WANTED.has(`${s.a}|${s.t}`)),
+  ...SONGS.filter((s) => s.c === 'PL').sort((a, b) => score0(b) - score0(a)).slice(0, TOP || Infinity)])]
+  .sort((a, b) => wantedFirst(b) + score0(b) - wantedFirst(a) - score0(a));
 // kategorie gry (lyrics-cats.js) – piosenki z kategorii, które w katalogu mają mało piosenek, wyszukujemy najpierw,
 // żeby plansze były różnorodne (kategoria potrzebuje co najmniej 2 piosenek, a lepiej kilku na kolejne gry)
 const catCtx = { window: {}, T: (x) => x };
@@ -340,7 +346,7 @@ async function stepYoutube() {
   // 3) wyszukiwarka YouTube – najpopularniejsze piosenki bez filmu, potem te z jednym filmem (zapasowe filmy na wypadek
   // blokady osadzania); najpierw nagranie „… – Topic” (wersja z płyty), potem oficjalne kanały, potem pozostałe
   const have = catalogCounts(lr, yt);
-  const score = (s) => (s.p || 0) + (tagged(s) ? 40 : 0) + thinBonus(s, have);
+  const score = (s) => wantedFirst(s) + (s.p || 0) + (tagged(s) ? 40 : 0) + thinBonus(s, have);
   const queue = [...candidates.filter((s) => lr[key(s)] && !hasVideo(yt[key(s)]) && retryDue(yt[key(s)])).sort((a, b) => score(b) - score(a)),
     ...candidates.filter((s) => lr[key(s)] && hasVideo(yt[key(s)]) && !yt[key(s)].alts && !yt[key(s)].altsSearched)];
   for (const s of queue) {

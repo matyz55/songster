@@ -113,7 +113,9 @@ test('Tak to leciało!: koła ratunkowe – trzy słowa, trzy wersje, wymiana pi
   await page.getByRole('button', { name: /Wymiana piosenki/ }).click();
   await expect.poll(() => page.evaluate(() => state.phase), { timeout: 20000 }).toBe('answer');
   expect(await page.evaluate(() => songKey(state.lyrics.cur.it.song))).not.toBe(before);
-  // zła odpowiedź – koniec gry (przed 4. etapem bez kwoty gwarantowanej)
+  // zła odpowiedź – koniec gry (przed 4. etapem bez kwoty gwarantowanej); piosenka po odpowiedzi gra wolniej,
+  // żeby wers z przerwą nie minął, zanim test go sprawdzi (przy 40× cała piosenka mija w kilka sekund)
+  await page.evaluate(() => { window.__ytSpeed = 3; });
   await page.locator('#ly-input').fill('zupełnie');
   await page.getByRole('button', { name: 'Tak to leciało!' }).click();
   await expect(page.locator('#ly-answer .verdict')).toContainText('0 zł');

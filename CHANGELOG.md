@@ -937,3 +937,20 @@ Wersja próbna wyglądu 6.0: pojedynek na żywo mieści się na telefonie trzyma
 
 - Wybór trybu: tryby podzielone na 6 grup według tego, co się w nich robi – Oś czasu, Impreza i karaoke, Zgadnij piosenkę, Kariera i wyzwanie dnia, Rok i dekada, Wiedza o muzyce (wcześniej jedna duża grupa „Quizy” z 15 różnymi trybami).
 - Oś czasu: „Kup kartę” jest zawsze pierwszym przyciskiem – przed odkryciem („Kup tę kartę”) i po odkryciu („Kup losową kartę”) w tym samym miejscu; główna akcja zawsze na końcu.
+
+## 5.51.1 – 19.10.2026 (`b44218f`)
+
+- „Tak to leciało!”: z raportu gracza usunięte 21 kolejnych filmów (nie odtwarzają się albo zgłoszone w grze jako zła wersja / tekst na ekranie) i wpisane przesunięcia tekstu dla 10 filmów (m.in. „Plamy na słońcu”, „Tańcz głupia tańcz”, „my”, „Telefony”) – tekst karaoke jest równo z muzyką u wszystkich. Katalog: 311 piosenek.
+
+## 5.52.0 – 19.10.2026 (`3ceaa2b`)
+
+- Baza piosenek: +14 piosenek z playlisty „Tak to leciało” (m.in. „Za siódmą chmurą”, „Poligon”, „Palę w oknie”, „Gruby, mały”, „Raissa”, „Autobusy i tramwaje”, „Tęsknię sobie”, „Principolo”, „Ja, fala”, „Jak Disney”) – są też w innych trybach. Piosenki z tej playlisty są szukane do „Tak to leciało!” w pierwszej kolejności.
+- Wersja próbna wyglądu 6.0: ekran startowy tylko z „Gram sam” i „Gramy razem” (duży ekran – ikona 📺 w górnym pasku); wybór trybu z 6 grupami (na telefonie zakładki z nazwami w dwóch rzędach, kafelki bez wielkich pustych pól); lobby na telefonie w dwóch kolumnach; ustawienia przed grą na PC w trzech panelach (Gracze, Piosenki, Opcje trybu).
+
+## 5.52.1 – 19.10.2026 (`4887759`)
+
+- Wersja próbna wyglądu 6.0 – duży ekran i telefon gracza: oś czasu do 10 kart widać w całości (bez zwijania w same lata), dłuższa przewija się tylko sama oś i sama podjeżdża do wybranego miejsca albo nowej karty; na telefonie przy krótkiej osi więcej miejsca dla płyty i karty tury, przy długiej – zwarta karta tury i jeden rząd przycisków.
+
+## 5.52.2 – 19.10.2026 (`dcf58e7`)
+
+- „Tak to leciało!”: katalog 408 piosenek, +97 (najpierw piosenki z playlisty „Tak to leciało” – jest ich w katalogu 202 z 324). Kategorie z co najmniej 3 piosenkami: 69 z 73.
