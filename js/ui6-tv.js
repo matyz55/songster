@@ -3,7 +3,7 @@
 // tv.html nie ładuje js/ui6.js, więc tutaj jest własna kontrola „bez przewijania” (ui6Check) i przebudowy widoku telefonu:
 // • głosowanie na tryb – kafelki na całą wysokość, podzielone na strony (‹ ›, kropki, przesunięcie palcem),
 // • rozgrywka – stałe strefy: pasek wyników, karta tury, panel osi z zakładkami (twoja oś / gracz z turą / pozostali);
-//   długa oś zwija się do „grzbietów” (sam rok) daleko od wybranego miejsca – karty wokół niego mają pełną wielkość,
+//   oś do 10 kart widać w całości (przy ciasnym miejscu karty w jednej linii), dłuższa przewija się sama (tylko oś),
 // • pozostałe ekrany (dołączanie, lobby, ustawienia, wyniki) – jedna karta; gdy treść się nie mieści – strony.
 // Elementy z tv.js są przenoszone (nie kopiowane), więc wszystkie przyciski działają jak dotąd. Logika gry bez zmian.
 const UI6 = document.documentElement.classList.contains('ui6');
@@ -15,6 +15,8 @@ function ui6Check() {
   const out = { scrollY: d.scrollHeight > innerHeight + 1, scrollX: d.scrollWidth > innerWidth + 1, clipped: [] };
   for (const e of document.body.querySelectorAll('*')) {
     if (!e.offsetParent || e.closest('.u6-pages')) continue;
+    // długa oś (więcej niż 10 kart) przewija się sama – oznacza ją data-ui6-scroll; oś do 10 kart musi mieścić się w całości
+    if (e.closest('[data-ui6-scroll]')) { out.scrollOk = (out.scrollOk || 0) + 1; continue; }
     const cs = getComputedStyle(e);
     if (!/(hidden|clip|auto|scroll)/.test(cs.overflowY + cs.overflowX)) continue;
     if (cs.textOverflow === 'ellipsis' || (cs.webkitLineClamp && cs.webkitLineClamp !== 'none')) continue;
@@ -125,82 +127,102 @@ if (UI6) {
     box.scrollLeft = u6.flowPage * step;
   }
 
-  /* ---------- oś na telefonie: grzbiety daleko od wybranego miejsca ---------- */
-  const accItems = (vtl) => [...vtl.children].filter((n) => n.matches('.vrow, .vslot'));
-  // wokół wybranego miejsca karty i pola „＋” mają pełną wielkość, dalej – grzbiety z samym rokiem,
-  // a najdalsze karty łączą się w jedną grupę „1960–1975 · 6 kart” (nad i pod wybranym miejscem)
-  function accordion(vtl, key) {
-    vtl.querySelectorAll(':scope > .u6-grp').forEach((g) => g.remove());
-    const items = accItems(vtl);
-    vtl.classList.add('u6-acc');
-    vtl.style.gap = '';
-    items.forEach((n) => n.classList.remove('u6-sp', 'u6-hide'));
-    vtl.u6key = key;
-    if (!items.length || !overflows(vtl)) return;
-    const full = items.map((n) => n.offsetHeight);
-    const fixed = [...vtl.children].filter((n) => !items.includes(n)).reduce((a, n) => a + n.offsetHeight, 0);
-    const extra = vtl.children.length - items.length;
-    // miejsce, wokół którego karty mają pełną wielkość: zakryta karta / znacznik / nowa karta / wybrane wcześniej
-    const mark = items.findIndex((n) => n.matches('.vmys, .vmark, .vslot.chosen'));
-    const fresh = items.findIndex((n) => n.matches('.vnew'));
-    const saved = u6.focus[key];
-    let focus = mark >= 0 ? mark : (saved && saved.n === items.length ? saved.i : (fresh >= 0 ? fresh : (vtl.querySelector('.vslot') ? Math.floor(items.length / 2) : items.length - 1)));
-    focus = Math.max(0, Math.min(items.length - 1, focus));
-    const isSlot = (i) => items[i].matches('.vslot');
-    const SP = 24; const SPS = 6; const GRP = 28;
-    const n = items.length;
-    const H = vtl.clientHeight;
-    const lvl = (i, r1, r2) => { const d = Math.abs(i - focus); return d <= r1 ? 2 : d <= r2 ? 1 : 0; };
-    const total = (r1, r2, g) => {
-      let h = fixed; let vis = extra; let up = false; let down = false;
-      items.forEach((_, i) => {
-        const l = lvl(i, r1, r2);
-        if (l === 0) { if (i < focus) up = true; else down = true; return; }
-        h += l === 2 ? full[i] : (isSlot(i) ? SPS : SP); vis += 1;
-      });
-      vis += up + down;
-      return h + (up + down) * GRP + g * (vis - 1);
+  /* ---------- oś na telefonie: do 10 kart w całości, dłuższa przewija się sama (tylko oś, nigdy strona) ---------- */
+  // Wysokość kart i miejsc „＋” liczona z wolnego miejsca: najpierw karty dwulinijkowe (tytuł / wykonawca),
+  // przy ciasnym miejscu – jedna linia „rok · tytuł – wykonawca” i cienkie „＋”, a na szerokim panelu dwie kolumny.
+  const LONG = 10;
+  function fitAxis(vtl, key) {
+    const rows = [...vtl.children].filter((n) => n.matches('.vrow'));
+    const slots = [...vtl.children].filter((n) => n.matches('.vslot'));
+    const cards = rows.filter((n) => n.matches('.vcard')).length;
+    const long = cards > LONG;
+    vtl.classList.add('u6-fit');
+    vtl.classList.remove('u6-c1', 'u6-two', 'u6-short', 'u6-long', 'u6-nohint', 'u6-thin', 'u6-hair');
+    vtl.toggleAttribute('data-ui6-scroll', long);
+    vtl.classList.toggle('u6-long', long);
+    const set = (rh, sh, g, cls) => {
+      vtl.style.setProperty('--rh', `${Math.floor(rh)}px`);
+      vtl.style.setProperty('--sh', `${Math.floor(sh)}px`);
+      vtl.style.setProperty('--g', `${g}px`);
+      cls.forEach((c) => vtl.classList.add(c));
+      if (sh < 30) vtl.classList.add('u6-thin');
+      if (sh < 16) vtl.classList.add('u6-hair');
     };
-    let pick = null;
-    for (let r1 = n; r1 >= 0 && !pick; r1--) if (total(r1, n, 3) <= H) pick = [r1, n, 3];
-    for (let r1 = 2; r1 >= 0 && !pick; r1--) {
-      for (let r2 = n; r2 >= r1 && !pick; r2--) if (total(r1, r2, 2) <= H) pick = [r1, r2, 2];
+    const nr = rows.length; const ns = slots.length;
+    if (!nr && !ns) return { ok: true };
+    const H = vtl.clientHeight;
+    const W = vtl.clientWidth;
+    const hOf = (sel) => [...vtl.children].filter((n) => n.matches(sel)).reduce((a, n) => a + n.offsetHeight, 0);
+    const titleH = hOf('.vtl-title');
+    const hintH = hOf('.vtl-hint');
+    const nFix = [...vtl.children].filter((n) => n.matches('.vtl-title, .vtl-hint')).length;
+    let res = { ok: true };
+    if (long) {
+      // długa oś: wygodne, jednakowe karty; przewijana jest tylko sama oś
+      set(38, ns ? 26 : 0, 4, ['u6-c1']);
+      res = { ok: H >= 6 * 42, long: true };
+    } else {
+      // miejsce na karty i „＋” przy danym odstępie (g), z napisami „starsze/nowsze” albo bez nich
+      const avail = (g, hints, cols = 1) => {
+        const items = Math.ceil((nr + ns + (hints ? nFix : titleH ? 1 : 0)) / cols);
+        return H - (hints ? titleH + hintH : titleH) / (cols > 1 ? 2 : 1) - g * Math.max(0, items - 1);
+      };
+      const per = (k, cols) => Math.ceil(k / cols);
+      const dist = (room, r, s, r0, s0, rMax, sMax, sFirst) => {
+        // ile dorzucić kartom i miejscom „＋” ponad minimum (najpierw cele dotyku albo najpierw karty)
+        let extra = room - (r * r0 + s * s0);
+        if (extra < 0) return null;
+        let rh = r0; let sh = s0;
+        const grow = (which) => {
+          if (which === 's' && s) { const d = Math.min(sMax - sh, extra / s); sh += d; extra -= d * s; }
+          if (which === 'r' && r) { const d = Math.min(rMax - rh, extra / r); rh += d; extra -= d * r; }
+        };
+        (sFirst ? ['s', 'r'] : ['r', 's']).forEach(grow);
+        return { rh, sh, left: extra };
+      };
+      const tries = [
+        // dwie linijki, „＋” pełnej wielkości gdy jest miejsce
+        () => { const g = ns ? 2 : 4; const d = dist(avail(g, true), nr, ns, 44, 18, 62, 46, true); return d && { d, g, cls: [] }; },
+        // jedna linijka, cienkie „＋”
+        () => { const g = ns ? 0 : 3; const d = dist(avail(g, true), nr, ns, 28, 10, 40, 26, false); return d && { d, g, cls: ['u6-c1'] }; },
+        // dwie kolumny (szeroki panel – np. telefon poziomo): najpierw karty dwulinijkowe, potem w jednej linii
+        () => {
+          if (W < 330) return null;
+          const g = ns ? 0 : 3;
+          const d = dist(avail(g, false, 2) - 4, per(nr, 2), per(ns, 2), 40, 10, 50, 30, false);
+          return d && { d, g, cls: ['u6-two', 'u6-nohint'] };
+        },
+        () => {
+          if (W < 330) return null;
+          const g = ns ? 0 : 3;
+          const d = dist(avail(g, false, 2) - 4, per(nr, 2), per(ns, 2), 26, 10, 46, 30, false);
+          return d && { d, g, cls: ['u6-c1', 'u6-two', 'u6-nohint'] };
+        },
+        // bez napisów „starsze/nowsze”, najmniejsze odstępy
+        () => { const g = ns ? 0 : 2; const d = dist(avail(g, false), nr, ns, 24, 8, 40, 20, false); return d && { d, g, cls: ['u6-c1', 'u6-nohint'] }; },
+      ];
+      let pick = null;
+      for (const t of tries) { pick = t(); if (pick) break; }
+      if (!pick) { pick = { d: { rh: 22, sh: 8, left: 0 }, g: 2, cls: ['u6-c1', 'u6-nohint'] }; res.ok = false; }
+      set(pick.d.rh, pick.d.sh, pick.g, pick.cls);
+      if (pick.cls.length === 0 && pick.d.left > 24) { vtl.classList.add('u6-short'); res.short = true; }
+      // za drobno: karty niższe niż 28 px albo podpisane „＋ Wcześniej / ＋ Później” ściśnięte do kreski
+      res.poor = pick.d.rh < 28 || (!!vtl.querySelector(':scope > .vslot.labeled') && pick.d.sh < 34);
     }
-    if (!pick) {
-      // bardzo mało miejsca: bez napisów „starsze/nowsze”
-      vtl.querySelectorAll(':scope > .vtl-hint').forEach((x) => x.classList.add('hidden'));
-      pick = [0, 0, 2];
+    // wybrane miejsce / nowa karta / znacznik – zawsze widoczne (przewijamy oś do niego)
+    if (long) {
+      const f = vtl.querySelector(':scope > .vmys, :scope > .vmark, :scope > .vslot.chosen, :scope > .vnew');
+      const all = [...vtl.children];
+      const sig = f ? `${all.length}:${all.indexOf(f)}` : '';
+      const saved = u6.focus[key];
+      if (saved) vtl.scrollTop = saved.top;
+      // nowe miejsce / nowa karta albo poza widokiem – na środek osi
+      const out = f && (f.offsetTop < vtl.scrollTop || f.offsetTop + f.offsetHeight > vtl.scrollTop + vtl.clientHeight);
+      if (f && (!saved || saved.sig !== sig || out)) vtl.scrollTop = f.offsetTop - (vtl.clientHeight - f.offsetHeight) / 2;
+      u6.focus[key] = { sig, top: vtl.scrollTop };
+      vtl.onscroll = () => { u6.focus[key] = { sig, top: vtl.scrollTop }; };
     }
-    const [r1, r2, g] = pick;
-    vtl.style.gap = `${g}px`;
-    vtl.style.setProperty('--sp', `${SP}px`);
-    vtl.style.setProperty('--sps', `${SPS}px`);
-    const runs = [[], []];
-    items.forEach((it, i) => {
-      const l = lvl(i, r1, r2);
-      if (l < 2) it.classList.add('u6-sp');
-      if (l < 1) { it.classList.add('u6-hide'); runs[i < focus ? 0 : 1].push(it); }
-    });
-    for (const run of runs) {
-      if (!run.length) continue;
-      const years = run.map((x) => x.querySelector('.y')).filter(Boolean).map((y) => y.textContent);
-      const grp = mk('button', 'u6-grp', years.length ? `${years[0]}${years.length > 1 ? `–${years[years.length - 1]}` : ''} · ${T('kart: {0}', years.length)}` : '⋯');
-      grp.type = 'button';
-      grp.u6mid = run[Math.floor(run.length / 2)];
-      run[0].before(grp);
-    }
-    // stuknięcie grzbietu albo grupy: rozwija to miejsce (zamiast od razu wybierać miejsce na osi)
-    if (!vtl.u6tap) {
-      vtl.u6tap = true;
-      vtl.addEventListener('click', (e) => {
-        const it = e.target.closest('.u6-sp, .u6-grp');
-        if (!it || !vtl.contains(it)) return;
-        e.preventDefault(); e.stopPropagation();
-        const all = accItems(vtl);
-        u6.focus[vtl.u6key] = { n: all.length, i: all.indexOf(it.u6mid || it) };
-        accordion(vtl, vtl.u6key);
-      }, true);
-    }
+    return res;
   }
 
   /* ---------- żetony „🪙 3” i stan gracza „1/10 kart · 🪙 2” – krótko, w osobnych kawałkach ---------- */
@@ -377,10 +399,43 @@ if (UI6) {
       if (title) title.classList.toggle('hidden', all.length > 1);
     } else view.replaceChildren(node);
     const vtl = node.matches('.vtl') ? node : node.querySelector('.vtl');
-    if (vtl) accordion(vtl, `${v.key}|${u6.other}`);
+    main.classList.remove('short');
+    const res = vtl ? fitAxis(vtl, `${v.key}|${u6.other}`) : { ok: true };
+    // krótka oś (kilka kart): panel tylko tak wysoki jak oś, resztę miejsca dostaje karta tury (większa płyta)
+    if (res.short && main.classList.contains('split') && innerWidth <= innerHeight) main.classList.add('short');
+    growCard(main);
+    return res;
+  }
+  // wolne miejsce w karcie tury: większa płyta / okładka (do 150 px), reszta wyśrodkowana
+  function growCard(main) {
+    const { card } = main.u6;
+    const vin = card.querySelector('.ht-vinyl');
+    if (!vin) return;
+    vin.style.width = ''; vin.style.height = '';
+    card.classList.remove('u6-roomy');
+    if (card.classList.contains('hidden') || !(main.classList.contains('solo') || main.classList.contains('short'))) return;
+    // kolumny .u6-col mają display: contents – liczymy ich zawartość
+    const flat = (n) => [...n.children].flatMap((k) => (getComputedStyle(k).display === 'contents' ? flat(k) : [k]));
+    const kids = flat(card).filter((n) => n.offsetParent);
+    if (!kids.length) return;
+    const bottom = Math.max(...kids.map((n) => n.getBoundingClientRect().bottom));
+    const used = bottom - card.getBoundingClientRect().top + parseFloat(getComputedStyle(card).paddingBottom);
+    const free = card.clientHeight - used;
+    if (free < 24) return;
+    card.classList.add('u6-roomy');
+    // ciasny układ (mniejsza płyta) – tylko wyśrodkowanie
+    if (main.classList.contains('tight') || main.classList.contains('mini')) return;
+    const base = vin.offsetWidth;
+    const row = vin.parentElement.clientWidth;
+    let v = Math.min(150, base + free - 12, row * (card.querySelector('.ht-reveal') ? 0.26 : 0.42));
+    for (; v > base; v -= 8) {
+      vin.style.width = `${v}px`; vin.style.height = `${v}px`;
+      if (!overflows(card)) break;
+    }
+    if (v <= base) { vin.style.width = ''; vin.style.height = ''; }
   }
   function layoutGame(main) {
-    main.classList.remove('tight', 'tabbed', 'split', 'solo', 'pick', 'wide');
+    main.classList.remove('tight', 'tabbed', 'split', 'solo', 'pick', 'wide', 'mini', 'short', 'lean');
     sizeChips(app.querySelector('.u6-bar > .ht-scores'));
     const { views, card, panel } = main.u6;
     card.classList.remove('hidden');
@@ -389,15 +444,25 @@ if (UI6) {
       main.classList.add('solo'); panel.classList.add('hidden');
       main.classList.toggle('wide', land);
       if (overflows(card)) main.classList.add('tight');
+      growCard(main);
       return;
     }
     main.classList.add('split');
-    showView(main);
     const pick = views.some((v) => v.pick);
     main.classList.toggle('pick', pick);
-    const cramped = () => overflows(card) || (!land && panel.clientHeight < (pick ? 320 : 150));
-    if (cramped()) { main.classList.add('tight'); showView(main); }
-    if (cramped()) { main.classList.remove('split'); main.classList.add('tabbed'); main.classList.toggle('wide', land); showView(main); }
+    // kolejno: zwykły układ → ciaśniejsza karta tury → (wybór miejsca) karta tury w jednym-dwóch rzędach → zakładki
+    let res = showView(main);
+    const cramped = () => overflows(card) || card.scrollWidth > card.clientWidth + 1 || !res.ok || (!land && panel.clientHeight < 150);
+    if (cramped() || res.poor) { main.classList.add('tight'); res = showView(main); }
+    // własna tura: gdy karty osi wychodzą drobne, karta tury oddaje miejsce (sam nagłówek i przyciski)
+    // (poziomo – węższa karta tury, a oś dostaje szeroki panel na dwie kolumny)
+    const small = () => cramped() || res.poor;
+    const turn = views[0].key === 'turn' && !card.querySelector('.p-choices');
+    if (small() && land) { main.classList.add('lean'); if (turn) main.classList.add('mini'); res = showView(main); }
+    if (small() && turn) { main.classList.add('mini'); res = showView(main); }
+    if (cramped()) {
+      main.classList.remove('split', 'mini', 'lean'); main.classList.add('tabbed'); main.classList.toggle('wide', land); showView(main);
+    }
   }
 
   /* ---------- telefon: po każdym odświeżeniu ekranu ---------- */
@@ -438,6 +503,45 @@ if (UI6) {
       cancelAnimationFrame(refit);
       refit = requestAnimationFrame(() => { const b = app.querySelector('.timelines'); if (overflows(app) || (b && overflows(b))) fit(); });
     }, true);
+  }
+  /* ---------- duży ekran: oś dłuższa niż 10 kart – karty tej wielkości co przy 10, przewija się tylko oś ---------- */
+  // do 10 kart oś mieści się w całości (dopasowanie z tv.js); przy dłuższej karty nie maleją dalej, a oś przesuwa się
+  // tak, by nowa karta / wybrane miejsce / znacznik pomyłki były na środku (bez znacznika – najnowsze karty po prawej)
+  function tvLongAxes() {
+    const box = app.querySelector('.timelines');
+    if (!box) return;
+    const u = scaleUnit();
+    for (const r of box.children) {
+      const tl = r.querySelector('.tl');
+      if (!tl) continue;
+      const n = tl.querySelectorAll(':scope > .card:not(.mystery)').length;
+      const long = n > LONG;
+      tl.toggleAttribute('data-ui6-scroll', long);
+      tl.classList.toggle('u6-long', long);
+      if (!long) continue;
+      const items = [...tl.children];
+      const gap = parseFloat(tl.style.getPropertyValue('--gap')) || 0;
+      const marks = items.filter((x) => !x.matches('.card') || x.matches('.mystery')).length;
+      const rowH = r.clientHeight;
+      const cw0 = parseFloat(tl.style.getPropertyValue('--cw')) || 0;
+      const room = (tl.clientWidth - gap * (LONG + marks - 1)) / (LONG + marks * 0.55);
+      const cw = Math.max(cw0, Math.min(room, rowH * 0.78, contentWidth() * 0.16));
+      const ch = Math.max(20 * u, Math.min(rowH - 6 * u, cw * 1.35));
+      const tiny = ch < 85 * u;
+      tl.style.setProperty('--cw', `${cw}px`);
+      tl.style.setProperty('--ch', `${ch}px`);
+      tl.style.setProperty('--fs', `${Math.max(6, Math.min(cw / 5.8, ch / (tiny ? 3.9 : 8.2)))}px`);
+      r.classList.toggle('tiny', tiny);
+      const f = tl.querySelector(':scope > .mystery, :scope > .mark, :scope > .card.new');
+      tl.scrollLeft = f ? f.offsetLeft - (tl.clientWidth - f.offsetWidth) / 2 : tl.scrollWidth;
+      // wygaszona krawędź po stronie, gdzie są dalsze karty
+      tl.classList.toggle('u6-more-l', tl.scrollLeft > 2);
+      tl.classList.toggle('u6-more-r', tl.scrollLeft + tl.clientWidth < tl.scrollWidth - 2);
+    }
+  }
+  if (!PLAYER) {
+    const baseFit = fit;
+    fit = function ui6Fit() { baseFit(); try { tvLongAxes(); } catch (e) { console.error(e); } };
   }
   const baseRender = render;
   render = function ui6Render(s) {
