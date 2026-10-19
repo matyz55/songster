@@ -5,7 +5,7 @@
 if (UI6 && $('#screen-modes')) {
   const scr = $('#screen-modes');
   const heads = $$('#screen-modes .mode-group');
-  const ICONS = ['🕰️', '📅', '🎵', '🧠', '🥳', '🏆']; // kolejno: Oś czasu, Rok i dekada, Zgadnij piosenkę, Wiedza o muzyce, Impreza i karaoke, Kariera
+  const ICONS = ['🕰️', '🥳', '🎵', '🏆', '📅', '🧠']; // kolejno: Oś czasu, Impreza i karaoke, Zgadnij piosenkę, Kariera, Rok i dekada, Wiedza o muzyce
   const tabs = el('nav', { class: 'ui6-mtabs', role: 'tablist', 'aria-label': T('Grupy trybów') });
   const box = el('div', { class: 'ui6-pages ui6-mbox' });
   const track = el('div', { class: 'ui6-mtrack' });
