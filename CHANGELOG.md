@@ -955,7 +955,7 @@ Wersja próbna wyglądu 6.0: pojedynek na żywo mieści się na telefonie trzyma
 
 - „Tak to leciało!”: katalog 408 piosenek, +97 (najpierw piosenki z playlisty „Tak to leciało” – jest ich w katalogu 202 z 324). Kategorie z co najmniej 3 piosenkami: 69 z 73.
 
-## 5.53.0 – 19.10.2026 (`HASH`)
+## 5.53.0 – 19.10.2026 (`e82ca6f`)
 
 - Oś czasu: główna akcja („✔ Zatwierdź i odkryj”, po odkryciu „Następna piosenka/gracz →”) jest zawsze pierwsza – po lewej, tak jak ▶ Odtwórz; „Kup kartę” zawsze ostatni, w tym samym miejscu przed i po odkryciu.
 - Wersja próbna wyglądu 6.0: ustawienia przed grą w dwóch krokach – „Gracze i poziom” (poziom trudności na pierwszej karcie, przy jednym graczu na samej górze) i „Piosenki i zasady” (dawne „Piosenki” i „Opcje trybu” razem).
