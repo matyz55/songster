@@ -59,8 +59,8 @@ html.ui6 .g-side:not(:has(> :not(.hidden))), html.ui6 .g-media:not(:has(> :not(.
 html.ui6 .g-player { display: flex; gap: var(--gap); align-items: center; margin: 0; }
 html.ui6 .g-player .vinyl { --vs: clamp(52px, 9vmin, 120px); width: var(--vs); height: var(--vs); box-shadow: 0 0 0 3px #000, 0 6px 20px rgba(0,0,0,.4); }
 /* po odkryciu w miejscu płyty jest okładka albumu – kwadrat z zaokrągleniem, nie koło (inaczej wygląda jak kolorowa kula) */
-html.ui6 .g-player .vinyl.cover { border-radius: calc(var(--radius) * .6); animation: none; background-color: #000;
-  box-shadow: 0 0 0 1px rgba(255,255,255,.12), 0 6px 20px rgba(0,0,0,.45); }
+html.ui6 .g-player .vinyl.cover { border-radius: 6px; animation: none; background-color: #000; background-size: cover; background-position: center;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.14), 0 2px 6px rgba(0,0,0,.45), 0 14px 34px rgba(0,0,0,.5); }
 html.ui6 .g-player .vinyl .label { width: 38%; height: 38%; font-size: max(12px, calc(var(--vs) * .2)); }
 html.ui6 .mystery-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 html.ui6 #mystery-status { font-size: .9rem; line-height: 1.3; max-width: 60ch; }
@@ -77,6 +77,16 @@ html.ui6 .reveal .fact { margin: 0; font-size: .9rem; }
 html.ui6 .reveal .listen { margin: 2px 0 0; gap: 8px; }
 html.ui6 .reveal .listen-label { font-size: .9rem; }
 html.ui6 .reveal .listen-icon { width: var(--tap); height: var(--tap); padding: 4px; }
+
+/* po odkryciu: status mówi o wyniku (js/ui6-game.js przenosi tu werdykt z odkrycia), ▶ już tylko do ponownego
+   odsłuchu (drugorzędny), nieaktywne „Pomiń” znika */
+html.ui6 #mystery-status.ui6-res { font-weight: 800; font-size: 1.05rem; color: var(--text); }
+html.ui6 #mystery-status.ui6-res.ok { color: var(--ok); }
+html.ui6 #mystery-status.ui6-res.bad { color: var(--bad); }
+html.ui6 #mystery-status.ui6-res-none { display: none; }
+html.ui6 #reveal > .verdict.ui6-dup { display: none; }
+html.ui6 .mystery:has(#reveal:not(.hidden)) #btn-play { background: transparent; color: var(--text); border: 1px solid var(--line); box-shadow: none; }
+html.ui6 .mystery:has(#reveal:not(.hidden)) #btn-skip:disabled { display: none; }
 
 /* okładka z mgły, pierwsze słowa, kroki */
 html.ui6 .g-media:has(#cover-fog:not(.hidden)) .vinyl { display: none; }
@@ -427,6 +437,26 @@ html.ui6 #actions .sort-row button { white-space: nowrap; }
   html.ui6 .player-turn:has(#timeline:not(.hidden)):has(#reveal:not(.hidden)) .g-player .vinyl { --vs: clamp(110px, 20vmin, 260px); }
 }
 
+/* ---------- PC i telewizor, gry bez osi (quizy, zgadywanie): jedna kolumna „odtwarzacza” na środku ekranu ----------
+   wyniki i nagłówek u góry; niżej, wyśrodkowane w pionie: okładka/płyta obok statusu, odkrycia i ▶, pod nimi pole
+   odpowiedzi i przyciski – bez pustej połowy ekranu */
+@media (min-width: 1000px) and (min-height: 600px) and (min-aspect-ratio: 11/10) {
+  html.ui6 #screen-game .player-turn:not(:has(#timeline:not(.hidden))):not(:has(#buzzers:not(.hidden), .g-bingo-pages:not(.hidden), #actions > .live-row, #actions > .royale-row, #actions > .sort-box, #climb-ladder:not(.hidden), #cover-fog:not(.hidden))) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 60rem) minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr) auto auto auto minmax(0, 1fr);
+    grid-template-areas: "sb sb sb" "head head head" ". . ." ". media ." ". side ." ". actions ." ". . .";
+    row-gap: calc(var(--gap) * 1.4);
+  }
+  html.ui6 #screen-game .player-turn:not(:has(#timeline:not(.hidden))):not(:has(#buzzers:not(.hidden), .g-bingo-pages:not(.hidden), #actions > .live-row, #actions > .royale-row, #actions > .sort-box, #climb-ladder:not(.hidden), #cover-fog:not(.hidden))) > .g-media { align-self: center; }
+  html.ui6 #screen-game .player-turn:not(:has(#timeline:not(.hidden))):not(:has(#buzzers:not(.hidden), .g-bingo-pages:not(.hidden), #actions > .live-row, #actions > .royale-row, #actions > .sort-box, #climb-ladder:not(.hidden), #cover-fog:not(.hidden))) > .g-side, html.ui6 #screen-game .player-turn:not(:has(#timeline:not(.hidden))):not(:has(#buzzers:not(.hidden), .g-bingo-pages:not(.hidden), #actions > .live-row, #actions > .royale-row, #actions > .sort-box, #climb-ladder:not(.hidden), #cover-fog:not(.hidden))) > #actions { width: 100%; align-self: start; }
+  html.ui6 #screen-game .player-turn:not(:has(#timeline:not(.hidden))):not(:has(#buzzers:not(.hidden), .g-bingo-pages:not(.hidden), #actions > .live-row, #actions > .royale-row, #actions > .sort-box, #climb-ladder:not(.hidden), #cover-fog:not(.hidden))) .g-player { flex-direction: row; text-align: left; align-items: center; gap: calc(var(--gut) * 1.2); }
+  html.ui6 #screen-game .player-turn:not(:has(#timeline:not(.hidden))):not(:has(#buzzers:not(.hidden), .g-bingo-pages:not(.hidden), #actions > .live-row, #actions > .royale-row, #actions > .sort-box, #climb-ladder:not(.hidden), #cover-fog:not(.hidden))) .g-player .vinyl { --vs: clamp(140px, 30vmin, 320px); }
+  html.ui6 #screen-game .player-turn:not(:has(#timeline:not(.hidden))):not(:has(#buzzers:not(.hidden), .g-bingo-pages:not(.hidden), #actions > .live-row, #actions > .royale-row, #actions > .sort-box, #climb-ladder:not(.hidden), #cover-fog:not(.hidden))) .mystery-body { flex: 1 1 0; width: auto; align-items: stretch; }
+  html.ui6 #screen-game .player-turn:not(:has(#timeline:not(.hidden))):not(:has(#buzzers:not(.hidden), .g-bingo-pages:not(.hidden), #actions > .live-row, #actions > .royale-row, #actions > .sort-box, #climb-ladder:not(.hidden), #cover-fog:not(.hidden))) #mystery-status { align-self: flex-start; font-size: 1.1rem; }
+  html.ui6 #screen-game .player-turn:not(:has(#timeline:not(.hidden))):not(:has(#buzzers:not(.hidden), .g-bingo-pages:not(.hidden), #actions > .live-row, #actions > .royale-row, #actions > .sort-box, #climb-ladder:not(.hidden), #cover-fog:not(.hidden))) #actions:not(:has(.big-choice, input)) { flex-direction: row; flex-wrap: wrap; justify-content: flex-end; }
+  html.ui6 #screen-game .player-turn:not(:has(#timeline:not(.hidden))):not(:has(#buzzers:not(.hidden), .g-bingo-pages:not(.hidden), #actions > .live-row, #actions > .royale-row, #actions > .sort-box, #climb-ladder:not(.hidden), #cover-fog:not(.hidden))) #actions:not(:has(.big-choice, input)) > button { flex: 0 1 auto; min-width: 16rem; }
+}
+
 /* ---------- ultrawide: oś szeroko u dołu, karty obok siebie ---------- */
 @media (min-aspect-ratio: 2/1) and (min-width: 1600px) {
   html.ui6 #screen-game .player-turn:has(#timeline:not(.hidden)) {
@@ -503,11 +533,11 @@ html.ui6.kbd #screen-game #guess-form > :not(.suggest-wrap, .actions, #guess-yea
 
 /* ---------- gęstość (js/ui6-game.js): gdy karta tury się nie mieści, chowamy kolejno mniej ważne rzeczy ---------- */
 html.ui6 .player-turn.g-d1 .g-player .vinyl { --vs: 44px; }
-html.ui6 .player-turn.g-d1:has(#reveal:not(.hidden)) #mystery-status { display: none; }
+html.ui6 .player-turn.g-d1:has(#reveal:not(.hidden)) #mystery-status:not(.ui6-res) { display: none; }
 html.ui6 .player-turn.g-d1 .reveal .listen-label { display: none; }
 html.ui6 .player-turn.g-d1 #drag-card { display: none !important; }
 html.ui6 .player-turn.g-d2 .reveal .fact, html.ui6 .player-turn.g-d2 #audio-note { display: none; }
-html.ui6 .player-turn.g-d2 #mystery-status { display: none; }
+html.ui6 .player-turn.g-d2 #mystery-status:not(.ui6-res) { display: none; }
 html.ui6 .player-turn.g-d2 .reveal .year { font-size: 1.3rem; }
 html.ui6 .player-turn.g-d3 .reveal .listen { display: none; }
 html.ui6 .player-turn.g-d3 .g-player .vinyl { display: none; }

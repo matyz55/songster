@@ -199,8 +199,8 @@ if (UI6) {
         // dwie kolumny tylko w pionowej osi obok reszty karty tury (poziomy ekran)
         const wide = !h && turn.clientWidth >= 560 && matchMedia('(min-aspect-ratio: 11/10)').matches;
         const lvs = on ? TL_LEVELS.map((x, i) => i).filter((i) => i < 3 || wide) : [0];
-        const tryAll = (scroll) => {
-          for (const d of [null, ...LEVELS]) {
+        const tryAll = (scroll, from = 0) => {
+          for (const d of [null, ...LEVELS].slice(from)) {
             turn.classList.remove(...LEVELS);
             if (d) turn.classList.add(...LEVELS.slice(0, LEVELS.indexOf(d) + 1));
             // najmniej zwarta oś, która się mieści (zwarta oś nie pomoże, gdy za dużo jest reszty karty tury)
@@ -216,8 +216,13 @@ if (UI6) {
         // bez osi albo z osią, która się mieści – od razu; za długa (ponad 10 kart) – przewija się sama
         const ok = tryAll(false);
         if (!ok) {
-          if (cards > TL_MAX) tryAll(true);
-          else { turn.classList.add(...LEVELS); setTl(lvs[lvs.length - 1], false); }
+          // przewijana oś na telefonie w pionie: reszta karty tury od razu zwarta, żeby oś pokazała więcej kart
+          if (cards > TL_MAX) tryAll(true, !h && matchMedia('(max-aspect-ratio: 11/10)').matches ? 2 : 0);
+          else {
+            // nic się nie mieści: najgęstsza karta tury i najmniej zwarta oś, która się mieści
+            turn.classList.add(...LEVELS);
+            for (const lv of lvs) { setTl(lv, false); if (!tlOver()) break; }
+          }
         }
         if (ok && tl.classList.contains('ui6-cols2')) wideSong = state.current;
         if (tl.hasAttribute('data-ui6-scroll')) focusTl(h);
@@ -234,9 +239,10 @@ if (UI6) {
       const items = [...tl.children];
       const f = tl.querySelector('.drop-over') || tl.querySelector('.slot.chosen, .slot.challenge, .mark.bad, .tcard.new, .mark.ok');
       const sig = `${items.length}:${f ? `${items.indexOf(f)}${f.className}` : ''}`;
-      if (sig === focusSig || !f) { focusSig = sig; return; }
+      const r = f ? f.getBoundingClientRect() : null; const b = tl.getBoundingClientRect();
+      const seen = r && (h ? r.left >= b.left - 1 && r.right <= b.right + 1 : r.top >= b.top - 1 && r.bottom <= b.bottom + 1);
+      if (!f || (sig === focusSig && seen)) { focusSig = sig; return; }
       focusSig = sig;
-      const r = f.getBoundingClientRect(); const b = tl.getBoundingClientRect();
       if (h) tl.scrollLeft += r.left - b.left - (b.width - r.width) / 2;
       else tl.scrollTop += r.top - b.top - (b.height - r.height) / 2;
     }
