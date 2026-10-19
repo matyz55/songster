@@ -43,12 +43,13 @@ html.ui6 .ui6-mtab-n {
 html.ui6 .ui6-mtab.on { color: var(--text); border-color: var(--accent); background: linear-gradient(160deg, rgba(255,61,127,.28), rgba(255,61,127,.08)), var(--panel); box-shadow: 0 0 0 1px var(--accent) inset; }
 html.ui6 .ui6-mtab.on .ui6-mtab-n { background: var(--accent); color: #fff; }
 html.ui6 .ui6-mtab-v { position: absolute; top: -6px; right: -4px; font-size: max(13px, .75rem); font-weight: 700; color: #1b1300; background: var(--gold); border-radius: 999px; padding: 1px 6px; }
-/* wąski telefon: nieaktywne zakładki same ikony, aktywna – ikona i nazwa (liczba trybów tylko na szerszym ekranie) */
-@media (max-width: 559px) {
-  html.ui6 .ui6-mtabs { grid-auto-columns: auto; grid-template-columns: none; display: flex; }
-  html.ui6 .ui6-mtab { flex: 0 0 var(--tap); padding: 0; }
-  html.ui6 .ui6-mtab:not(.on) .ui6-mtab-t, html.ui6 .ui6-mtab-n { display: none; }
-  html.ui6 .ui6-mtab.on { flex: 1 1 auto; padding: 0 .6em; }
+/* telefon pionowo: zakładki w dwóch rzędach po trzy – każda z ikoną i nazwą grupy (łatwo znaleźć tryb), bez liczby trybów */
+@media (max-aspect-ratio: 4/3) and (max-width: 759px) {
+  html.ui6 .ui6-mtabs { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-columns: auto; gap: 5px; }
+  html.ui6 .ui6-mtab { min-height: 42px; padding: 3px 5px; gap: .35em; justify-content: flex-start; font-size: 13px; line-height: 1.15; border-radius: calc(var(--radius) * .6); }
+  html.ui6 .ui6-mtab-i { font-size: 1.05rem; flex: none; }
+  html.ui6 .ui6-mtab-t { white-space: normal; text-align: left; overflow: visible; hyphens: auto; }
+  html.ui6 .ui6-mtab-n { display: none; }
 }
 
 /* ---------- strony kafelków ---------- */
@@ -100,6 +101,7 @@ html.ui6 #screen-modes .ui6-g1 .mode { --g: #ffc93c; }
 html.ui6 #screen-modes .ui6-g2 .mode { --g: #2de2e6; }
 html.ui6 #screen-modes .ui6-g3 .mode { --g: #a77bff; }
 html.ui6 #screen-modes .ui6-g4 .mode { --g: #3ddc84; }
+html.ui6 #screen-modes .ui6-g5 .mode { --g: #ff8a3d; }
 
 /* pasek stron */
 html.ui6 .ui6-mnav.ui6-off { visibility: hidden; }
@@ -117,7 +119,7 @@ html.ui6 .ui6-mnav.ui6-off { visibility: hidden; }
   html.ui6 #screen-modes > .ui6-mnav { grid-area: nav; justify-self: center; }
   html.ui6 .ui6-mtabs { grid-auto-flow: row; grid-auto-rows: minmax(calc(var(--tap) * 1.15), auto); grid-auto-columns: auto; align-content: start; }
   html.ui6 .ui6-mtab { justify-content: flex-start; padding: .4em .8em; font-size: 1rem; text-align: left; }
-  html.ui6 .ui6-mtab-t { flex: 1 1 auto; text-align: left; }
+  html.ui6 .ui6-mtab-t { flex: 1 1 auto; text-align: left; white-space: normal; overflow: visible; line-height: 1.2; }
 }
 /* telefon poziomo: mało wysokości – zakładki na całą wysokość po lewej, tytuł (albo gracze w multi) nad kafelkami */
 @media (min-aspect-ratio: 4/3) and (max-height: 500px) {
@@ -130,6 +132,13 @@ html.ui6 .ui6-mnav.ui6-off { visibility: hidden; }
   html.ui6 .ui6-mtab-i { font-size: 1rem; }
   html.ui6 #screen-modes { grid-template-columns: 9.5rem minmax(0, 1fr); }
   html.ui6 .ui6-mtab-n { display: none; }
+  /* sześć grup na całą wysokość: „Wróć” jest w górnym pasku (←), więc wiersz z przyciskiem zostaje tylko dla kropek stron */
+  html.ui6 #screen-modes { grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: "tabs lobby" "tabs box" "tabs nav"; }
+  html.ui6 #screen-modes:has(#modes-lobby.hidden) { grid-template-areas: "tabs title" "tabs box" "tabs nav"; }
+  html.ui6 #screen-modes > .actions { display: none; }
+  html.ui6 .ui6-mtabs { grid-auto-rows: minmax(0, 1fr); align-content: stretch; }
+  html.ui6 .ui6-mtab { min-height: 36px; }
+  html.ui6 .ui6-mtab-t { white-space: normal; line-height: 1.1; overflow: visible; }
 }
 
 /* =================== lobby multiplayera =================== */
@@ -174,9 +183,24 @@ html.ui6 #lobby-list .p-fixed { flex: 1 1 auto; min-width: 0; padding: 0 .4em; f
 html.ui6 #lobby-list .p-phone { flex: none; font-size: .8rem; }
 html.ui6 #screen-lobby .player-btns { flex: none; }
 html.ui6 #screen-lobby .ui6-lplayers > p.muted { flex: none; }
-/* pionowy telefon: krótki opis znika, zostaje QR z kodem */
+/* pionowy telefon: krótki opis znika, zostaje QR z kodem (mniejszy); lista graczy w dwóch kolumnach,
+   „+ Gracz na tym urządzeniu” pod listą na całą szerokość (w wierszu nagłówka się nie mieści) */
 @media (max-aspect-ratio: 4/3) and (max-width: 700px) {
   html.ui6 #screen-lobby .ui6-lqr > p.muted, html.ui6 #screen-lobby .ui6-lplayers > p.muted { display: none; }
+  html.ui6 #screen-lobby .ui6-lqr { gap: .3em; padding: 10px 12px; }
+  html.ui6 #screen-lobby .ui6-lqr > h2 { font-size: .95rem; }
+  html.ui6 #lobby-room { gap: 14px; }
+  html.ui6 #lobby-room .room-qr { width: min(8rem, 34vw); height: min(8rem, 34vw); padding: 5px; }
+  html.ui6 #lobby-room .room-code b { font-size: 1.9em; }
+  html.ui6 #screen-lobby .ui6-lplayers { padding: 10px 12px; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto auto; grid-template-areas: "head" "list" "nav" "btns"; }
+  html.ui6 #screen-lobby .ui6-lplayers > .player-btns { margin: 0; display: flex; }
+  html.ui6 #screen-lobby .ui6-lplayers > .player-btns > button { flex: 1 1 auto; }
+  html.ui6 #screen-lobby .ui6-lpages { --colw: 9rem; }
+  html.ui6 #lobby-list .player-row { gap: 4px; margin-bottom: 6px; }
+  html.ui6 #lobby-list .player-row input { min-width: 0; padding-left: .6em; padding-right: .4em; }
+  html.ui6 #lobby-list .player-row button { width: 40px; min-width: 40px; }
+  html.ui6 #screen-lobby > .actions > button { padding-left: .6em; padding-right: .6em; }
+  html.ui6 #screen-lobby > .actions > #btn-lobby-back { flex: 0 1 auto; }
 }
 /* poziomo: QR na środku po lewej (duży), gracze po prawej */
 @media (min-aspect-ratio: 4/3) {

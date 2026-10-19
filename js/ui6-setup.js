@@ -3,8 +3,9 @@
 // Sekcje (.card) zostają tymi samymi elementami – setup.js dalej pokazuje i chowa ich części (data-for, data-hide-for, data-ctx).
 // Kroki leżą obok siebie w pasku przesuwanym w bok (ukryte kroki nadal są „widoczne” dla podsumowania na dużym ekranie);
 // treść kroku, która się nie mieści, przechodzi na kolejne strony (ui6Paginate).
-// Na szerokim ekranie nie ma kroków: wszystkie sekcje płyną po kolei w kolumnach na całą szerokość (jedno pudełko ze stronami),
-// więc kolumny wypełniają się równo, a kropki stron pojawiają się dopiero, gdy naprawdę brakuje miejsca.
+// Na szerokim ekranie nie ma przechodzenia między krokami: kroki stoją obok siebie jako trzy (dwa) panele z nagłówkiem
+// „1 Gracze · 2 Piosenki · 3 Opcje trybu”; każdy panel dostaje tyle kolumn, ile potrzebuje jego treść (Piosenki zwykle dwie),
+// więc sekcje są pogrupowane tematycznie, a nie rozsypane po siatce jak formularz.
 // „Graj od razu” (#btn-start) jest na każdym kroku. Działa tylko przy UI6.
 if (UI6 && $('#screen-setup')) {
   const scr = $('#screen-setup');
@@ -23,22 +24,17 @@ if (UI6 && $('#screen-setup')) {
   scr.insertBefore(box, bar.nextSibling);
   for (const s of STEPS) {
     s.el = el('section', { class: 'ui6-sstep', 'aria-label': T(s.name) });
+    // nagłówek panelu (tylko na szerokim ekranie): numer i nazwa kroku
+    s.head = el('h2', { class: 'ui6-shead' }, el('span', { class: 'ui6-snum' }, ''), el('span', { class: 'ui6-sicon', 'aria-hidden': 'true' }, s.icon), T(s.name));
     track.append(s.el);
     // pierwsza karta jest w kroku od razu – pudełko ze stronami wstawia się przed nią
-    s.el.append(s.cards[0]);
+    s.el.append(s.head, s.cards[0]);
     s.pager = ui6Paginate(s.el, s.cards, { cls: 'ui6-spages' });
     s.flow = s.pager.flow;
   }
   const opt = STEPS[2];
   const back = $('#btn-back');
   const start = $('#btn-start');
-  // szeroki ekran: jedno pudełko na wszystkie sekcje, pasek jego stron w wierszu przycisków
-  const wbox = el('div', { class: 'ui6-pages ui6-spages ui6-swbox' });
-  const wflow = el('div', { class: 'ui6-flow' });
-  wbox.append(wflow);
-  scr.insertBefore(wbox, box);
-  const wpager = ui6Pager(wbox, { navHost: back.parentElement, navBefore: back });
-  wpager.nav.classList.add('ui6-swnav');
   const prevB = el('button', { type: 'button', class: 'ghost ui6-sprev', 'aria-label': T('← Wstecz'), onclick: () => step(cur - 1) }, T('← Wstecz'));
   const nextB = el('button', { type: 'button', class: 'ui6-snext', onclick: () => step(cur + 1) }, T('Dalej →'));
   back.after(prevB);
@@ -46,7 +42,6 @@ if (UI6 && $('#screen-setup')) {
   let cur = 0;
   let jumpUntil = 0; // do kiedy trwa płynne przesunięcie do wybranego kroku
   let live = STEPS;
-  let inWide = false;
   const offs = (s) => s.el.getBoundingClientRect().left - track.getBoundingClientRect().left;
   const wide = () => matchMedia('(min-width: 1000px) and (min-aspect-ratio: 4/3) and (min-height: 560px)').matches;
   // karty kroku w kolejności (jeden gracz – imię na początku „Opcji”)
@@ -55,26 +50,21 @@ if (UI6 && $('#screen-setup')) {
     if (s === opt) return playCtx === 'multi' ? s.cards : [pl, ...s.cards];
     return s.cards;
   };
-  // sekcje na swoje miejsca: w krokach albo wszystkie po kolei w jednym pudełku (szeroki ekran)
-  function place(w) {
-    inWide = w;
-    for (const s of STEPS) {
-      const list = stepCards(s);
-      const host = w ? wflow : s.flow;
-      host.append(...list);
-    }
-    // na wąskim: nagłówek sekcji taki sam jak nazwa kroku w pasku („Piosenki”) – chowamy, żeby nie było dwóch takich samych
+  function place() {
+    for (const s of STEPS) s.flow.append(...stepCards(s));
+    // nagłówek sekcji taki sam jak nazwa kroku („Piosenki”) – chowamy, żeby nie było dwóch takich samych (CSS)
     for (const s of STEPS) for (const c of s.cards) {
       const h = c.querySelector(':scope > h2');
-      if (h) h.classList.toggle('ui6-sdup', !w && h.textContent.trim() === T(s.name));
+      if (h) h.classList.toggle('ui6-sdup', h.textContent.trim() === T(s.name));
     }
   }
   // kroki tego trybu: pomijamy kroki, w których wszystkie sekcje są ukryte
   function rebuild() {
-    place(false);
+    place();
     markEmpty();
     live = STEPS.filter((s) => s.flow.querySelector(':scope > .card:not(.hidden):not(.ui6-empty)'));
     STEPS.forEach((s) => s.el.classList.toggle('hidden', !live.includes(s)));
+    live.forEach((s, i) => { s.head.firstChild.textContent = String(i + 1); });
     bar.replaceChildren(...live.map((s, i) => el('button', {
       type: 'button', class: 'ui6-sstep-b', 'aria-label': T(s.name), onclick: () => step(i),
     }, el('span', { class: 'ui6-snum' }, String(i + 1)), el('span', { class: 'ui6-sname' }, T(s.name)))));
@@ -91,8 +81,65 @@ if (UI6 && $('#screen-setup')) {
       c.classList.toggle('ui6-empty', !any);
     }
   }
+  // szeroki ekran: podział kolumn między panele – sprawdzamy możliwe podziały i wybieramy ten, przy którym
+  // nic nie przechodzi na drugą stronę, potem ten z najmniejszą liczbą pustych kolumn, potem ten z większą liczbą kolumn
+  function sizeWide() {
+    const W = track.clientWidth;
+    if (!W || !live.length) return;
+    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    const colw = rem * 16;
+    const cgap = parseFloat(getComputedStyle(live[0].flow).columnGap) || gap;
+    const padOf = (s) => { const cs = getComputedStyle(s.el); return parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight); };
+    const pad = live.reduce((n, s) => n + padOf(s), 0);
+    const n = live.length;
+    const C = Math.max(n, Math.min(9, Math.floor((W - gap * (n - 1) - pad + cgap * n) / (colw + cgap))));
+    const apply = (cols) => live.forEach((s, i) => {
+      s.flow.style.columnWidth = 'auto';
+      s.flow.style.columnCount = String(cols[i]);
+      s.el.style.flexGrow = String(cols[i]);
+      // bardzo szeroki ekran: kolumna nie szersza niż ok. 1,8 zwykłej (panele stoją na środku zamiast się rozciągać)
+      s.el.style.maxWidth = `${cols[i] * (colw * 1.8 + cgap) - cgap + padOf(s) + 2}px`;
+    });
+    // ocena podziału: strony ponad pierwszą i puste kolumny w każdym panelu
+    const judge = (cols) => {
+      apply(cols);
+      let over = 0; let empty = 0;
+      live.forEach((s, i) => {
+        const f = s.flow;
+        const bw = s.pager.box.clientWidth;
+        const cw = (bw - cgap * (cols[i] - 1)) / cols[i];
+        const pages = Math.max(1, Math.ceil((f.scrollWidth + cgap) / (bw + cgap) - 0.05));
+        over += pages - 1;
+        if (pages === 1) {
+          const kids = [...f.children].filter((k) => k.offsetParent && k.getClientRects().length);
+          const left = f.getBoundingClientRect().left;
+          const right = kids.reduce((m, k) => Math.max(m, ...[...k.getClientRects()].map((r) => r.right)), left);
+          empty += cols[i] - Math.max(1, Math.round((right - left + cgap) / (cw + cgap)));
+        }
+      });
+      return over * 1000 + empty * 10 - cols.reduce((a, b) => a + b, 0);
+    };
+    // wszystkie podziały co najwyżej C kolumn na n paneli (każdy panel co najmniej jedna kolumna)
+    const splits = [];
+    const walk = (pre, rest, k) => {
+      if (k === 1) { for (let c = 1; c <= rest; c++) splits.push([...pre, c]); return; }
+      for (let c = 1; c <= rest - (k - 1); c++) walk([...pre, c], rest - c, k - 1);
+    };
+    walk([], C, n);
+    let best = null;
+    for (const cols of splits) {
+      const sc = judge(cols);
+      if (!best || sc < best.sc) best = { cols, sc };
+    }
+    apply(best.cols);
+    for (const s of live) s.pager.update();
+  }
+  function unsizeWide() {
+    for (const s of STEPS) { s.flow.style.columnCount = ''; s.flow.style.columnWidth = ''; s.el.style.flexGrow = ''; s.el.style.maxWidth = ''; }
+  }
   // zmiana opcji może wydłużyć albo skrócić sekcje (pokazane pola, liczby piosenek) – liczymy strony od nowa
-  const recount = () => { markEmpty(); if (inWide) wpager.update(); else for (const s of live) s.pager.update(); };
+  const recount = () => { markEmpty(); if (wide()) sizeWide(); else for (const s of live) s.pager.update(); };
   scr.addEventListener('change', () => requestAnimationFrame(recount));
   scr.addEventListener('click', () => requestAnimationFrame(recount));
   function step(n) {
@@ -101,8 +148,9 @@ if (UI6 && $('#screen-setup')) {
   }
   function paint(smooth) {
     const w = wide();
+    const was = scr.classList.contains('ui6-swide');
     scr.classList.toggle('ui6-swide', w);
-    if (w !== inWide) place(w);
+    if (was && !w) unsizeWide();
     [...bar.children].forEach((b, i) => { b.classList.toggle('on', w || i === cur); b.classList.toggle('done', !w && i < cur); b.setAttribute('aria-current', String(i === cur)); });
     const last = w || cur >= live.length - 1;
     back.classList.toggle('hidden', !w && cur > 0);
@@ -117,7 +165,7 @@ if (UI6 && $('#screen-setup')) {
       if (low) { if (nav.parentElement !== start.parentElement) nextB.before(nav); } else if (nav.parentElement !== s.el) s.el.append(nav);
       nav.classList.toggle('ui6-cur', !w && s === live[cur]);
     });
-    if (w) { wpager.update(); return; }
+    if (w) { box.scrollLeft = 0; sizeWide(); return; }
     const target = live[cur];
     if (!target) return;
     const anim = smooth && !matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -128,7 +176,8 @@ if (UI6 && $('#screen-setup')) {
   // przeglądarka sama przesuwa pasek, gdy fokus (Tab) trafi do innego kroku – zaznaczamy ten krok
   box.addEventListener('scrollend', () => { jumpUntil = 0; });
   box.addEventListener('scroll', () => {
-    if (inWide || Date.now() < jumpUntil) return;
+    if (scr.classList.contains('ui6-swide')) { if (box.scrollLeft) box.scrollLeft = 0; return; }
+    if (Date.now() < jumpUntil) return;
     const i = live.findIndex((s) => Math.abs(offs(s) - box.scrollLeft) < box.clientWidth / 2);
     if (i >= 0 && i !== cur) { cur = i; paint(false); }
   }, { passive: true });
@@ -145,7 +194,7 @@ if (UI6 && $('#screen-setup')) {
   // dla narzędzia zrzutów i testów: przejście do kroku n (od 1); zwraca liczbę kroków (na szerokim ekranie widać wszystko naraz)
   window.ui6SetupStep = (n) => {
     step((n || 1) - 1);
-    if (!inWide) box.scrollLeft = offs(live[cur]);
+    if (!scr.classList.contains('ui6-swide')) box.scrollLeft = offs(live[cur]);
     return live.length;
   };
 }
