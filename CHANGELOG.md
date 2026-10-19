@@ -938,6 +938,6 @@ Wersja próbna wyglądu 6.0: pojedynek na żywo mieści się na telefonie trzyma
 - Wybór trybu: tryby podzielone na 6 grup według tego, co się w nich robi – Oś czasu, Impreza i karaoke, Zgadnij piosenkę, Kariera i wyzwanie dnia, Rok i dekada, Wiedza o muzyce (wcześniej jedna duża grupa „Quizy” z 15 różnymi trybami).
 - Oś czasu: „Kup kartę” jest zawsze pierwszym przyciskiem – przed odkryciem („Kup tę kartę”) i po odkryciu („Kup losową kartę”) w tym samym miejscu; główna akcja zawsze na końcu.
 
-## 5.51.1 – 19.10.2026 (`HASH`)
+## 5.51.1 – 19.10.2026 (`b44218f`)
 
 - „Tak to leciało!”: z raportu gracza usunięte 21 kolejnych filmów (nie odtwarzają się albo zgłoszone w grze jako zła wersja / tekst na ekranie) i wpisane przesunięcia tekstu dla 10 filmów (m.in. „Plamy na słońcu”, „Tańcz głupia tańcz”, „my”, „Telefony”) – tekst karaoke jest równo z muzyką u wszystkich. Katalog: 311 piosenek.
