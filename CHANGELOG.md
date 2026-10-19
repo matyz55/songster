@@ -941,3 +941,8 @@ Wersja próbna wyglądu 6.0: pojedynek na żywo mieści się na telefonie trzyma
 ## 5.51.1 – 19.10.2026 (`b44218f`)
 
 - „Tak to leciało!”: z raportu gracza usunięte 21 kolejnych filmów (nie odtwarzają się albo zgłoszone w grze jako zła wersja / tekst na ekranie) i wpisane przesunięcia tekstu dla 10 filmów (m.in. „Plamy na słońcu”, „Tańcz głupia tańcz”, „my”, „Telefony”) – tekst karaoke jest równo z muzyką u wszystkich. Katalog: 311 piosenek.
+
+## 5.52.0 – 19.10.2026 (`HASH`)
+
+- Baza piosenek: +14 piosenek z playlisty „Tak to leciało” (m.in. „Za siódmą chmurą”, „Poligon”, „Palę w oknie”, „Gruby, mały”, „Raissa”, „Autobusy i tramwaje”, „Tęsknię sobie”, „Principolo”, „Ja, fala”, „Jak Disney”) – są też w innych trybach. Piosenki z tej playlisty są szukane do „Tak to leciało!” w pierwszej kolejności.
+- Wersja próbna wyglądu 6.0: ekran startowy tylko z „Gram sam” i „Gramy razem” (duży ekran – ikona 📺 w górnym pasku); wybór trybu z 6 grupami (na telefonie zakładki z nazwami w dwóch rzędach, kafelki bez wielkich pustych pól); lobby na telefonie w dwóch kolumnach; ustawienia przed grą na PC w trzech panelach (Gracze, Piosenki, Opcje trybu).
