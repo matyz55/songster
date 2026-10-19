@@ -951,6 +951,6 @@ Wersja próbna wyglądu 6.0: pojedynek na żywo mieści się na telefonie trzyma
 
 - Wersja próbna wyglądu 6.0 – duży ekran i telefon gracza: oś czasu do 10 kart widać w całości (bez zwijania w same lata), dłuższa przewija się tylko sama oś i sama podjeżdża do wybranego miejsca albo nowej karty; na telefonie przy krótkiej osi więcej miejsca dla płyty i karty tury, przy długiej – zwarta karta tury i jeden rząd przycisków.
 
-## 5.52.2 – 19.10.2026 (`HASH`)
+## 5.52.2 – 19.10.2026 (`dcf58e7`)
 
 - „Tak to leciało!”: katalog 408 piosenek, +97 (najpierw piosenki z playlisty „Tak to leciało” – jest ich w katalogu 202 z 324). Kategorie z co najmniej 3 piosenkami: 69 z 73.
