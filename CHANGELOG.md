@@ -969,3 +969,11 @@ Wersja próbna wyglądu 6.0 – „Impreza – minigry” jako teleturniej (bez 
 - Po rundzie tablica wyników z rosnącymi paskami, przyrostem punktów i awansami ▲▼.
 - Finał „Ostatnie odliczanie”: punkty zamieniają się w sekundy, czas ucieka wszystkim naraz, szybkie pytania (kto śpiewa, rok, dekada, starsza piosenka) – dobra odpowiedź dodaje czas, zła zabiera; kto spadnie do zera, odpada, ostatni wygrywa imprezę. Przy jednym graczu finał na rekord.
 - Duży ekran i telefony graczy pokazują w tym czasie klasyfikację jak dotąd; finał rozgrywa się na urządzeniu gospodarza.
+
+## 5.54.1 – 20.10.2026 (`HASH`)
+
+Wersja próbna wyglądu 6.0 – ekran gry:
+- Oś czasu do 10 kart widać w całości na każdym urządzeniu (także na telefonie), bez zwijania w same lata – przy ciasnym miejscu karty w jednej linijce i cienkie miejsca „＋” (łatwe do trafienia palcem); dłuższa oś przewija się tylko sama i podjeżdża do wybranego miejsca albo nowej karty.
+- „Zatwierdź” / „Następny…” po lewej, jak ▶ Odtwórz; „Kup kartę” zawsze w tym samym miejscu po prawej, przed i po odkryciu.
+- Po odkryciu karty status pokazuje werdykt zamiast „Posłuchaj i wybierz…”; okładka wygląda jak okładka płyty.
+- Quizy i zgadywanie na PC: jedna wyśrodkowana kolumna zamiast pustej prawej połowy; cztery odpowiedzi w siatce 2×2.
