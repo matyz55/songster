@@ -81,17 +81,19 @@ html.ui6 #screen-end #ranking > .daily-squares { text-align: center; font-size: 
 html.ui6 #screen-end #ranking > p { text-align: center; }
 html.ui6 #screen-end #ranking > button { display: block; width: 100%; }
 
-/* oś zwycięzcy: zwarte wiersze rok – tytuł – wykonawca */
-html.ui6 #screen-end #winner-timeline { flex-direction: column; gap: 4px; overflow: visible; scroll-snap-type: none; }
+/* oś zwycięzcy: zwarte wiersze rok – tytuł – wykonawca; do 10 kart zawsze w całości (jeden kafelek w jednej kolumnie),
+   dłuższa (data-ui6-scroll, js/ui6-end.js) przewija się sama w wysokości kolumny – nigdy cała strona */
+html.ui6 #screen-end #winner-timeline { flex-direction: column; gap: 3px; overflow: visible; scroll-snap-type: none; }
 html.ui6 #screen-end #winner-timeline:not(.hidden) { display: flex; }
+html.ui6 #screen-end #winner-timeline[data-ui6-scroll] { max-height: var(--end-colh, 60vh); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
 html.ui6 #screen-end #winner-timeline .tcard {
-  width: 100%; min-height: 0; padding: 6px 10px; text-align: left; border-radius: 10px; animation: none;
-  display: grid; grid-template-columns: 3.4em minmax(0, 1fr) auto; grid-template-areas: "y t f" "y a f"; align-items: center; column-gap: 10px;
+  flex: none; width: 100%; min-height: 0; padding: 3px 10px; text-align: left; border-radius: 9px; animation: none;
+  display: grid; grid-template-columns: 3.2em minmax(0, 1fr) auto; grid-template-areas: "y t f" "y a f"; align-items: center; column-gap: 10px;
 }
-html.ui6 #screen-end #winner-timeline .tcard .y { grid-area: y; font-size: 1.25rem; }
-html.ui6 #screen-end #winner-timeline .tcard .t { grid-area: t; font-size: .88rem; overflow-wrap: anywhere; }
-html.ui6 #screen-end #winner-timeline .tcard .a { grid-area: a; font-size: .78rem; overflow-wrap: anywhere; }
-html.ui6 #screen-end #winner-timeline .tcard .flag { grid-area: f; }
+html.ui6 #screen-end #winner-timeline .tcard .y { grid-area: y; font-size: 1.12rem; line-height: 1.15; }
+html.ui6 #screen-end #winner-timeline .tcard .t { grid-area: t; font-size: .85rem; line-height: 1.2; overflow-wrap: anywhere; }
+html.ui6 #screen-end #winner-timeline .tcard .a { grid-area: a; font-size: .75rem; line-height: 1.2; overflow-wrap: anywhere; }
+html.ui6 #screen-end #winner-timeline .tcard .flag { grid-area: f; font-size: 1rem; line-height: 1; }
 html.ui6 #screen-end #winner-timeline .tcard.start .t { display: none; }
 
 /* piosenki z gry */
@@ -125,12 +127,32 @@ html.ui6 #screen-end > #end-multi { grid-template-columns: auto auto minmax(0, 1
   html.ui6 #screen-end[data-tab=league] #winner-timeline { display: none !important; }
   html.ui6 #screen-end .end-songs-card { padding: 8px 10px; }
   html.ui6 #screen-end .end-songs-card h2 { display: none; } /* nazwa jest na zakładce */
+  /* oś zwycięzcy: od 8 kart każda karta w jednym wierszu „rok  tytuł – wykonawca  flaga” – 10 kart mieści się na telefonie
+     (krótsza oś – zwykłe dwuwierszowe karty) */
+  html.ui6 #screen-end #winner-timeline { padding: 8px; }
+  html.ui6 #screen-end #winner-timeline:has(> div.tcard:nth-of-type(8)) .tcard { display: flex; flex-direction: row; justify-content: flex-start; align-items: center; gap: 8px; padding: 3px 8px; min-height: 28px; text-align: left; }
+  html.ui6 #screen-end #winner-timeline:has(> div.tcard:nth-of-type(8)) .tcard > * { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  html.ui6 #screen-end #winner-timeline:has(> div.tcard:nth-of-type(8)) .tcard .y { order: 0; flex: none; min-width: 2.4em; font-size: 1rem; overflow: visible; }
+  html.ui6 #screen-end #winner-timeline:has(> div.tcard:nth-of-type(8)) .tcard .t { order: 1; flex: 0 1 auto; }
+  html.ui6 #screen-end #winner-timeline:has(> div.tcard:nth-of-type(8)) .tcard .a { order: 2; flex: 1 1 35%; font-size: .8rem; }
+  html.ui6 #screen-end #winner-timeline:has(> div.tcard:nth-of-type(8)) .tcard:not(.start) .a::before { content: "– "; }
+  html.ui6 #screen-end #winner-timeline:has(> div.tcard:nth-of-type(8)) .tcard .flag { order: 3; flex: none; margin-left: auto; overflow: visible; }
+  /* zakładki: przy braku miejsca nieaktywne jako same ikony */
+  html.ui6 #screen-end .end-tab { display: inline-flex; align-items: center; justify-content: center; gap: .35em; }
+  html.ui6 #screen-end .end-tab.hidden { display: none; }
+}
+@media (max-width: 480px), (orientation: landscape) and (max-height: 520px) {
+  html.ui6 #screen-end .end-tabs:has(.end-tab:not(.hidden) ~ .end-tab:not(.hidden) ~ .end-tab:not(.hidden)) .end-tab:not(.on) { flex: 0 0 auto; padding: 0 .9em; }
+  html.ui6 #screen-end .end-tabs:has(.end-tab:not(.hidden) ~ .end-tab:not(.hidden) ~ .end-tab:not(.hidden)) .end-tab:not(.on) .end-tab-tx { display: none; }
+  html.ui6 #screen-end .end-tab.on { flex: 1 1 auto; }
 }
 /* telefon pionowo: dwa mniejsze przyciski obok siebie, główny pod nimi na całą szerokość */
 @media (max-width: 600px) {
   html.ui6 #screen-end > .actions { gap: 8px; }
-  /* trzy przyciski – długie napisy nie mieszczą się obok siebie: każdy w osobnym rzędzie, główny na dole */
-  html.ui6 #screen-end > #end-multi { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  /* trzy przyciski: dwa mniejsze obok siebie (napis może się zawinąć), główny pod nimi na całą szerokość */
+  html.ui6 #screen-end > #end-multi { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 6px; }
+  html.ui6 #screen-end > #end-multi > .primary { grid-column: 1 / -1; }
+  html.ui6 #screen-end > #end-multi > .ghost { white-space: normal; line-height: 1.15; font-size: .88rem; padding: .25em .5em; }
   html.ui6 #screen-end > .actions button { font-size: .95rem; padding: .3em .7em; }
   html.ui6 #screen-end .end-tab { font-size: .85rem; padding: 0 .3em; }
   html.ui6 #screen-end .end-bar { gap: 6px; }
@@ -179,3 +201,32 @@ html.ui6 body:has(#screen-end:not(.hidden)) .toasts { bottom: calc(var(--end-act
 /* same piosenki (bez wyników i ligi) – zamiast jedynej zakładki zwykły nagłówek karty */
 html.ui6 #screen-end .end-tab.hidden + .end-tab.hidden + .end-tab { display: none; }
 html.ui6 #screen-end.end-nores:has(.end-tab.hidden + .end-tab.hidden) .end-songs-card h2 { display: block; }
+
+/* ---------- szeroki ekran, treść na jedną stronę (js/ui6-end.js: end-fit*): panele szerokie jak treść, razem na środku ---------- */
+@media (min-width: 900px) and (min-height: 521px) {
+  html.ui6 #screen-end.end-fit-res .end-body { grid-template-columns: var(--end-resw) minmax(0, 1fr); }
+  html.ui6 #screen-end.end-fit-songs .end-body { grid-template-columns: minmax(0, 1fr) var(--end-songw); }
+  html.ui6 #screen-end.end-fit .end-body {
+    grid-template-columns: var(--end-resw) var(--end-songw); justify-content: center; align-content: center; align-items: start;
+    column-gap: calc(var(--gap) * 1.5);
+  }
+  html.ui6 #screen-end.end-fit.end-nores .end-body { grid-template-columns: var(--end-songw); }
+  html.ui6 #screen-end.end-fit-res .end-res, html.ui6 #screen-end.end-fit-songs .end-songs { align-self: start; }
+  html.ui6 #screen-end.end-fit-res .end-res .ui6-pages, html.ui6 #screen-end.end-fit-songs .end-songs .ui6-pages { flex: none; }
+  html.ui6 #screen-end.end-fit-res .end-res .ui6-flow { height: auto; column-width: auto; column-count: var(--end-rescols); column-fill: balance; }
+  html.ui6 #screen-end.end-fit-songs .end-songs .ui6-flow { height: auto; column-width: auto; column-count: var(--end-songcols); column-fill: balance; }
+  html.ui6 #screen-end.end-fit > .actions { max-width: max(var(--end-w, 100%), min(100%, 56rem)); }
+}
+/* telefon poziomo: zakładki obok wyniku – nieaktywne zawsze jako same ikony */
+@media (orientation: landscape) and (max-height: 520px) {
+  html.ui6 #screen-end .end-tab:not(.on) { flex: 0 0 auto; padding: 0 .9em; }
+  html.ui6 #screen-end .end-tab:not(.on) .end-tab-tx { display: none; }
+  html.ui6 #screen-end .end-tab.on { flex: 1 1 auto; }
+}
+/* telefon poziomo, długa oś (8–10 kart): oś na całą szerokość strony w dwóch kolumnach kart – mieści się w całości */
+@media (orientation: landscape) and (max-height: 520px) {
+  html.ui6 #screen-end:has(#winner-timeline:not([data-ui6-scroll]) > div.tcard:nth-of-type(8)) .end-res .ui6-flow { column-width: 30rem; }
+  html.ui6 #screen-end #winner-timeline:not([data-ui6-scroll]):has(> div.tcard:nth-of-type(8)):not(.hidden) {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(5, auto); grid-auto-flow: column; gap: 3px 8px; padding: 6px;
+  }
+}
