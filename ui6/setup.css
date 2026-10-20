@@ -1,4 +1,4 @@
-/* Songster 6.0 – ustawienia gry: kreator Gracze → Piosenki → Opcje trybu (wersja próbna); reguły tylko przy html.ui6.
+/* Songster 6.0 – ustawienia gry: kreator Gracze i poziom → Piosenki i zasady (wersja próbna); reguły tylko przy html.ui6.
    Kroki obok siebie w pasku (js/ui6-setup.js); na wąskim ekranie widać jeden krok, na szerokim – wszystkie naraz jako panele. */
 html.ui6 #screen-setup {
   display: grid; gap: var(--gap); grid-template-columns: minmax(0, 1fr);
@@ -39,7 +39,7 @@ html.ui6 .ui6-sstep > .ui6-nav .ui6-tab { font-size: .8rem; }
 /* nagłówek sekcji taki sam jak nazwa kroku (w pasku albo w nagłówku panelu, np. „Piosenki”) – bez powtórzenia */
 html.ui6 #screen-setup:is(:not(.ui6-one), .ui6-swide) .card > h2.ui6-sdup { display: none; }
 html.ui6 .ui6-shead { display: none; }
-/* ---------- szeroki ekran: kroki obok siebie jako panele „1 Gracze · 2 Piosenki · 3 Opcje trybu” (js/ui6-setup.js) ---------- */
+/* ---------- szeroki ekran: kroki obok siebie jako panele „1 Gracze i poziom · 2 Piosenki i zasady” (js/ui6-setup.js) ---------- */
 html.ui6 #screen-setup.ui6-swide { grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: "title" "body" "actions"; }
 html.ui6 #screen-setup.ui6-swide > .ui6-ssteps { display: none; }
 html.ui6 #screen-setup.ui6-swide .ui6-strack { gap: var(--gap); justify-content: center; }

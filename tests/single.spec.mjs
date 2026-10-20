@@ -351,13 +351,13 @@ test('wygląd 6.0: „Dalej →” w ustawieniach trybu przechodzi do następneg
   expect(await page.evaluate(() => [...document.querySelectorAll('.ui6-sstep-b')].map((b) => b.getAttribute('aria-current')))).toEqual(['false', 'true']);
 });
 
-test('oś czasu: „Kup kartę” w tym samym miejscu przed i po odkryciu (pierwszy przycisk)', async ({ page }) => {
+test('oś czasu: główna akcja zawsze pierwsza (po lewej), „Kup kartę” zawsze ostatni – przed i po odkryciu', async ({ page }) => {
   await page.goto('/');
   await start(page, 'solo');
   await ready(page);
-  const first = () => page.evaluate(() => document.querySelector('#actions button').textContent);
-  expect(await first()).toContain('Kup tę kartę');
+  const ends = () => page.evaluate(() => { const b = [...document.querySelectorAll('#actions button')]; return [b[0].textContent, b[b.length - 1].textContent]; });
+  expect(await ends()).toEqual([expect.stringContaining('Zatwierdź'), expect.stringContaining('Kup tę kartę')]);
   await page.evaluate(() => { const p = activePlayer(); onSlotClick(correctSlot(p.timeline, state.current.y)); onConfirmPlacement(); });
   await expect.poll(() => page.evaluate(() => state.phase)).toBe('revealed');
-  expect(await first()).toContain('Kup losową kartę');
+  expect(await ends()).toEqual([expect.stringContaining('Następna piosenka'), expect.stringContaining('Kup losową kartę')]);
 });
