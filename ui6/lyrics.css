@@ -451,3 +451,7 @@ html.ui6 #ly-sync > button + button::before { content: "·"; display: inline-blo
   html.ui6 #ly-answer .ly-reveal { gap: 3px; font-size: .95rem; }
   html.ui6 #ly-stage:has(.verdict) #ly-song .ly-songartist { display: none; } /* po odpowiedzi – sam tytuł, miejsce na wynik */
 }
+/* telefon pionowo, „trzy wersje wersu”: tytuł piosenki ustępuje miejsca – większy tekst karaoke mieści się w dwóch wierszach */
+@media (max-width: 600px) and (orientation: portrait) {
+  html.ui6 #ly-stage:has(.ly-variants) #ly-song { display: none; }
+}
