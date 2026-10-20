@@ -987,3 +987,7 @@ Wersja próbna wyglądu 6.0:
 ## 5.54.3 – 20.10.2026 (`617091a`)
 
 - Wersja próbna wyglądu 6.0, „Tak to leciało!” na telefonie: przy „trzech wersjach wersu” tytuł piosenki chowa się, żeby większy tekst karaoke mieścił się w dwóch wierszach (wcześniej drugi wiersz był ucięty).
+
+## 5.54.4 – 20.10.2026 (`HASH`)
+
+- „Tak to leciało!”: katalog 476 piosenek, +68 (z playlisty „Tak to leciało” jest już 242 z 324). Kategorie z co najmniej 3 piosenkami: 70 z 73.
