@@ -336,6 +336,8 @@ function renderActions() {
       btns.push(el('button', { class: 'primary', onclick: nextTurn }, last ? T('Zobacz wyniki →') : (state.players.length > 1 ? T('Następny gracz →') : T('Następna piosenka →'))));
     }
   } else if (state.phase === 'listen' || state.phase === 'placed') {
+    // główna akcja („Zatwierdź”, po odkryciu „Następny…”) zawsze pierwsza – po lewej, jak ▶ Odtwórz;
+    // „Kup kartę” zawsze ostatni – przed i po odkryciu w tym samym miejscu
     btns.push(el('button', { class: 'primary', disabled: state.slot == null, onclick: onConfirmPlacement }, T('✔ Zatwierdź i odkryj')));
     if (isMulti()) {
       const canChallenge = state.players.some((pl, i) => i !== state.turn && pl.tokens >= 1);
@@ -345,7 +347,7 @@ function renderActions() {
       }, T('⚔ Wyzwanie')));
     }
     btns.push(el('button', {
-      class: 'ghost', disabled: p.tokens < BUY_COST || !state.deck.size,
+      class: 'ghost buy-card', disabled: p.tokens < BUY_COST || !state.deck.size,
       title: T('Za 3 żetony odtwarzana piosenka trafia od razu na właściwe miejsce Twojej osi'),
       onclick: buyCard,
     }, T('Kup tę kartę (🪙 {0})', BUY_COST)));
@@ -392,6 +394,10 @@ function renderActions() {
   } else if (state.phase === 'revealed' && state.skipped) {
     btns.push(el('button', { class: 'primary', onclick: afterSkip }, T('Dalej – nowa piosenka →')));
   } else if (state.phase === 'revealed') {
+    const over = state.mode === 'solo' && (p.lives <= 0 || (!state.endless && p.timeline.length >= state.winTarget));
+    btns.push(el('button', { class: 'primary', onclick: nextTurn },
+      over ? T('Zobacz podsumowanie →') : (isSoloLike() ? T('Następna piosenka →')
+        : (state.mode === 'teams' ? T('Następna drużyna →') : T('Następny gracz →')))));
     // żeton „przy stole” – gdy tytułu i wykonawcy nie sprawdza gra
     if (isMulti() && !(guessFields().title && guessFields().artist)) {
       btns.push(el('button', {
@@ -403,15 +409,11 @@ function renderActions() {
     if (state.swapOffer) btns.push(...swapButtons(p));
     if (isTimeline()) {
       btns.push(el('button', {
-        class: 'ghost', disabled: p.tokens < BUY_COST || !state.deck.size,
+        class: 'ghost buy-card', disabled: p.tokens < BUY_COST || !state.deck.size,
         title: T('Za 3 żetony dobierasz losową kartę z talii, która od razu trafia na właściwe miejsce osi'),
         onclick: buyCard,
       }, T('Kup losową kartę (🪙 {0})', BUY_COST)));
     }
-    const over = state.mode === 'solo' && (p.lives <= 0 || (!state.endless && p.timeline.length >= state.winTarget));
-    btns.push(el('button', { class: 'primary', onclick: nextTurn },
-      over ? T('Zobacz podsumowanie →') : (isSoloLike() ? T('Następna piosenka →')
-        : (state.mode === 'teams' ? T('Następna drużyna →') : T('Następny gracz →')))));
   }
   // nie przebudowujemy listy „Ułóż piątkę” w trakcie przeciągania (zgubiłoby chwyt)
   if (!$('#actions .drag-active')) $('#actions').replaceChildren(...btns);

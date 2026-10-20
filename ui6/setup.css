@@ -1,5 +1,5 @@
-/* Songster 6.0 – ustawienia gry: kreator Gracze → Piosenki → Opcje trybu (wersja próbna); reguły tylko przy html.ui6.
-   Kroki obok siebie w pasku (js/ui6-setup.js); na wąskim ekranie widać jeden krok, na szerokim – wszystkie naraz. */
+/* Songster 6.0 – ustawienia gry: kreator Gracze i poziom → Piosenki i zasady (wersja próbna); reguły tylko przy html.ui6.
+   Kroki obok siebie w pasku (js/ui6-setup.js); na wąskim ekranie widać jeden krok, na szerokim – wszystkie naraz jako panele. */
 html.ui6 #screen-setup {
   display: grid; gap: var(--gap); grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto auto minmax(0, 1fr) auto; grid-template-areas: "title" "steps" "body" "actions";
@@ -36,15 +36,44 @@ html.ui6 .ui6-sstep { flex: 0 0 100%; min-width: 0; height: 100%; display: flex;
 html.ui6 .ui6-sstep.hidden { display: none; }
 html.ui6 .ui6-spages { --colw: 22rem; }
 html.ui6 .ui6-sstep > .ui6-nav .ui6-tab { font-size: .8rem; }
-/* nagłówek sekcji taki sam jak nazwa kroku w pasku (np. „Piosenki”) – bez powtórzenia */
-html.ui6 #screen-setup:not(.ui6-one) .card > h2.ui6-sdup { display: none; }
-/* szeroki ekran: bez kroków – wszystkie sekcje po kolei w kolumnach na całą szerokość (js/ui6-setup.js) */
-html.ui6 .ui6-swbox { display: none; grid-area: body; min-height: 0; min-width: 0; overflow: hidden; }
-html.ui6 #screen-setup.ui6-swide > .ui6-swbox { display: block; --colw: 17rem; }
-html.ui6 #screen-setup.ui6-swide > :is(.ui6-ssteps, .ui6-sbox) { display: none; }
+/* nagłówek sekcji taki sam jak nazwa kroku (w pasku albo w nagłówku panelu, np. „Piosenki”) – bez powtórzenia */
+html.ui6 #screen-setup:is(:not(.ui6-one), .ui6-swide) .card > h2.ui6-sdup { display: none; }
+html.ui6 .ui6-shead { display: none; }
+/* ---------- szeroki ekran: kroki obok siebie jako panele „1 Gracze i poziom · 2 Piosenki i zasady” (js/ui6-setup.js) ---------- */
 html.ui6 #screen-setup.ui6-swide { grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: "title" "body" "actions"; }
-html.ui6 #screen-setup > .actions > .ui6-swnav { flex: 0 0 auto; margin-right: auto; }
-html.ui6 #screen-setup:not(.ui6-swide) > .actions > .ui6-swnav { display: none; }
+html.ui6 #screen-setup.ui6-swide > .ui6-ssteps { display: none; }
+html.ui6 #screen-setup.ui6-swide .ui6-strack { gap: var(--gap); justify-content: center; }
+html.ui6 #screen-setup.ui6-swide .ui6-sstep {
+  flex: 1 1 0; min-width: 0; gap: calc(var(--gap) * .7); padding: clamp(10px, 1.5vmin, 22px) clamp(12px, 1.7vmin, 24px); box-sizing: border-box;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--sc, var(--accent)) 10%, transparent), transparent 9rem), var(--panel);
+  box-shadow: 0 10px 30px rgba(0,0,0,.28);
+}
+html.ui6 #screen-setup.ui6-swide .ui6-sstep:nth-child(2) { --sc: var(--gold); }
+html.ui6 #screen-setup.ui6-swide .ui6-sstep:nth-child(3) { --sc: var(--accent-2); }
+html.ui6 #screen-setup.ui6-swide .ui6-shead {
+  flex: none; display: flex; align-items: center; gap: .55em; margin: 0; padding-bottom: .55em;
+  font-size: clamp(1.05rem, .9rem + .5vmin, 1.5rem); border-bottom: 1px solid var(--line);
+}
+html.ui6 #screen-setup.ui6-swide .ui6-shead .ui6-snum {
+  width: 1.75em; height: 1.75em; font-size: .8em; background: var(--sc, var(--accent)); color: #14121c;
+}
+html.ui6 #screen-setup.ui6-swide .ui6-shead .ui6-sicon { font-size: .95em; }
+html.ui6 #screen-setup.ui6-swide .ui6-spages { --colw: 16rem; }
+html.ui6 #screen-setup.ui6-swide .ui6-spages .ui6-flow { column-gap: calc(var(--gap) * 1.6); column-rule: 1px solid color-mix(in srgb, var(--line) 60%, transparent); }
+/* mysz (PC): niższe pola i przyciski wyboru – więcej opcji mieści się w panelu */
+@media (hover: hover) and (pointer: fine) {
+  html.ui6 #screen-setup.ui6-swide { --tap: max(36px, 2.1rem); }
+  html.ui6 #screen-setup.ui6-swide .ui6-sstep :is(.seg label, .chip) { padding-top: .15em; padding-bottom: .15em; }
+  html.ui6 #screen-setup.ui6-swide .ui6-sstep :is(.row, .check) { margin-top: .25em; margin-bottom: .25em; }
+  html.ui6 #screen-setup.ui6-swide .ui6-sstep .label { margin-top: .55em; }
+}
+/* sekcje w panelu: bez osobnych ramek – podtytuł w kolorze kroku, odstęp między sekcjami */
+html.ui6 #screen-setup.ui6-swide .ui6-sstep .card { padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; margin-bottom: calc(var(--gap) * 1.6); }
+html.ui6 #screen-setup.ui6-swide .ui6-sstep .card > h2 {
+  font-size: max(13px, .8rem); text-transform: uppercase; letter-spacing: .08em; color: color-mix(in srgb, var(--sc, var(--accent)) 75%, var(--text)); margin-bottom: .55em;
+}
+html.ui6 #screen-setup.ui6-swide .ui6-sstep > .ui6-nav { margin-top: auto; }
 html.ui6 #screen-setup.ui6-swide > .actions { justify-content: flex-end; }
 html.ui6 #screen-setup.ui6-swide > .actions > button { flex: 0 1 14rem; }
 html.ui6 #screen-setup.ui6-swide > .actions > #btn-start { flex: 0 1 26rem; }

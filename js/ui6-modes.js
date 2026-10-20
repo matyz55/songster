@@ -5,7 +5,7 @@
 if (UI6 && $('#screen-modes')) {
   const scr = $('#screen-modes');
   const heads = $$('#screen-modes .mode-group');
-  const ICONS = ['🕰️', '🥳', '⚡', '🧠', '🎵'];
+  const ICONS = ['🕰️', '🥳', '🎵', '🏆', '📅', '🧠']; // kolejno: Oś czasu, Impreza i karaoke, Zgadnij piosenkę, Kariera, Rok i dekada, Wiedza o muzyce
   const tabs = el('nav', { class: 'ui6-mtabs', role: 'tablist', 'aria-label': T('Grupy trybów') });
   const box = el('div', { class: 'ui6-pages ui6-mbox' });
   const track = el('div', { class: 'ui6-mtrack' });
@@ -56,7 +56,8 @@ if (UI6 && $('#screen-modes')) {
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
     const gap = parseFloat(getComputedStyle(scr).rowGap) || 10;
     const minW = rem * 12; const minH = rem * 4.6;
-    const maxW = rem * 64; const maxH = (tw) => Math.max(minH, Math.min(tw / 2.5, rem * 18));
+    // mało trybów: kafelki nie szersze niż ok. 42rem i nie wyższe niż 12.5rem – bez wielkich pustych pól na PC
+    const maxW = rem * 42; const maxH = (tw) => Math.max(minH, Math.min(tw / 2.6, rem * 12.5));
     pw = W;
     flat = [];
     for (const g of groups) {

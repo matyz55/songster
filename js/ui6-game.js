@@ -1,8 +1,8 @@
 'use strict';
 // Songster 6.0 – ekran gry: zmiany układu dla nowego wyglądu (działa tylko przy UI6).
 // Ekran gry dzieli się na strefy (nagłówek tury, płyta i odkrycie, odpowiedzi, oś czasu, przyciski) – układ stref
-// zależy od orientacji i miejsca (ui6/game.css). Oś czasu nigdy się nie przewija: przy wielu kartach karty daleko
-// od wybranego miejsca zwijają się w grupy („akordeon”), które rozwija stuknięcie.
+// zależy od orientacji i miejsca (ui6/game.css). Oś czasu pokazuje zawsze wszystkie karty: do 10 kart mieści się
+// w całości (karty i „＋” robią się zwarte), dopiero dłuższa przewija się sama (data-ui6-scroll).
 if (UI6) {
   (() => {
     const turn = $('#screen-game .player-turn');
@@ -151,148 +151,156 @@ if (UI6) {
     const turnOver = () => {
       if (turn.scrollHeight > turn.clientHeight + 1 || turn.scrollWidth > turn.clientWidth + 1) return true;
       const zs = [...turn.children].filter((z) => z.offsetParent && getComputedStyle(z).position !== 'absolute');
-      if (zs.some((z) => z !== board && z.scrollHeight > z.clientHeight + 1)) return true;
+      if (zs.some((z) => z !== board && (z.scrollHeight > z.clientHeight + 1 || z.scrollWidth > z.clientWidth + 1))) return true;
       const rs = zs.map((z) => z.getBoundingClientRect());
       return rs.some((r, i) => rs.some((q, j) => j > i && overlap(r, q)));
     };
-    // najpierw układ stref, potem oś; gdy nawet zwinięta oś się nie mieści – kolejny poziom gęstości
+
+    /* ---------- oś czasu: zawsze wszystkie karty ---------- */
+    // Do 10 kart oś mieści się w całości: najpierw pełne karty, potem cienkie „＋” między kartami, potem karty w jednej
+    // linijce, na końcu (pionowa oś, gdy jest szerokość) – w dwóch kolumnach; w razie potrzeby reszta karty tury oddaje
+    // miejsce (poziomy gęstości). Dopiero przy więcej niż 10 kartach oś może się przewijać (sama, nigdy cała strona) –
+    // dostaje wtedy data-ui6-scroll i przewija się do wybranego miejsca / nowej karty.
+    const TL_MAX = 10;
+    const TL_LEVELS = [[], ['ui6-thin'], ['ui6-thin', 'ui6-compact'], ['ui6-thin', 'ui6-compact', 'ui6-cols2']];
+    const TL_CLS = ['ui6-thin', 'ui6-compact', 'ui6-cols2'];
+    const isCard = (e) => e.classList.contains('tcard');
+    const horizontal = () => getComputedStyle(tl).flexDirection.startsWith('row');
+    const tlOn = () => !tl.classList.contains('hidden') && !!tl.offsetParent && tl.children.length > 0;
+    const tlOver = () => tlOn() && (tl.scrollWidth > tl.clientWidth + 1 || tl.scrollHeight > tl.clientHeight + 1);
+    // pełny tytuł i wykonawca w podpowiedzi (w jednej linijce bywają skrócone „…”)
+    function tagCards() {
+      for (const c of tl.children) {
+        if (!isCard(c) || c.title) continue;
+        const t = c.querySelector('.t'); const a = c.querySelector('.a'); const y = c.querySelector('.y');
+        if (!c.classList.contains('start')) c.title = `${y ? y.textContent : ''} · ${t ? t.textContent : ''} – ${a ? a.textContent : ''}`;
+      }
+    }
+    let wideSong = null;
+    function setTl(lv, scroll) {
+      tl.classList.remove(...TL_CLS);
+      tl.classList.add(...TL_LEVELS[lv]);
+      const compact = TL_LEVELS[lv].includes('ui6-compact');
+      tl.querySelectorAll('.tcard .t, .tcard .a').forEach((e) => { if (compact) e.dataset.ui6Trunc = ''; else delete e.dataset.ui6Trunc; });
+      if (scroll) tl.setAttribute('data-ui6-scroll', ''); else tl.removeAttribute('data-ui6-scroll');
+      // dwie kolumny osi potrzebują szerszej lewej kolumny
+      // (ta sama piosenka: po odkryciu układ kolumn zostaje, żeby przyciski nie skakały)
+      turn.classList.toggle('g-tlwide', TL_LEVELS[lv].includes('ui6-cols2') || (wideSong != null && wideSong === state.current));
+    }
+    // najpierw oś (od najmniej zwartej), potem kolejne poziomy gęstości karty tury
     function fitAll() {
       if (fitting || !turn.offsetParent) return;
       fitting = true;
       try {
+        tagCards();
+        const on = tlOn();
+        const h = on && horizontal();
+        const cards = on ? [...tl.children].filter(isCard).length : 0;
+        // dwie kolumny tylko w pionowej osi obok reszty karty tury (poziomy ekran)
+        const wide = !h && turn.clientWidth >= 560 && matchMedia('(min-aspect-ratio: 11/10)').matches;
+        const lvs = on ? TL_LEVELS.map((x, i) => i).filter((i) => i < 3 || wide) : [0];
+        const tryAll = (scroll, from = 0) => {
+          for (const d of [null, ...LEVELS].slice(from)) {
+            turn.classList.remove(...LEVELS);
+            if (d) turn.classList.add(...LEVELS.slice(0, LEVELS.indexOf(d) + 1));
+            // najmniej zwarta oś, która się mieści (zwarta oś nie pomoże, gdy za dużo jest reszty karty tury)
+            for (const lv of scroll ? [2] : lvs) {
+              setTl(lv, scroll);
+              if (scroll || !tlOver()) { if (!turnOver()) return true; break; }
+            }
+          }
+          return false;
+        };
         turn.classList.remove(...LEVELS);
-        let tlOver = layout();
-        for (const lv of LEVELS) {
-          if (!turnOver() && !tlOver) break;
-          turn.classList.add(lv);
-          tlOver = layout();
+        setTl(0, false);
+        // bez osi albo z osią, która się mieści – od razu; za długa (ponad 10 kart) – przewija się sama
+        const ok = tryAll(false);
+        if (!ok) {
+          // przewijana oś na telefonie w pionie: reszta karty tury od razu zwarta, żeby oś pokazała więcej kart
+          if (cards > TL_MAX) tryAll(true, !h && matchMedia('(max-aspect-ratio: 11/10)').matches ? 2 : 0);
+          else {
+            // nic się nie mieści: najgęstsza karta tury i najmniej zwarta oś, która się mieści
+            turn.classList.add(...LEVELS);
+            for (const lv of lvs) { setTl(lv, false); if (!tlOver()) break; }
+          }
         }
+        if (ok && tl.classList.contains('ui6-cols2')) wideSong = state.current;
+        if (tl.hasAttribute('data-ui6-scroll')) focusTl(h);
         fitSuggest();
       } finally {
         moTurn.takeRecords();
+        moTl.takeRecords();
         fitting = false;
       }
+    }
+    // przewijana oś: wybrane miejsce, wyzwanie, znacznik pomyłki albo nowa karta na środku (tylko gdy się zmieniło)
+    let focusSig = '';
+    function focusTl(h) {
+      const items = [...tl.children];
+      const f = tl.querySelector('.drop-over') || tl.querySelector('.slot.chosen, .slot.challenge, .mark.bad, .tcard.new, .mark.ok');
+      const sig = `${items.length}:${f ? `${items.indexOf(f)}${f.className}` : ''}`;
+      const r = f ? f.getBoundingClientRect() : null; const b = tl.getBoundingClientRect();
+      const seen = r && (h ? r.left >= b.left - 1 && r.right <= b.right + 1 : r.top >= b.top - 1 && r.bottom <= b.bottom + 1);
+      if (!f || (sig === focusSig && seen)) { focusSig = sig; return; }
+      focusSig = sig;
+      if (h) tl.scrollLeft += r.left - b.left - (b.width - r.width) / 2;
+      else tl.scrollTop += r.top - b.top - (b.height - r.height) / 2;
     }
     let fitRaf = 0;
     const fitLater = () => { if (!fitting) { cancelAnimationFrame(fitRaf); fitRaf = requestAnimationFrame(fitAll); } };
     const moTurn = new MutationObserver(fitLater);
     moTurn.observe(turn, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'], characterData: true });
+    // nowa oś (render) – od razu, żeby nie mignęła w złym układzie
+    const moTl = new MutationObserver(() => { if (!fitting) fitAll(); });
+    moTl.observe(tl, { childList: true });
     new ResizeObserver(fitLater).observe(turn);
+    new ResizeObserver(fitLater).observe(board);
 
-    /* ---------- bez przewijania: gra czasem przewija do wybranego miejsca (scrollIntoView) – tu wszystko jest widoczne ---------- */
+    /* ---------- bez przewijania: gra czasem przewija do wybranego miejsca (scrollIntoView) – tu wszystko jest widoczne
+       (poza długą osią z data-ui6-scroll, która przewija się sama) ---------- */
     for (const e of [tl, board, turn, $('#screen-game')]) {
-      e.addEventListener('scroll', () => { if (e.scrollTop || e.scrollLeft) { e.scrollTop = 0; e.scrollLeft = 0; } });
+      e.addEventListener('scroll', () => {
+        if (e === tl && tl.hasAttribute('data-ui6-scroll')) return;
+        if (e.scrollTop || e.scrollLeft) { e.scrollTop = 0; e.scrollLeft = 0; }
+      });
     }
-
-    /* ---------- akordeon osi czasu ---------- */
-    // Gdy oś się nie mieści: wokół przypiętych miejsc (wybrane „＋”, wyzwanie, znaczniki po odkryciu, nowa karta, miejsce
-    // rozwinięte stuknięciem) karty i „＋” zostają pełne, dalsze zwijają się w grupy z samymi latami (w poziomie – w grzbiety).
-    let focusKey = '';
-    let focusIdx = null; // pozycja (w elementach osi) rozwinięta stuknięciem w grupę
-    let busy = false;
-    const isCard = (e) => e.classList.contains('tcard');
-    const yearOf = (e) => { const y = e.querySelector('.y'); return y ? y.textContent.trim() : ''; };
-    const horizontal = () => getComputedStyle(tl).flexDirection.startsWith('row');
-    const overflows = (h) => (h ? tl.scrollWidth > tl.clientWidth + 1 : false) || tl.scrollHeight > tl.clientHeight + 1;
-    function clear() {
-      tl.querySelectorAll('.ui6-grp, .ui6-spine').forEach((g) => g.remove());
-      tl.querySelectorAll('.ui6-fold').forEach((e) => e.classList.remove('ui6-fold'));
-      tl.classList.remove('ui6-acc');
-    }
-    // zwraca true, gdy oś mimo zwinięcia się nie mieści
-    function layout() {
-      if (busy) return false;
-      busy = true;
-      try {
-        clear();
-        if (tl.classList.contains('hidden') || !tl.offsetParent) return false;
-        const items = [...tl.children];
-        const h = horizontal();
-        const key = items.filter(isCard).map(yearOf).join(',');
-        if (key !== focusKey) { focusKey = key; focusIdx = null; }
-        if (!overflows(h) || items.filter(isCard).length < 2) return overflows(h);
-        let pins = items.map((e, i) => (e.matches('.chosen, .challenge, .mark, .new, .drop-over') ? i : -1)).filter((i) => i >= 0);
-        if (focusIdx != null && focusIdx < items.length) pins.push(focusIdx);
-        if (!pins.length) pins = [Math.floor(items.length / 2)];
-        // kolejność rozwijania: od najbliższych przypiętym, na zmianę w obie strony
-        const dist = (i) => Math.min(...pins.map((p) => Math.abs(p - i)));
-        const order = items.map((e, i) => i).filter((i) => !pins.includes(i)).sort((x, y) => dist(x) - dist(y) || x - y);
-        for (const groups of h ? [false, true] : [true]) {
-          const full = new Set(pins);
-          apply(items, full, h, groups);
-          if (overflows(h)) continue;
-          // rozwijamy kolejne elementy, dopóki się mieszczą
-          for (const i of order) {
-            full.add(i);
-            apply(items, full, h, groups);
-            if (overflows(h)) { full.delete(i); apply(items, full, h, groups); break; }
-          }
-          return false;
-        }
-        return true;
-      } finally {
-        moChild.takeRecords();
-        moAttr.takeRecords();
-        moTurn.takeRecords();
-        busy = false;
+    // przeciąganie karty przy brzegu przewijanej osi – oś przewija się sama
+    let dragXY = null; let dragRaf = 0;
+    const dragScroll = () => {
+      dragRaf = 0;
+      if (!dragXY || !$('#drag-card.dragging') || !tl.hasAttribute('data-ui6-scroll')) return;
+      const r = tl.getBoundingClientRect(); const edge = 44;
+      const [x, y] = dragXY;
+      if (horizontal()) {
+        if (y > r.top && y < r.bottom) { if (x < r.left + edge) tl.scrollLeft -= 10; else if (x > r.right - edge) tl.scrollLeft += 10; }
+      } else if (x > r.left && x < r.right) {
+        if (y < r.top + edge) tl.scrollTop -= 10; else if (y > r.bottom - edge) tl.scrollTop += 10;
       }
-    }
-    // pełne elementy zostają, pozostałe ciągi (z co najmniej jedną kartą) zwijają się w grupy albo grzbiety
-    function apply(items, full, h, groups) {
-      clear();
-      tl.classList.add('ui6-acc');
-      let i = 0;
-      while (i < items.length) {
-        if (full.has(i)) { i++; continue; }
-        let j = i;
-        while (j < items.length && !full.has(j)) j++;
-        const run = items.slice(i, j);
-        const cards = run.filter(isCard);
-        if (cards.length) {
-          run.forEach((e) => e.classList.add('ui6-fold'));
-          const mid = i + Math.floor((j - i) / 2);
-          if (h && !groups) {
-            // grzbiety: każda karta jako wąski pasek z rokiem, stuknięcie rozwija okolice tej karty
-            for (const c of cards) {
-              const at = items.indexOf(c);
-              tl.insertBefore(el('button', {
-                type: 'button', class: 'ui6-spine', title: yearOf(c), 'aria-label': T('Pokaż karty wokół roku {0}', yearOf(c)),
-                onclick: () => { focusIdx = at; fitAll(); },
-              }, el('span', {}, yearOf(c))), c);
-            }
-          } else {
-            const ys = cards.map(yearOf);
-            const label = ys.length <= (h ? 1 : maxYears()) ? ys.join(' · ') : `${ys[0]} – ${ys[ys.length - 1]}`;
-            tl.insertBefore(el('button', {
-              type: 'button', class: 'ui6-grp', 'aria-label': T('Rozwiń karty: {0}', ys.join(', ')),
-              onclick: () => { focusIdx = mid; fitAll(); },
-            }, el('span', { class: 'ui6-grp-y' }, label), el('span', { class: 'ui6-grp-n' }, T('{0} ▾', cardsLabel(cards.length)))), run[0]);
-          }
-        }
-        i = j;
-      }
-    }
-    // ile lat zmieści się w jednym wierszu grupy
-    const maxYears = () => Math.max(1, Math.floor((tl.clientWidth - 110) / 46));
-    let raf = 0;
-    const later = () => { if (!busy) { cancelAnimationFrame(raf); raf = requestAnimationFrame(fitAll); } };
-    const moChild = new MutationObserver(() => { if (!busy) fitAll(); });
-    moChild.observe(tl, { childList: true });
-    const moAttr = new MutationObserver(later);
-    moAttr.observe(tl, { attributes: true, attributeFilter: ['class'] });
-    new ResizeObserver(later).observe(board);
-    // przeciąganie karty nad zwiniętą grupą – po chwili grupa się rozwija
-    let hoverT = 0; let hoverEl = null;
+      dragRaf = requestAnimationFrame(dragScroll);
+    };
     document.addEventListener('pointermove', (e) => {
-      if (!$('#drag-card.dragging')) return;
-      const t = document.elementFromPoint(e.clientX, e.clientY);
-      const g = t && t.closest('#timeline .ui6-grp, #timeline .ui6-spine');
-      if (g !== hoverEl) {
-        clearTimeout(hoverT);
-        hoverEl = g;
-        if (g) hoverT = setTimeout(() => { if (hoverEl === g && g.isConnected) g.click(); }, 350);
-      }
+      if (!$('#drag-card.dragging')) { dragXY = null; return; }
+      dragXY = [e.clientX, e.clientY];
+      if (!dragRaf) dragRaf = requestAnimationFrame(dragScroll);
     }, { passive: true });
+
+    /* ---------- po odkryciu: status mówi o wyniku (zamiast „Posłuchaj i wybierz…”) ---------- */
+    const reveal = $('#reveal');
+    const status = $('#mystery-status');
+    const syncResult = () => {
+      const on = !reveal.classList.contains('hidden') && reveal.children.length > 0;
+      const v = on ? reveal.querySelector(':scope > .verdict:not(.small-verdict)') : null;
+      reveal.querySelectorAll('.ui6-dup').forEach((x) => { if (x !== v) x.classList.remove('ui6-dup'); });
+      if (v && !v.classList.contains('ui6-dup')) v.classList.add('ui6-dup');
+      const want = { 'ui6-res': on, 'ui6-res-none': on && !v, ok: !!v && !v.classList.contains('bad'), bad: !!v && v.classList.contains('bad') };
+      for (const [c, x] of Object.entries(want)) if (status.classList.contains(c) !== x) status.classList.toggle(c, x);
+      if (v && status.textContent !== v.textContent) status.textContent = v.textContent;
+    };
+    new MutationObserver(syncResult).observe(reveal, { attributes: true, attributeFilter: ['class'], childList: true, subtree: true, characterData: true });
+    // gra pisze nowy status przy następnej piosence – gdy odkrycie jest widoczne, wracamy do wyniku
+    new MutationObserver(() => { if (!reveal.classList.contains('hidden') && status.classList.contains('ui6-res') && !status.classList.contains('ui6-res-none')) syncResult(); })
+      .observe(status, { childList: true, characterData: true, subtree: true });
+    syncResult();
 
     /* ---------- podpowiedzi: tylko tyle, ile mieści się nad polem (albo nad klawiaturą) – bez przewijania listy ---------- */
     const sug = $('#guess-suggest');

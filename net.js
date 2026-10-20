@@ -237,7 +237,7 @@
 
   // wersja aplikacji (taka sama jak pamięć podręczna w sw.js) – gdy gospodarz ma nowszą, duży ekran i telefony graczy
   // same się odświeżają (inaczej np. telewizor otwarty przed aktualizacją nie zna nowych ekranów)
-  const version = '48';
+  const version = '49';
   // pobranie świeżych plików (z pominięciem pamięci podręcznej przeglądarki) i przeładowanie strony – raz na wersję
   async function updateTo(ver) {
     const key = 'songster.reloadedFor';

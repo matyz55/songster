@@ -134,6 +134,8 @@ function ui6Check() {
     // długa oś czasu (więcej niż 10 kart) może przewijać się sama – oznacza ją atrybut data-ui6-scroll (ustawia skrypt osi);
     // oś do 10 kart musi być widoczna w całości
     if (e.closest('[data-ui6-scroll]')) { out.scrollOk = (out.scrollOk || 0) + 1; continue; }
+    // napis świadomie skrócony „…” w jednej linijce (pełny tekst w podpowiedzi), np. tytuł na zwartej karcie osi
+    if (e.hasAttribute('data-ui6-trunc')) continue;
     const cs = getComputedStyle(e);
     if (!/(hidden|clip|auto|scroll)/.test(cs.overflowY + cs.overflowX)) continue;
     if (e.scrollHeight > e.clientHeight + 2 || e.scrollWidth > e.clientWidth + 2) {

@@ -924,3 +924,48 @@ Wersja próbna wyglądu 6.0: pojedynek na żywo mieści się na telefonie trzyma
 - „Tak to leciało!”: na dole ekranu nowy dyskretny przycisk „film pokazuje tekst – zmień film” – gra od razu bierze inny film tej piosenki (albo inną piosenkę), a film trafia do zgłoszeń i nie pojawi się w kolejnych grach. Zgłoszenia z gry są teraz też w raporcie w Ustawieniach.
 - Sprawdzarka filmów: film, który nie ruszył, dostaje drugą, dłuższą próbę, a sprawdzanie czeka, gdy karta przeglądarki jest w tle (wcześniej takie filmy wychodziły jako niedziałające).
 - Usunięte 77 filmów z raportu gracza; katalog ma teraz 317 piosenek.
+
+## 5.50.1 – 18.10.2026 (`ed99053`)
+
+- Wersja próbna wyglądu 6.0: kontrola „bez przewijania” dopuszcza przewijanie samej osi czasu, gdy ma ona więcej niż 10 kart (oś do 10 kart musi mieścić się w całości); w narzędziu przeglądu ekranów nowe zrzuty osi z 10 i 14 kartami.
+
+## 5.50.2 – 18.10.2026 (`240bdf1`)
+
+- Wersja próbna wyglądu 6.0: poprawka – przycisk „Dalej →” w ustawieniach trybu (telefon, tablet) znów przechodzi do następnego kroku; wcześniej płynne przesunięcie cofało się do pierwszego kroku.
+
+## 5.51.0 – 19.10.2026 (`1e1afac`)
+
+- Wybór trybu: tryby podzielone na 6 grup według tego, co się w nich robi – Oś czasu, Impreza i karaoke, Zgadnij piosenkę, Kariera i wyzwanie dnia, Rok i dekada, Wiedza o muzyce (wcześniej jedna duża grupa „Quizy” z 15 różnymi trybami).
+- Oś czasu: „Kup kartę” jest zawsze pierwszym przyciskiem – przed odkryciem („Kup tę kartę”) i po odkryciu („Kup losową kartę”) w tym samym miejscu; główna akcja zawsze na końcu.
+
+## 5.51.1 – 19.10.2026 (`b44218f`)
+
+- „Tak to leciało!”: z raportu gracza usunięte 21 kolejnych filmów (nie odtwarzają się albo zgłoszone w grze jako zła wersja / tekst na ekranie) i wpisane przesunięcia tekstu dla 10 filmów (m.in. „Plamy na słońcu”, „Tańcz głupia tańcz”, „my”, „Telefony”) – tekst karaoke jest równo z muzyką u wszystkich. Katalog: 311 piosenek.
+
+## 5.52.0 – 19.10.2026 (`3ceaa2b`)
+
+- Baza piosenek: +14 piosenek z playlisty „Tak to leciało” (m.in. „Za siódmą chmurą”, „Poligon”, „Palę w oknie”, „Gruby, mały”, „Raissa”, „Autobusy i tramwaje”, „Tęsknię sobie”, „Principolo”, „Ja, fala”, „Jak Disney”) – są też w innych trybach. Piosenki z tej playlisty są szukane do „Tak to leciało!” w pierwszej kolejności.
+- Wersja próbna wyglądu 6.0: ekran startowy tylko z „Gram sam” i „Gramy razem” (duży ekran – ikona 📺 w górnym pasku); wybór trybu z 6 grupami (na telefonie zakładki z nazwami w dwóch rzędach, kafelki bez wielkich pustych pól); lobby na telefonie w dwóch kolumnach; ustawienia przed grą na PC w trzech panelach (Gracze, Piosenki, Opcje trybu).
+
+## 5.52.1 – 19.10.2026 (`4887759`)
+
+- Wersja próbna wyglądu 6.0 – duży ekran i telefon gracza: oś czasu do 10 kart widać w całości (bez zwijania w same lata), dłuższa przewija się tylko sama oś i sama podjeżdża do wybranego miejsca albo nowej karty; na telefonie przy krótkiej osi więcej miejsca dla płyty i karty tury, przy długiej – zwarta karta tury i jeden rząd przycisków.
+
+## 5.52.2 – 19.10.2026 (`dcf58e7`)
+
+- „Tak to leciało!”: katalog 408 piosenek, +97 (najpierw piosenki z playlisty „Tak to leciało” – jest ich w katalogu 202 z 324). Kategorie z co najmniej 3 piosenkami: 69 z 73.
+
+## 5.53.0 – 19.10.2026 (`e82ca6f`)
+
+- Oś czasu: główna akcja („✔ Zatwierdź i odkryj”, po odkryciu „Następna piosenka/gracz →”) jest zawsze pierwsza – po lewej, tak jak ▶ Odtwórz; „Kup kartę” zawsze ostatni, w tym samym miejscu przed i po odkryciu.
+- Wersja próbna wyglądu 6.0: ustawienia przed grą w dwóch krokach – „Gracze i poziom” (poziom trudności na pierwszej karcie, przy jednym graczu na samej górze) i „Piosenki i zasady” (dawne „Piosenki” i „Opcje trybu” razem).
+
+## 5.54.0 – 19.10.2026 (`56e3f97`)
+
+Wersja próbna wyglądu 6.0 – „Impreza – minigry” jako teleturniej (bez 6.0 impreza bez zmian):
+- Prowadzący 🎙️ zapowiada każdą rundę i komentuje wyniki, zwracając się do graczy po imieniu.
+- Przed każdą minigrą plansza „Runda 2 z 5” z zasadą gry, za co są punkty i odliczaniem 3-2-1.
+- Modyfikatory rund: runda otwierająca, Podwójne punkty, Złodziej punktów (zwycięzca zabiera punkty wybranemu rywalowi), Wszystko albo nic, Szansa dla maruderów, a przedostatnia runda za podwójną stawkę.
+- Po rundzie tablica wyników z rosnącymi paskami, przyrostem punktów i awansami ▲▼.
+- Finał „Ostatnie odliczanie”: punkty zamieniają się w sekundy, czas ucieka wszystkim naraz, szybkie pytania (kto śpiewa, rok, dekada, starsza piosenka) – dobra odpowiedź dodaje czas, zła zabiera; kto spadnie do zera, odpada, ostatni wygrywa imprezę. Przy jednym graczu finał na rekord.
+- Duży ekran i telefony graczy pokazują w tym czasie klasyfikację jak dotąd; finał rozgrywa się na urządzeniu gospodarza.
