@@ -460,6 +460,7 @@ html.ui6 #actions .sort-row button { white-space: nowrap; }
   html.ui6 #screen-game .player-turn:not(:has(#timeline:not(.hidden))):not(:has(#buzzers:not(.hidden), .g-bingo-pages:not(.hidden), #actions > .live-row, #actions > .royale-row, #actions > .sort-box, #climb-ladder:not(.hidden), #cover-fog:not(.hidden))) #actions:not(:has(.big-choice, input)) > button { flex: 0 1 auto; min-width: 16rem; }
   /* odpowiedzi do wyboru w siatce 2×2 – płyta zostaje widoczna */
   html.ui6 #screen-game .player-turn:not(:has(#timeline:not(.hidden))):not(:has(#buzzers:not(.hidden), .g-bingo-pages:not(.hidden), #actions > .live-row, #actions > .royale-row, #actions > .sort-box, #climb-ladder:not(.hidden), #cover-fog:not(.hidden))) #actions > .big-choice:not(.live-opt) { flex: 1 1 calc(50% - var(--gap)); }
+  html.ui6 #screen-game .player-turn:not(:has(#timeline:not(.hidden))):not(:has(#buzzers:not(.hidden), .g-bingo-pages:not(.hidden), #actions > .live-row, #actions > .royale-row, #actions > .sort-box, #climb-ladder:not(.hidden), #cover-fog:not(.hidden))) #actions > .quiz-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* ---------- ultrawide: oś szeroko u dołu, karty obok siebie ---------- */
