@@ -984,6 +984,6 @@ Wersja próbna wyglądu 6.0:
 - „Tak to leciało!”: większy tekst karaoke – na telefonie jak w obecnym wyglądzie, na większych ekranach rośnie razem z ekranem; większe pole odpowiedzi; plansza kategorii na PC zwarta (3×3 na środku zamiast wielkich pustych kafelków); dolna linijka „tekst za wcześnie · tekst za późno · zmień film” dalej dyskretna.
 - Koniec gry: na szerokim ekranie panele na środku zamiast pustej połowy; oś zwycięzcy do 10 kart w całości, dłuższa przewija się sama; na telefonie przyciski po grze wieloosobowej czytelniej ułożone.
 
-## 5.54.3 – 20.10.2026 (`HASH`)
+## 5.54.3 – 20.10.2026 (`617091a`)
 
 - Wersja próbna wyglądu 6.0, „Tak to leciało!” na telefonie: przy „trzech wersjach wersu” tytuł piosenki chowa się, żeby większy tekst karaoke mieścił się w dwóch wierszach (wcześniej drugi wiersz był ucięty).
