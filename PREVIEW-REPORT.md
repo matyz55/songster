@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 453 z 7080 piosenek (ostatnio 2026-10-19, w tym uruchomieniu: 150).
+Sprawdzono dotąd 603 z 7094 piosenek (ostatnio 2026-10-20, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -68,3 +68,24 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Kat – Metal and Hell / Oracle | 1986 | 2026-10-19 |
 | Kat – Time of Revenge / Czas zemsty | 1986 | 2026-10-19 |
 | Kult – Piloci / Do Ani | 1986 | 2026-10-19 |
+| Kayah – Córeczko chciałabym, żebyś była chłopcem | 1988 | 2026-10-20 |
+| Grażyna Łobaszewska – Brzydcy | 1989 | 2026-10-20 |
+| Jolanta Jaszkowska – Każdy swego pana ma | 1989 | 2026-10-20 |
+| Jolanta Jaszkowska – Mgiełka | 1989 | 2026-10-20 |
+| Jerzy Połomski – Moja młodość | 1990 | 2026-10-20 |
+| Krystyna Prońko & Halina Frąckowiak – Tam gdzie lekki wieje wiatr | 1990 | 2026-10-20 |
+| Renata Zarębska – Noc z Renatą | 1990 | 2026-10-20 |
+| Kazik – Bagdad | 1991 | 2026-10-20 |
+| Republika – Biała Flaga | 1991 | 2026-10-20 |
+| Republika – Sexy Doll | 1991 | 2026-10-20 |
+| Republika – Telefony | 1991 | 2026-10-20 |
+| Universe – Mr. Lennon | 1991 | 2026-10-20 |
+| Maryla Rodowicz – Ale to już było | 1991 | 2026-10-20 |
+| Piersi – ZCHN zbliża się | 1992 | 2026-10-20 |
+| Stare Dobre Małżeństwo – Czarny blues o czwartej nad ranem | 1992 | 2026-10-20 |
+| Elektryczne Gitary – Koniec | 1992 | 2026-10-20 |
+| Chłopcy z Placu Broni – O Ela! | 1993 | 2026-10-20 |
+| Closterkeller – W moim kraju | 1993 | 2026-10-20 |
+| Hey – Moja i twoja nadzieja | 1993 | 2026-10-20 |
+| Kazik – 100 000 000 | 1993 | 2026-10-20 |
+| Republika – Tak Długo Czekam (Ciało) | 1993 | 2026-10-20 |
