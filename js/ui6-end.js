@@ -64,13 +64,79 @@ if (UI6) {
     btns.league.classList.toggle('hidden', !hasLeague());
     if (scr.dataset.tab === 'league' && !hasLeague()) scr.dataset.tab = 'res';
     for (const t of TABS) {
-      btns[t.id].textContent = t.label();
+      // „🏆 Wyniki” → ikona i napis osobno (na wąskim telefonie nieaktywne zakładki to same ikony)
+      const label = t.label();
+      const sp = label.indexOf(' ');
+      btns[t.id].replaceChildren(el('span', { class: 'end-tab-ic', 'aria-hidden': 'true' }, sp > 0 ? label.slice(0, sp) : ''),
+        el('span', { class: 'end-tab-tx' }, sp > 0 ? label.slice(sp + 1) : label));
+      btns[t.id].title = label;
+      btns[t.id].setAttribute('aria-label', sp > 0 ? label.slice(sp + 1) : label);
       const on = scr.dataset.tab === t.id;
       btns[t.id].classList.toggle('on', on);
       btns[t.id].setAttribute('aria-selected', String(on));
     }
-    requestAnimationFrame(() => pagers.forEach((p) => { p.go(0, false); p.update(); }));
+    requestAnimationFrame(() => { pagers.forEach((p) => p.go(0, false)); fit(); });
   };
+
+  // oś zwycięzcy: do 10 kart cała (zwarte wiersze), dłuższa przewija się sama w wysokości kolumny (data-ui6-scroll)
+  const tl = $('#winner-timeline');
+  const longTl = () => !tl.classList.contains('hidden') && tl.querySelectorAll('.tcard').length > 10;
+  // szeroki ekran: gdy wszystko mieści się na jednej stronie, panele mają szerokość treści i stoją razem na środku
+  // (zamiast wąskiej kolumny po lewej i pustej reszty); dłuższa treść – zwykły układ ze stronami
+  const FIT = ['end-fit', 'end-fit-res', 'end-fit-songs'];
+  const columns = (box, sel) => {
+    const lefts = [];
+    let w = 0;
+    for (const e of box.querySelectorAll(sel)) {
+      for (const r of e.getClientRects()) {
+        if (r.width < 1) continue;
+        lefts.push(r.left);
+        w = Math.max(w, r.width);
+      }
+    }
+    lefts.sort((a, b) => a - b);
+    const n = lefts.filter((x, i) => i === 0 || x - lefts[i - 1] > 60).length;
+    return { n: Math.max(1, n), w: Math.ceil(w) };
+  };
+  function fit() {
+    scr.classList.remove(...FIT);
+    if (scr.classList.contains('hidden')) return;
+    const long = longTl();
+    tl.toggleAttribute('data-ui6-scroll', long);
+    if (long) {
+      scr.style.removeProperty('--end-colh');
+      resPager && resPager.update();
+      if (resPager && resPager.box.clientHeight) scr.style.setProperty('--end-colh', `${resPager.box.clientHeight - (parseFloat(getComputedStyle(resPager.flow).columnGap) || 0) - 4}px`);
+    }
+    pagers.forEach((p) => p.update());
+    if (!wide.matches) return;
+    const gap = parseFloat(getComputedStyle(body).columnGap) || 0;
+    const one = (p) => p && p.box.offsetParent && p.pages === 1;
+    const fitRes = one(resPager) && !scr.classList.contains('end-nores');
+    const fitSongs = one(songsPager);
+    if (fitRes) {
+      const c = columns(resPager.box, '#ranking > *, #winner-timeline');
+      scr.style.setProperty('--end-rescols', c.n);
+      scr.style.setProperty('--end-resw', `${c.n * c.w + (c.n - 1) * gap}px`);
+      scr.classList.add('end-fit-res');
+    }
+    if (fitSongs) {
+      const c = columns(songsPager.box, '#played-list > li');
+      scr.style.setProperty('--end-songcols', c.n);
+      scr.style.setProperty('--end-songw', `${c.n * c.w + (c.n - 1) * gap}px`);
+      scr.classList.add('end-fit-songs');
+    }
+    if (fitSongs && (fitRes || scr.classList.contains('end-nores'))) scr.classList.add('end-fit');
+    pagers.forEach((p) => p.update());
+    // zabezpieczenie: gdyby po zmianie coś nie zmieściło się w wysokości – wracamy do zwykłego układu
+    if (body.scrollHeight > body.clientHeight + 1 || pagers.some((p) => p.box.offsetParent && p.pages > 1)) {
+      scr.classList.remove(...FIT);
+      pagers.forEach((p) => p.update());
+    }
+    const vis = [...body.children].filter((e) => e.offsetParent);
+    const w = scr.classList.contains('end-fit') ? vis.reduce((sum, e) => sum + e.offsetWidth, 0) + gap * (vis.length - 1) : 0;
+    scr.style.setProperty('--end-w', w > 0 ? `${Math.ceil(w)}px` : '100%');
+  }
   function setTab(id) {
     scr.dataset.tab = id;
     refresh();
@@ -78,6 +144,8 @@ if (UI6) {
   scr.dataset.tab = 'res';
   placeNav();
   wide.addEventListener('change', () => { placeNav(); refresh(); });
+  let rt = 0;
+  addEventListener('resize', () => { cancelAnimationFrame(rt); rt = requestAnimationFrame(fit); });
   // nowe podsumowanie (koniec gry, przerwa w imprezie) – od zakładki „Wyniki” i pierwszej strony
   let wasHidden = scr.classList.contains('hidden');
   new MutationObserver(() => {

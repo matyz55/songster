@@ -143,6 +143,10 @@ function longTimeline(id, title, { ctx = 'single', n = 3, cards }) {
       await capture(page, { id: `${id}-2-placed`, group: this.group, title: `${title} – karta położona`, desc: 'Gracz wybrał miejsce, przed zatwierdzeniem.' });
       await answer(page, true);
       await capture(page, { id: `${id}-3-ok`, group: this.group, title: `${title} – odkryta karta`, desc: 'Odkryta karta po dobrej odpowiedzi.' });
+      // koniec gry z taką samą osią – oś zwycięzcy w podsumowaniu (do 10 kart w całości, dłuższa przewija się sama)
+      await fillTimelines(page, cards);
+      await endNow(page);
+      await capture(page, { id: `${id}-4-end`, group: this.group, title: `${title} – koniec gry`, desc: `Podsumowanie, oś zwycięzcy: ${cards} kart.` });
     },
   };
 }
