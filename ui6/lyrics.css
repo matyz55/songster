@@ -134,6 +134,7 @@ html.ui6 #ly-answer .ly-helper { margin: 0; }
   /* po odpowiedzi i przy trzech wersjach – film 200 px, więcej miejsca na większe wersy */
   html.ui6 #ly-stage:is(:has(.verdict), :has(.ly-variants)) { --ly-vid: 200px; }
   html.ui6 #ly-stage:is(:has(.verdict), :has(.ly-variants)) #ly-lines .now { font-size: 1.05em; line-height: 1.25; }
+  html.ui6 #ly-lines { min-height: 1.6em; } /* zawsze co najmniej cały śpiewany wers */
   html.ui6 #ly-lines { display: flex; flex-direction: column; justify-content: safe center; }
   /* w trakcie piosenki tytuł ekranu nie jest potrzebny (na górze pasek drabinki i tytuł piosenki) */
   html.ui6 #screen-lyrics:has(#ly-stage:not(.hidden)) #ly-title { display: none; }
@@ -447,5 +448,6 @@ html.ui6 #ly-sync > button + button::before { content: "·"; display: inline-blo
   html.ui6 #ly-answer .ly-variants { gap: 4px; }
   html.ui6 #ly-answer .ly-variants button { min-height: 34px; }
   html.ui6 #ly-answer > .actions .primary, html.ui6 #ly-answer > .actions .small { min-height: 40px; }
-  html.ui6 #ly-answer .ly-reveal { gap: 3px; }
+  html.ui6 #ly-answer .ly-reveal { gap: 3px; font-size: .95rem; }
+  html.ui6 #ly-stage:has(.verdict) #ly-song .ly-songartist { display: none; } /* po odpowiedzi – sam tytuł, miejsce na wynik */
 }
