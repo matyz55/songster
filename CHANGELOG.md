@@ -977,3 +977,9 @@ Wersja próbna wyglądu 6.0 – ekran gry:
 - „Zatwierdź” / „Następny…” po lewej, jak ▶ Odtwórz; „Kup kartę” zawsze w tym samym miejscu po prawej, przed i po odkryciu.
 - Po odkryciu karty status pokazuje werdykt zamiast „Posłuchaj i wybierz…”; okładka wygląda jak okładka płyty.
 - Quizy i zgadywanie na PC: jedna wyśrodkowana kolumna zamiast pustej prawej połowy; cztery odpowiedzi w siatce 2×2.
+
+## 5.54.2 – 20.10.2026 (`HASH`)
+
+Wersja próbna wyglądu 6.0:
+- „Tak to leciało!”: większy tekst karaoke – na telefonie jak w obecnym wyglądzie, na większych ekranach rośnie razem z ekranem; większe pole odpowiedzi; plansza kategorii na PC zwarta (3×3 na środku zamiast wielkich pustych kafelków); dolna linijka „tekst za wcześnie · tekst za późno · zmień film” dalej dyskretna.
+- Koniec gry: na szerokim ekranie panele na środku zamiast pustej połowy; oś zwycięzcy do 10 kart w całości, dłuższa przewija się sama; na telefonie przyciski po grze wieloosobowej czytelniej ułożone.
