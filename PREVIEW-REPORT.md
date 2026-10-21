@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 603 z 7094 piosenek (ostatnio 2026-10-20, w tym uruchomieniu: 150).
+Sprawdzono dotąd 753 z 7094 piosenek (ostatnio 2026-10-21, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -89,3 +89,35 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Hey – Moja i twoja nadzieja | 1993 | 2026-10-20 |
 | Kazik – 100 000 000 | 1993 | 2026-10-20 |
 | Republika – Tak Długo Czekam (Ciało) | 1993 | 2026-10-20 |
+| Lady Pank – Na na | 1994 | 2026-10-21 |
+| Marek Jackowski – Oprócz Błękitnego Nieba | 1994 | 2026-10-21 |
+| Varius Manx & Kasia Stankiewicz – Piosenka księżycowa | 1994 | 2026-10-21 |
+| Voo Voo – Czajnik/Posypałka | 1994 | 2026-10-21 |
+| Acid Drinkers – 3 Version 4 Yonash / Acid on the Dance Floor | 1995 | 2026-10-21 |
+| Andrzej Piaseczny & Robert Chojnacki – Niecierpliwi | 1995 | 2026-10-21 |
+| Basia – Dzień Się Budzi | 1995 | 2026-10-21 |
+| Edyta Górniak – Dotknij... | 1995 | 2026-10-21 |
+| Justyna Steczkowska – Moja intymność | 1995 | 2026-10-21 |
+| Justyna Steczkowska – Sama | 1995 | 2026-10-21 |
+| Magda Umer – Oczy Tej Małej | 1995 | 2026-10-21 |
+| Nagły Atak Spawacza – Anty | 1995 | 2026-10-21 |
+| Varius Manx – Pocałuj noc (Do ciebie) | 1995 | 2026-10-21 |
+| Varius Manx – Zabij mnie / Do ciebie | 1995 | 2026-10-21 |
+| Varius Manx & Kasia Stankiewicz – Zamigotał świat | 1995 | 2026-10-21 |
+| Voo Voo – Nie spać / Bisz bosz | 1995 | 2026-10-21 |
+| Voo Voo – Rapatapa-to-ja | 1995 | 2026-10-21 |
+| Liroy & Wzgórze Ya-Pa 3 – Scyzoryk | 1995 | 2026-10-21 |
+| Liroy – Scoobiedoo Ya | 1995 | 2026-10-21 |
+| Grzegorz z Ciechowa – Piejo kury piejo | 1996 | 2026-10-21 |
+| Jonasz Kofta – Pamiętajcie o ogrodach | 1996 | 2026-10-21 |
+| Kaliber 44 – Magia i miecz | 1996 | 2026-10-21 |
+| Maanam – Maanam świątecznokarnawałowy | 1996 | 2026-10-21 |
+| Rotary – Na jednej z dzikich plaż | 1996 | 2026-10-21 |
+| Urszula – Coraz mniej | 1996 | 2026-10-21 |
+| Varius Manx – Ten sen | 1996 | 2026-10-21 |
+| Varius Manx & Kasia Stankiewicz – Orła cień | 1996 | 2026-10-21 |
+| Anna Maria Jopek – Ale Jestem | 1997 | 2026-10-21 |
+| Anna Maria Jopek – Joszko Broda | 1997 | 2026-10-21 |
+| Kaliber 44 – Film | 1997 | 2026-10-21 |
+| Kasia Kowalska – Jeśli chcesz kochanym być | 1997 | 2026-10-21 |
+| Michał Lorenc – Taniec Eleny | 1997 | 2026-10-21 |
