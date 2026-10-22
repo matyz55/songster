@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 753 z 7094 piosenek (ostatnio 2026-10-21, w tym uruchomieniu: 150).
+Sprawdzono dotąd 903 z 7094 piosenek (ostatnio 2026-10-22, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -121,3 +121,32 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Kaliber 44 – Film | 1997 | 2026-10-21 |
 | Kasia Kowalska – Jeśli chcesz kochanym być | 1997 | 2026-10-21 |
 | Michał Lorenc – Taniec Eleny | 1997 | 2026-10-21 |
+| Robert Kasprzycki – Niebo Do Wynajêcia | 1997 | 2026-10-22 |
+| Peja & Slums Attack – Czas Przemija | 1997 | 2026-10-22 |
+| Kukiz & Piersi – Całuj mnie | 1997 | 2026-10-22 |
+| Artur Gadowski – Na kredyt | 1998 | 2026-10-22 |
+| Artur Gadowski – Ona i on | 1998 | 2026-10-22 |
+| Artur Gadowski – Szczęśliwego Nowego Jorku | 1998 | 2026-10-22 |
+| Beata Kozidrak – Siedzę i myślę | 1998 | 2026-10-22 |
+| Beata Kozidrak – Żal mi tamtych nocy i dni | 1998 | 2026-10-22 |
+| Budka Suflera – Martwe morze | 1998 | 2026-10-22 |
+| Kult – Panie Waldku, Pan się nie boi czyli lewy czerwcowy | 1998 | 2026-10-22 |
+| Warszafski Deszcz & Wzgórze Ya-Pa 3 – Ja Mam To Co Ty | 1998 | 2026-10-22 |
+| Molesta – Wiedziałem, że tak będzie | 1998 | 2026-10-22 |
+| Stereofonia & DJ 600V – Dźwięki Stereo | 1998 | 2026-10-22 |
+| DJ 600V & Kaliber 44 – Ja Się Wcale Nie Chwalę | 1998 | 2026-10-22 |
+| Anna Szałapak – Grajmy Panu | 1999 | 2026-10-22 |
+| Budka Suflera – V bieg | 1999 | 2026-10-22 |
+| Closterkeller – Czas komety | 1999 | 2026-10-22 |
+| Closterkeller – Na krawędzi | 1999 | 2026-10-22 |
+| Kayah & Goran Bregović – Byłam Różą (A Rose Was I) (Ero Una Rosa) | 1999 | 2026-10-22 |
+| Kayah & Goran Bregović – Trudno Kochać (Hard To Love) (E Cosi Difficile Amare) | 1999 | 2026-10-22 |
+| Coma – Skaczemy / Pasażer | 2000 | 2026-10-22 |
+| Edyta Górniak – Pieśń Julii | 2000 | 2026-10-22 |
+| Kaliber 44 – Konfrontacje | 2000 | 2026-10-22 |
+| Kaliber 44 – Konfrontacje/Rutyny | 2000 | 2026-10-22 |
+| Lady Pank – Jak ruchomy cel | 2000 | 2026-10-22 |
+| Stare Dobre Małżeństwo – Bieszczadzkie anioły | 2000 | 2026-10-22 |
+| Urszula – Udar | 2000 | 2026-10-22 |
+| Varius Manx – Teraz i tu | 2000 | 2026-10-22 |
+| Wzgórze Ya-Pa 3 – Dobrze, że tak się stało/BF – Ludzie, o których nie zapomnicie | 2000 | 2026-10-22 |
