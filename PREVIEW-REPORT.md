@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 903 z 7094 piosenek (ostatnio 2026-10-22, w tym uruchomieniu: 150).
+Sprawdzono dotąd 1053 z 7094 piosenek (ostatnio 2026-10-23, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -150,3 +150,44 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Urszula – Udar | 2000 | 2026-10-22 |
 | Varius Manx – Teraz i tu | 2000 | 2026-10-22 |
 | Wzgórze Ya-Pa 3 – Dobrze, że tak się stało/BF – Ludzie, o których nie zapomnicie | 2000 | 2026-10-22 |
+| Mor W.A. & Wigor Mor W.A. – Idź za ciosem | 2000 | 2026-10-23 |
+| Kaliber 44 – Wena | 2000 | 2026-10-23 |
+| WWO & Sokół – Jeszcze będzie czas | 2000 | 2026-10-23 |
+| Paktofonika – Rób Co Chcesz... | 2000 | 2026-10-23 |
+| Łzy – Narcyz się nazywam | 2000 | 2026-10-23 |
+| Andrzej Piaseczny – 2 Long | 2001 | 2026-10-23 |
+| Edyta Geppert – Życie, kocham cię nad życie | 1986 | 2026-10-23 |
+| Ewa Bem – Serce to jest muzyk | 2001 | 2026-10-23 |
+| Killaz Group – Zjednoczone Emiraty Poznańskie | 2001 | 2026-10-23 |
+| Kowalski – Irlandia Zielona | 2001 | 2026-10-23 |
+| Kowalski – Marian | 2001 | 2026-10-23 |
+| O.S.T.R. – Ile jestem w stanie dać | 2001 | 2026-10-23 |
+| Peja – Jest jedna rzecz | 2001 | 2026-10-23 |
+| Tede – Wyścig szczurów | 2001 | 2026-10-23 |
+| Urszula – Klub samotnych serc | 2001 | 2026-10-23 |
+| Urszula – Piesek twist | 2001 | 2026-10-23 |
+| Urszula – Progress | 2001 | 2026-10-23 |
+| Tede – Drin za Drinem | 2001 | 2026-10-23 |
+| Afro Kolektyw – Czytaj z ruchu moich ust | 2001 | 2026-10-23 |
+| Edyta Bartosiewicz – Niewinność | 2002 | 2026-10-23 |
+| Edyta Górniak – Perła | 2002 | 2026-10-23 |
+| Lady Pank – 7-me niebo nienawiści | 2002 | 2026-10-23 |
+| Myslovitz – Acidland | 2002 | 2026-10-23 |
+| Myslovitz – Chciałbym umrzeć z miłości | 2002 | 2026-10-23 |
+| O.S.T.R. – Kochana Polsko | 2002 | 2026-10-23 |
+| Stanisław Soyka – Życie to krótki sen | 2002 | 2026-10-23 |
+| Urszula – To, co było raz | 2002 | 2026-10-23 |
+| Voo Voo & Tomasz „Oley” Olejnik – Omal nie pękła łepetyna | 2002 | 2026-10-23 |
+| WWO – Moda | 2002 | 2026-10-23 |
+| Łona – Hiphop non stop/Nie słuchać przed 2050 r. | 2002 | 2026-10-23 |
+| Łzy – Jestem dilerem | 2002 | 2026-10-23 |
+| O.S.T.R. – Tabasko | 2002 | 2026-10-23 |
+| Pezet & NOON – Ukryty w Mieście Krzyk | 2002 | 2026-10-23 |
+| Myslovitz – Bar Mleczny Korova | 2002 | 2026-10-23 |
+| WWO & Sokół – Damy radę | 2002 | 2026-10-23 |
+| WWO & Sokół – Sen | 2002 | 2026-10-23 |
+| Pezet & NOON – Re-Fleksje | 2002 | 2026-10-23 |
+| O.S.T.R. – 1 na 100 | 2002 | 2026-10-23 |
+| WWO & Sokół – W wyjątkowych okolicznościach | 2002 | 2026-10-23 |
+| Big Cyc – Dres | 2002 | 2026-10-23 |
+| Kasia Kowalska – Mniejsze zło | 2003 | 2026-10-23 |
