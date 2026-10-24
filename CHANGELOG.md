@@ -1003,3 +1003,7 @@ Wersja próbna wyglądu 6.0:
 ## 5.54.7 – 23.10.2026 (`6b71568`)
 
 - „Tak to leciało!”: katalog 574 piosenek, +4 (z playlisty „Tak to leciało” jest już 286 z 324).
+
+## 5.54.8 – 24.10.2026 (`HASH`)
+
+- „Tak to leciało!”: katalog 579 piosenek, +5 (z playlisty „Tak to leciało” 286 z 324).
