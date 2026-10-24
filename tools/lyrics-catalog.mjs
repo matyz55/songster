@@ -123,9 +123,11 @@ async function stepLang() {
   console.log(`\njęzyk sprawdzony: ${n}; teksty nie po polsku (poniżej ${PL_MIN}): ${notPl.length}`);
   for (const [k, v] of notPl) if (hasVideo(yt[k])) console.log(`  ${k} – polskich wersów ${Math.round(v.pl * 100)}%`);
 }
-async function lrclibSearch(s) {
+async function lrclibSearch(s, loose = false) {
   const artist = SongMatch.mainArtist(s);
-  const url = `https://lrclib.net/api/search?track_name=${encodeURIComponent(clean(s.t))}&artist_name=${encodeURIComponent(artist)}`;
+  // najpierw dokładnie (tytuł i wykonawca osobno), a gdy nic – luźniej (jedno pole q: wykonawca i tytuł razem)
+  const url = loose ? `https://lrclib.net/api/search?q=${encodeURIComponent(`${artist} ${clean(s.t)}`)}`
+    : `https://lrclib.net/api/search?track_name=${encodeURIComponent(clean(s.t))}&artist_name=${encodeURIComponent(artist)}`;
   for (let attempt = 0; attempt < 6; attempt++) {
     const res = await fetch(url, { headers: { 'User-Agent': UA } }).catch(() => null);
     // 429 – limit zapytań, 503 – serwer chwilowo przeciążony: czekamy tyle, ile prosi (retry-after)
@@ -133,9 +135,12 @@ async function lrclibSearch(s) {
     if (!res || !res.ok) { await sleep(3000 * (attempt + 1)); continue; }
     const rows = await res.json();
     const artists = SongMatch.artistsOf(s).map(norm);
-    const ok = rows.filter((r) => r.syncedLyrics && !r.instrumental && norm(clean(r.trackName)) === norm(clean(s.t))
+    let ok = (Array.isArray(rows) ? rows : []).filter((r) => r.syncedLyrics && !r.instrumental && norm(clean(r.trackName)) === norm(clean(s.t))
       && artists.some((a) => norm(r.artistName).includes(a)));
-    if (!ok.length) return null;
+    if (!ok.length) return loose ? null : lrclibSearch(s, true);
+    // polska piosenka: tylko teksty po polsku, jeśli takie są (bywają wgrane tłumaczenia albo inna wersja językowa)
+    const pol = ok.filter((r) => plShare(lrcTexts(r.syncedLyrics)) >= PL_MIN);
+    if (s.c === 'PL' && pol.length) ok = pol;
     // najczęstsza długość nagrania (różne wydania tej samej wersji) – potem najdłuższy tekst
     ok.sort((a, b) => ok.filter((x) => Math.abs(x.duration - b.duration) < 2).length - ok.filter((x) => Math.abs(x.duration - a.duration) < 2).length
       || b.syncedLyrics.length - a.syncedLyrics.length);
@@ -160,15 +165,24 @@ async function stepLrclib() {
   const yt = load('youtube-pl.json', {});
   // opcjonalny limit zapytań: node tools/lyrics-catalog.mjs lrclib 400
   let left = Number(process.argv[3]) || Infinity;
-  for (const s of [...candidates].sort((a, b) => hasVideo(yt[key(b)]) - hasVideo(yt[key(a)]))) {
-    if (key(s) in cache && (cache[key(s)] === null || cache[key(s)].v)) continue;
+  // piosenki bez tekstu z czasami (null) sprawdzamy ponownie co 30 dni – teksty w LRCLIB z czasem przybywają;
+  // data ostatniego sprawdzenia: lrclib-none.json; teksty z małym udziałem polskich wersów – też ponownie (wybór wariantu)
+  const none = load('lrclib-none.json', {});
+  const today = new Date().toISOString().slice(0, 10);
+  const due = (k) => !none[k] || Date.now() - Date.parse(none[k]) >= 30 * 864e5;
+  for (const s of [...candidates].sort((a, b) => wantedFirst(b) - wantedFirst(a) || hasVideo(yt[key(b)]) - hasVideo(yt[key(a)]))) {
+    const c = cache[key(s)];
+    if (key(s) in cache && ((c === null && !due(key(s))) || (c && c.v && !(c.pl < PL_MIN && !c.plChecked)))) continue;
     if (left-- <= 0) break;
     const r = await lrclibSearch(s);
+    if (r === null) none[key(s)] = today;
+    if (r && c && c.pl < PL_MIN) r.plChecked = true;
     if (r !== undefined) cache[key(s)] = r;
     await sleep(1100);
     if (++n % 25 === 0) { save('lrclib-pl.json', cache); process.stdout.write(`\rLRCLIB: ${n}`); }
   }
   save('lrclib-pl.json', cache);
+  save('lrclib-none.json', none);
   const found = Object.values(cache).filter(Boolean).length;
   console.log(`\nLRCLIB: sprawdzone ${Object.keys(cache).length}, z tekstem z czasami: ${found}`);
 }
