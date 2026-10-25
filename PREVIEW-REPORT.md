@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 1053 z 7094 piosenek (ostatnio 2026-10-23, w tym uruchomieniu: 150).
+Sprawdzono dotąd 1203 z 7094 piosenek (ostatnio 2026-10-25, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -191,3 +191,28 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | WWO & Sokół – W wyjątkowych okolicznościach | 2002 | 2026-10-23 |
 | Big Cyc – Dres | 2002 | 2026-10-23 |
 | Kasia Kowalska – Mniejsze zło | 2003 | 2026-10-23 |
+| Republika – Śmierć na pięć (New) | 2002 | 2026-10-25 |
+| Urszula – Kto by cię chciał pokochać | 2003 | 2026-10-25 |
+| Łzy – Oczy szeroko zamknięte | 2003 | 2026-10-25 |
+| Golden Life – 24.11.94 | 1995 | 2026-10-25 |
+| Lady Pank – Stacja Warszawa | 2004 | 2026-10-25 |
+| Maanam – Kraków – Ocean wolnego czasu | 2004 | 2026-10-25 |
+| Sidney Polak & Pezet – Otwieram wino | 2004 | 2026-10-25 |
+| Zipera & Pono – Bez ciśnień | 2004 | 2026-10-25 |
+| Artur Rojek – Prosta rzecz | 2005 | 2026-10-25 |
+| Ewelina Flinta – Nie znasz mnie | 2005 | 2026-10-25 |
+| Ewelina Flinta – Nieskończona historia | 2005 | 2026-10-25 |
+| IRA – Ona Jest Ze Snu | 2005 | 2026-10-25 |
+| Maria Peszek – Moje miasto | 2005 | 2026-10-25 |
+| Pokahontaz – Za szybcy się wściekli | 2005 | 2026-10-25 |
+| Blog 27 – Who I Am? | 2006 | 2026-10-25 |
+| Ewelina Flinta – Bliżej | 2006 | 2026-10-25 |
+| Ich Troje & Real McCoy – Follow My Heart | 2006 | 2026-10-25 |
+| Jacek Stachursky – Z Każdym Twym Oddechem | 2006 | 2026-10-25 |
+| Maria Sadowska – Kiedy Nie Ma Miłości | 2006 | 2026-10-25 |
+| The Jet Set – How Many People | 2006 | 2026-10-25 |
+| The Jet Set – Just Call Me | 2006 | 2026-10-25 |
+| Włodzimierz Korcz & Alicja Majewska – Być kobietą | 2006 | 2026-10-25 |
+| Molesta Ewenement & Jamal – Tak Miało Być | 2006 | 2026-10-25 |
+| Pono – Pierdolę to | 2006 | 2026-10-25 |
+| Agnieszka Włodarczyk – Jak oni śpiewają | 2007 | 2026-10-25 |
