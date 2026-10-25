@@ -1012,6 +1012,6 @@ Wersja próbna wyglądu 6.0:
 
 - „Tak to leciało!”: lepsze szukanie tekstów z czasami – piosenki bez tekstu są sprawdzane ponownie co 30 dni, przy braku wyniku szukanie jest luźniejsze, a dla polskich piosenek wybierana jest polska wersja tekstu. Katalog 582 piosenki, +3 (z playlisty „Tak to leciało” 287 z 324; tekst z czasami ma już 302 z nich, filmy do reszty zostaną dobrane w kolejnych dniach).
 
-## 5.54.10 – 25.10.2026 (`???????`)
+## 5.54.10 – 25.10.2026 (`520c065`)
 
 - „Tak to leciało!”: katalog 582 piosenek, +0 (z playlisty „Tak to leciało” 287 z 324).
