@@ -1063,7 +1063,7 @@ Wersja próbna wyglądu 6.0:
 - Baza: trzy piosenki zapisane dwukrotnie (np. „I Gotta Feeling”) nie trafią już do jednej gry dwa razy; przy tytułach „A / B” (obie strony singla) zaliczana jest każda z nazw.
 - Wygląd 6.0: w ustawieniach gry zakładki z nazwami sekcji („Piosenki · Odtwarzanie · Zasady”) zamiast samych kropek; „Pomijaj piosenki niecenzuralne” jest w sekcji „Piosenki”, więc pierwszy krok mieści się na jednym ekranie telefonu.
 
-## 5.58.2 – 26.10.2026 (`???????`)
+## 5.58.2 – 26.10.2026 (`837a7bd`)
 
 - Duży ekran i telefony graczy: w wynikach po grze każdy gracz był pokazany dwa razy (doklejała się tabela ligi) – teraz lista jest pojedyncza, a liga osobno.
 - „Tak to leciało!”: wyjaśnienie (np. „nie wczytał się tekst do tego filmu”) jest nad listą filmów i znika po wybraniu innego filmu; przycisk drugiej piosenki z kategorii jest krótszy (tytuł w jednej linijce).
