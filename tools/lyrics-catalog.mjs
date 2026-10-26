@@ -427,7 +427,11 @@ function stepBuild() {
     // [[film, tekst, długość], …] – filmy bez znanej długości (stare zapisy) dostają tekst główny
     if (!l || !hasVideo(v) || l.pl === undefined || l.pl < PL_MIN) continue;
     const alts = [];
-    for (const id of v.alts || [v.id]) {
+    // nagranie koncertowe (np. „Nieznajomy - Live” z kanału „- Topic”) – na koniec listy, gdy jest inna wersja:
+    // gra poleca pierwszy film, a wersja z płyty studyjnej jest bliższa temu, co gracze znają
+    const ids = [...(v.alts || [v.id])];
+    if (ids.length > 1 && v.title && BAD_TITLE.test(words(v.title)) && ids[0] === v.id) ids.push(ids.shift());
+    for (const id of ids) {
       if (BAD.has(id)) continue;
       const d = v.dur && v.dur[id];
       const m = d ? lrFor(d, l) : [l.id, l.d];

@@ -39,6 +39,8 @@
       const plain = `[Zwrotka 1]\nRefren:\npierwszy wers piosenki ${q.get('track_name')}\ndrugi wers tej piosenki\ntrzeci wers`;
       return new Response(JSON.stringify([{ id: 1, trackName: q.get('track_name'), artistName: q.get('artist_name'), plainLyrics: plain }]), { headers: { 'content-type': 'application/json' } });
     }
+    // __lrReal: prawdziwe teksty z lrclib.net (sprawdzanie konkretnych piosenek z katalogu)
+    if (url.startsWith('https://lrclib.net/api/get/') && window.__lrReal) return realFetch(input, init);
     if (url.startsWith('https://lrclib.net/api/get/')) {
       const id = url.split('/').pop();
       // __lrFail: serwer z tekstami przeciążony (503) dla tych tekstów

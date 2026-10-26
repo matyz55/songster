@@ -1189,7 +1189,8 @@ function lyRender() {
       }, el('b', {}, c.name)))));
       if (me.stage > 0 && !hitReady) items.push(el('button', { class: 'ghost ly-quit', onclick: lyQuit }, T('✋ Rezygnuję – zabieram {0}', lyMoney(me.score))));
     }
-    lyPrefetch(me.board.filter((c) => !c.done).flatMap((c) => c.songs.map((it) => it.lr)));
+    // teksty wszystkich filmów z planszy (każdy film może mieć własny wariant tekstu) – pobrane w tle, zanim gracz wybierze
+    lyPrefetch([...new Set(me.board.filter((c) => !c.done).flatMap((c) => c.songs.flatMap((it) => it.vids.map((v) => v.lr))))]);
     board.replaceChildren(...items);
     tvSync();
     return;
