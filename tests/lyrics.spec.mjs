@@ -37,7 +37,15 @@ async function toAnswer(page) {
   await expect.poll(async () => {
     if (await page.locator('.ly-film:not(.failed)').count()) await page.locator('.ly-film:not(.failed)').first().click({ timeout: 1000 }).catch(() => {});
     return page.evaluate(() => state.phase);
-  }, { timeout: 20000 }).toBe('answer');
+  }, { timeout: 20000 }).toBe('answer').catch(async (e) => {
+    // przy błędzie – stan piosenki (łatwiej znaleźć przyczynę)
+    const st = await page.evaluate(() => {
+      const ly = state.lyrics; const cur = ly && ly.cur;
+      return JSON.stringify({ phase: state.phase, msg: ly && ly.msg, pick: cur && cur.pick, dead: cur && cur.dead, vid: cur && cur.videoId, lines: !!(cur && cur.lines),
+        gap: !!(cur && cur.gap), started: cur && cur.started, failed: cur && cur.failed, yt: lyYT && lyYT.getPlayerState && lyYT.getPlayerState(), films: document.querySelectorAll('.ly-film').length });
+    }).catch(() => '?');
+    throw new Error(`${e.message}\nstan: ${st}`);
+  });
 }
 const fillCorrect = (page) => page.evaluate(() => {
   const cur = state.lyrics.cur;
@@ -596,14 +604,15 @@ test('Tak to leciało!: zagadka nie trafia na zapowiedzi z koncertu, chórki w n
   await page.goto('/');
   const r = await page.evaluate(() => {
     const bad = ['(Dzięki wielkie Poznań!)', 'Dzięki wielkie poznań, dziękujemy', 'Brawo wy!', '(Jeszcze raz!)', 'La la la la', 'Hej hej, hej hej', 'Uuuu, jestem tu', 'Oh yeah', 'Na na na na na'];
-    const good = ['Nie chcę tańczyć do melodii, którą znam', 'Jestem wolny, już mnie porwał wiatr', 'O tobie myślę co dzień'];
+    // liczba z trzema takimi samymi cyframi („2000”) to nie przeciągnięta głoska
+    const good = ['Nie chcę tańczyć do melodii, którą znam', 'Jestem wolny, już mnie porwał wiatr', 'O tobie myślę co dzień', 'Już w roku 2000 będzie inaczej'];
     // piosenka: tylko didaskalia i onomatopeje poza jednym zwykłym wersem
     const lines = [...bad, ...bad, good[0], ...bad].map((text, i) => ({ t: 12 + i * 4, text }));
     const picks = new Set(Array.from({ length: 40 }, () => { const g = lyPickGap(lines, 3, 200); return g && lines[g.line].text; }));
     return { bad: bad.map(lyGapLineOk), good: good.map(lyGapLineOk), picks: [...picks] };
   });
   expect(r.bad).toEqual(r.bad.map(() => false));
-  expect(r.good).toEqual([true, true, true]);
+  expect(r.good).toEqual([true, true, true, true]);
   expect(r.picks).toEqual(['Nie chcę tańczyć do melodii, którą znam']);
 });
 
@@ -661,20 +670,21 @@ test('6.0 na telefonie: pasek – sama stawka, śpiewany wers zawsze widoczny, w
   await expect(rungs).toHaveCount(1);
   await page.locator('.ly-cat:not(.done)').first().click();
   await page.locator('.ly-song').first().click();
-  // śpiewany wers – także ostatni przed przerwą – nigdy nie jest schowany (sprawdzane co 10 ms do przerwy)
+  // śpiewany wers – także ostatni przed przerwą – nigdy nie jest schowany (sprawdzane przy każdej zmianie wersów do przerwy)
   await page.evaluate(() => {
     window.__nowSeen = 0;
     window.__nowHidden = [];
-    window.__nowWatch = setInterval(() => {
+    window.__nowWatch = new MutationObserver(() => {
       const n = state.phase === 'play' && document.querySelector('#ly-lines p.now');
       if (!n) return;
       window.__nowSeen++;
       if (getComputedStyle(n).display === 'none') window.__nowHidden.push(n.textContent);
-    }, 10);
+    });
+    window.__nowWatch.observe(document.querySelector('#ly-lines'), { childList: true, subtree: true, attributes: true });
   });
   await pickFilm(page);
   await toAnswer(page);
-  expect(await page.evaluate(() => { clearInterval(window.__nowWatch); return window.__nowSeen; })).toBeGreaterThan(5);
+  expect(await page.evaluate(() => { window.__nowWatch.disconnect(); return window.__nowSeen; })).toBeGreaterThan(0);
   expect(await page.evaluate(() => window.__nowHidden)).toEqual([]);
   // przerwa: kropki, pole z „Tak to leciało!”, koła ratunkowe i „✋ Rezygnuję” z napisem (nie ikonka mikrofonu)
   for (const sel of ['.ly-dots', '#ly-input', '.ly-submit', '.ly-lifebtns', '#ly-answer .ly-quit']) await expect(page.locator(sel)).toBeVisible();
@@ -710,4 +720,28 @@ test('Tak to leciało!: trzy wersje po odsłonięciu słowa – odsłonięte sł
   await page.locator('.ly-variants button', { hasText: new RegExp(`^${want.join(' ').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`) }).click();
   await page.getByRole('button', { name: 'Tak to leciało!' }).click();
   await expect(page.locator('#ly-answer .verdict')).toContainText('Tak to leciało!');
+});
+
+test('Tak to leciało!: rozpoznawanie mowy nie działa w przeglądarce (błąd „network”) – komunikat, przycisk 🎤 znika', async ({ page }) => {
+  // przeglądarka z interfejsem rozpoznawania mowy, które nie działa (np. Brave)
+  await page.addInitScript(() => {
+    window.SpeechRecognition = class { start() { setTimeout(() => { this.onerror({ error: 'network' }); this.onend(); }, 20); } };
+  });
+  await startLyrics(page);
+  await playToGap(page);
+  await page.getByRole('button', { name: '🎤 Zaśpiewaj zamiast pisać' }).click();
+  await expect(page.locator('#ly-answer .ly-flash')).toContainText('nie działa w tej przeglądarce');
+  await expect(page.locator('#ly-answer .ly-sing')).toHaveCount(0);
+  expect(await page.evaluate(() => store.get('lySpeechOffAt', 0))).toBeGreaterThan(0);
+});
+
+test('Tak to leciało!: rozpoznawanie mowy – cisza daje komunikat, a przycisk 🎤 zostaje', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.SpeechRecognition = class { start() { setTimeout(() => { this.onerror({ error: 'no-speech' }); this.onend(); }, 20); } };
+  });
+  await startLyrics(page);
+  await playToGap(page);
+  await page.getByRole('button', { name: '🎤 Zaśpiewaj zamiast pisać' }).click();
+  await expect(page.locator('#ly-answer .ly-flash')).toContainText('Nic nie słychać');
+  await expect(page.locator('#ly-answer .ly-sing')).toHaveText('🎤 Zaśpiewaj zamiast pisać');
 });

@@ -210,8 +210,9 @@ const LY_INTERJ = new Set(['la', 'lala', 'nana', 'oh', 'och', 'ach', 'ah', 'aha'
 function lyGapLineOk(text) {
   if (/[()[\]]/.test(text) || LY_TALK.test(text)) return false;
   const ws = lyWords(text).map(lyNorm).filter(Boolean);
-  // powtórzona sylaba w słowie („lalala”, „nanana”) albo przeciągnięta głoska („uuuu”, „jeeeee”)
-  if (ws.some((w) => /(.)\1\1/u.test(w) || (w.length >= 4 && /^(\p{L}{1,3})\1+$/u.test(w)))) return false;
+  // powtórzona sylaba w słowie („lalala”, „nanana”) albo przeciągnięta głoska („uuuu”, „jeeeee”) – tylko litery
+  // (liczby jak „1000” czy „2000” to nie okrzyki)
+  if (ws.some((w) => /(\p{L})\1\1/u.test(w) || (w.length >= 4 && /^(\p{L}{1,3})\1+$/u.test(w)))) return false;
   // to samo krótkie słowo dwa razy z rzędu („na na”, „hej hej”) albo wykrzyknienia
   if (ws.some((w, i) => i && w.length <= 3 && w === ws[i - 1])) return false;
   if (ws.filter((w) => LY_INTERJ.has(w)).length >= 1 && ws.length <= 3) return false;
@@ -919,10 +920,14 @@ function lyGiven(cur) {
 }
 // tekst pola z całego wersu (puste miejsca na końcu pomijamy)
 const lySetText = (cur, words) => { cur.text = words.map((w) => w || '').join(' ').replace(/\s+/g, ' ').trim(); };
-// śpiewanie: rozpoznawanie mowy przeglądarki (Chrome, Edge, Safari) – rozpoznane słowa trafiają do pola odpowiedzi
+// śpiewanie: rozpoznawanie mowy przeglądarki (Chrome, Edge, Safari) – rozpoznane słowa trafiają do pola odpowiedzi.
+// Niektóre przeglądarki mają ten interfejs, ale rozpoznawanie w nich nie działa (np. Brave – błąd „network”): wtedy
+// komunikat, a przycisk 🎤 znika na tym urządzeniu na 30 dni; brak zgody na mikrofon i cisza – sam komunikat.
 const LySpeech = window.SpeechRecognition || window.webkitSpeechRecognition;
+const LY_SPEECH_OFF_MS = 30 * 86400000;
+const lySpeechOk = () => !!LySpeech && Date.now() - store.get('lySpeechOffAt', 0) > LY_SPEECH_OFF_MS;
 function lySing() {
-  if (!LySpeech || state.phase !== 'answer') return;
+  if (!lySpeechOk() || state.phase !== 'answer') return;
   const cur = state.lyrics.cur;
   const rec = new LySpeech();
   rec.lang = 'pl-PL';
@@ -945,7 +950,16 @@ function lySing() {
     if (best) lySetText(cur, best.win);
   };
   rec.onend = () => { cur.listening = false; lyRender(); };
-  rec.onerror = () => { cur.listening = false; lyRender(); };
+  rec.onerror = (e) => {
+    cur.listening = false;
+    const why = e && e.error;
+    if (['network', 'service-not-allowed', 'language-not-supported'].includes(why)) {
+      store.set('lySpeechOffAt', Date.now());
+      lyFlash(T('🎤 Rozpoznawanie mowy nie działa w tej przeglądarce – wpisz słowa w pole.'));
+    } else if (['not-allowed', 'audio-capture'].includes(why)) lyFlash(T('🎤 Brak dostępu do mikrofonu – zezwól na mikrofon w przeglądarce albo wpisz słowa w pole.'));
+    else if (why === 'no-speech') lyFlash(T('🎤 Nic nie słychać – spróbuj jeszcze raz.'));
+    lyRender();
+  };
   try { rec.start(); } catch (e) { cur.listening = false; lyRender(); }
 }
 // „Tak to leciało!” – sprawdzenie odpowiedzi
@@ -1333,7 +1347,7 @@ function lyRenderAnswer() {
   parts.push(el('button', { class: 'primary ly-submit', onclick: lySubmit }, T('Tak to leciało!')));
   if (!ly.mini && !final) parts.push(lyLifeBtns(me, cur, false));
   const extra = el('div', { class: 'actions ly-extra' },
-    LySpeech ? el('button', { class: 'ghost ly-sing', onclick: lySing, disabled: cur.listening }, cur.listening ? T('🎤 Słucham…') : T('🎤 Zaśpiewaj zamiast pisać')) : null);
+    lySpeechOk() ? el('button', { class: 'ghost ly-sing', onclick: lySing, disabled: cur.listening }, cur.listening ? T('🎤 Słucham…') : T('🎤 Zaśpiewaj zamiast pisać')) : null);
   if (!ly.mini && !final && state.players.length > 1 && me.lifes.help && cur.helper == null && !cur.hint) {
     extra.append(el('span', { class: 'ly-help' }, T('🙋 Sufler:'), state.players.map((p, i) => (i === state.turn ? null
       : el('button', { class: 'ghost small', onclick: () => lyAskHelper(i) }, p.name)))));

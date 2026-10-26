@@ -1093,3 +1093,8 @@ Wersja próbna wyglądu 6.0:
   - gdy na małym telefonie wszystko się nie mieści (np. kilku graczy i trzy wersje wersu), dół ekranu można przewinąć.
 - Wygląd 6.0, telefon poziomo: rozwinięta drabinka w dwóch rzędach na całą szerokość, tytuł i wykonawca w jednej linijce.
 - Wygląd 6.0 na komputerze: „🎤 Zaśpiewaj zamiast pisać” i „✋ Rezygnuję” stoją obok siebie, więc przy trzech wersjach wersu mieści się cała prawa kolumna.
+
+## 5.58.6 – 26.10.2026 (`…`)
+
+- „Tak to leciało!”: gdy przeglądarka ma rozpoznawanie mowy, ale ono w niej nie działa (np. Brave), „🎤 Zaśpiewaj zamiast pisać” pokazuje komunikat, że trzeba wpisać słowa, i znika na tym urządzeniu na 30 dni. Przy braku zgody na mikrofon albo gdy nic nie było słychać – komunikat, co zrobić.
+- „Tak to leciało!”: wersy z liczbami takimi jak „1000” czy „2000” nie są już odrzucane jak przeciągnięte okrzyki („uuu”) – mogą być zagadką jak inne wersy.
