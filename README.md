@@ -117,9 +117,10 @@ okładki pobierane są w jakości dopasowanej do ekranu).
 
 **Telewizor przez sieć**: na telewizorze (np. Google TV) lub innym komputerze otwórz `tv.html` i kliknij
 „📶 Połącz z innym urządzeniem” – pojawi się 4-znakowy kod i kod QR. Telefon, na którym toczy się gra, skanuje
-QR (albo w oknie 📺 wpisuje kod) i od tej chwili steruje dużym ekranem. Połączenie: dołączające urządzenie próbuje
-naraz bezpośrednio (WebRTC przez PeerJS) i przez publiczny serwer pośredniczący MQTT (shiftr.io, WebSocket na porcie 443) –
-wygrywa kanał, który połączy się pierwszy, drugi jest od razu zamykany. Biblioteki ładowane są dopiero przy łączeniu.
+QR (albo w oknie 📺 wpisuje kod) i od tej chwili steruje dużym ekranem. Połączenie: najpierw przez własny serwer
+pośredniczący Songstera (Cloudflare Workers, `server/relay` – instrukcja wdrożenia w `server/relay/README.md`), o ile
+jego adres jest ustawiony; gdy go nie ma albo nie odpowiada – naraz bezpośrednio (WebRTC przez PeerJS) i przez publiczny
+serwer pośredniczący MQTT (shiftr.io, WebSocket na porcie 443) – wygrywa kanał, który połączy się pierwszy. Biblioteki ładowane są dopiero przy łączeniu.
 Gospodarz wysyła numer wersji gry – duży ekran albo telefon gracza ze starszą wersją (np. otwarty przed aktualizacją)
 sam pobiera świeże pliki i się odświeża, a gospodarz łączy się z telewizorem ponownie (ten sam kod).
 

@@ -7,6 +7,8 @@ export const mockScript = readFileSync(new URL('./mock.js', import.meta.url), 'u
 export async function newPage(browser, opts = {}) {
   const ctx = await browser.newContext({ locale: 'pl-PL', ...opts });
   await ctx.addInitScript(mockScript);
+  // RELAY_TEST_URL – wszystkie strony łączą się przez własny serwer pośredniczący (server/relay)
+  if (process.env.RELAY_TEST_URL) await ctx.addInitScript((url) => { window.SONGSTER_RELAY = url; }, process.env.RELAY_TEST_URL);
   await ctx.route(/cloud\.umami\.is/, (r) => r.abort());
   const page = await ctx.newPage();
   page.errors = [];

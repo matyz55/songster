@@ -4,7 +4,7 @@ import globals from 'globals';
 // Pliki gry to zwykłe skrypty (bez modułów) ładowane po kolei w index.html / tv.html –
 // współdzielą zmienne globalne, dlatego no-undef jest wyłączone, a no-unused-vars pilnuje tylko zmiennych lokalnych.
 export default [
-  { ignores: ['node_modules/', 'playwright-report/', 'test-results/', 'songs.js', 'songs-sp.js', 'facts.js', 'flags/'] },
+  { ignores: ['node_modules/', '**/.wrangler/', 'playwright-report/', 'test-results/', 'songs.js', 'songs-sp.js', 'facts.js', 'flags/'] },
   js.configs.recommended,
   {
     files: ['*.js', 'js/*.js'],
@@ -22,6 +22,12 @@ export default [
   {
     files: ['tests/**/*.mjs', 'tools/**/*.mjs', '*.mjs'],
     languageOptions: { ecmaVersion: 2023, sourceType: 'module', globals: { ...globals.node } },
+  },
+  {
+    // serwer pośredniczący (Cloudflare Workers) – moduł z interfejsami środowiska Workers
+    files: ['server/**/*.js'],
+    languageOptions: { ecmaVersion: 2023, sourceType: 'module', globals: { ...globals.serviceworker, WebSocketPair: 'readonly', WebSocketRequestResponsePair: 'readonly' } },
+    rules: { 'no-unused-vars': ['error', { caughtErrors: 'none' }] },
   },
   {
     files: ['tests/mock.js'],

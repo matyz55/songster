@@ -1,9 +1,11 @@
 'use strict';
 // Połączenia między urządzeniami: telefon-pilot ↔ telewizor oraz gracze na własnych telefonach.
-// Dwa kanały, ten sam 4-znakowy kod pokoju:
-// 1) bezpośrednio przez WebRTC (PeerJS) – najszybciej, ale bywa blokowane przez sieć albo przeglądarkę (np. Brave),
-// 2) zapasowo przez publiczny serwer pośredniczący MQTT po WebSocket (port 443) – działa w każdej sieci.
-// Gospodarz pokoju słucha na obu; dołączający próbuje najpierw WebRTC, a gdy się nie uda – MQTT.
+// Trzy kanały, ten sam 4-znakowy kod pokoju:
+// 1) własny serwer pośredniczący Songstera (Cloudflare Workers, server/relay) po WebSocket (port 443) – działa w każdej
+//    sieci, także komórkowej, z małym opóźnieniem; używany, gdy ustawiony jest jego adres (RELAY_URL),
+// 2) bezpośrednio przez WebRTC (PeerJS) – bywa blokowane przez sieć (zwłaszcza komórkową) albo przeglądarkę (np. Brave),
+// 3) zapasowo przez publiczny serwer MQTT po WebSocket – działa w każdej sieci, ale jest wspólny i wolniejszy.
+// Gospodarz pokoju słucha na wszystkich; dołączający próbuje najpierw własnego serwera, a gdy się nie uda – WebRTC i MQTT.
 // Biblioteki ładujemy dopiero, gdy ktoś z tego korzysta.
 (function () {
   const PEERJS = 'https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js';
@@ -12,6 +14,8 @@
   // publiczny serwer shiftr.io (konto „public”) – kanały są jawne, dlatego przesyłamy wyłącznie stan gry
   const MQTT_URL = 'wss://public.cloud.shiftr.io';
   const MQTT_AUTH = { username: 'public', password: 'public' };
+  // adres serwera pośredniczącego po wdrożeniu (np. 'wss://songster-relay.nazwa.workers.dev'); pusty – kanał wyłączony
+  const RELAY_URL = window.SONGSTER_RELAY || '';
   const ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // bez łatwych do pomylenia znaków (0/O, 1/I/L)
   const loaded = {};
   function loadScript(src) {
@@ -141,6 +145,93 @@
     }
     return { conn };
   }
+  // ---------- własny serwer pośredniczący (server/relay) ----------
+  const relayRoom = (kind, code) => `${RELAY_URL.replace(/\/+$/, '')}/room/${kind}-${code}`;
+  // otwarcie WebSocketu i pierwsza wiadomość serwera ({t: 'ok'} albo powód odmowy)
+  function wsOpen(url) {
+    return new Promise((resolve, reject) => {
+      const ws = new WebSocket(url);
+      ws.onmessage = (e) => {
+        let m;
+        try { m = JSON.parse(e.data); } catch (err) { return; }
+        ws.onmessage = null;
+        if (m.t === 'ok') resolve(ws); else { reject(new Error(m.t || 'relay')); try { ws.close(); } catch (err) { /* zamknięte */ } }
+      };
+      ws.onerror = () => reject(new Error('relay'));
+      ws.onclose = () => reject(new Error('relay'));
+    });
+  }
+  // podtrzymanie połączenia: „ping” – serwer odpowiada sam, bez budzenia pokoju
+  const keepAlive = (ws) => setInterval(() => { if (ws.readyState === 1) ws.send('ping'); }, 25000);
+  async function wsHost(kind, code, onConn) {
+    const conns = new Map();
+    let ws = null;
+    let ping = null;
+    let closed = false;
+    const send = (m) => { if (ws && ws.readyState === 1) ws.send(JSON.stringify(m)); };
+    const connFor = (id) => {
+      let conn = conns.get(id);
+      if (!conn) {
+        conn = makeConn((msg) => send({ to: id, d: msg }), () => { send({ to: id, close: true }); conns.delete(id); });
+        conn.via = 'ws';
+        conns.set(id, conn);
+        onConn(conn);
+      }
+      return conn;
+    };
+    const attach = (sock) => {
+      ws = sock;
+      clearInterval(ping);
+      ping = keepAlive(sock);
+      sock.onmessage = (e) => {
+        let m;
+        try { m = JSON.parse(e.data); } catch (err) { return; }
+        if (m.t === 'join') { connFor(m.id); return; }
+        if (m.t === 'leave') { const c = conns.get(m.id); if (c) { c._close(); conns.delete(m.id); } return; }
+        if (m.from) { const c = connFor(m.from); c.seen = Date.now(); c._data(m.d); }
+      };
+      // zerwane połączenie gospodarza: serwer rozłączył graczy (połączą się ponownie) – wracamy do tego samego pokoju
+      sock.onclose = () => {
+        clearInterval(ping);
+        for (const c of conns.values()) c._close();
+        conns.clear();
+        if (closed) return;
+        setTimeout(function again() {
+          if (closed) return;
+          wsOpen(relayRoom(kind, code) + '?role=host').then(attach, () => setTimeout(again, 3000));
+        }, 1000);
+      };
+    };
+    try {
+      attach(await withTimeout(wsOpen(relayRoom(kind, code) + '?role=host'), 8000, 'relay'));
+    } catch (e) {
+      if (e.message === 'taken') return 'taken';
+      throw e;
+    }
+    return () => {
+      closed = true;
+      for (const conn of [...conns.values()]) { try { conn.send({ __bye: true }); } catch (e) { /* zerwane */ } conn._close(); }
+      conns.clear();
+      clearInterval(ping);
+      setTimeout(() => { try { ws.close(); } catch (e) { /* zamknięte */ } }, 300);
+    };
+  }
+  async function wsConnect(kind, code) {
+    const ws = await withTimeout(wsOpen(`${relayRoom(kind, code)}?role=peer&id=${rand(10)}`), 6000, 'relay');
+    const ping = keepAlive(ws);
+    const conn = makeConn((msg) => { if (ws.readyState === 1) ws.send(JSON.stringify({ d: msg })); }, () => {});
+    conn.via = 'ws';
+    ws.onmessage = (e) => {
+      let m;
+      try { m = JSON.parse(e.data); } catch (err) { return; }
+      if (m.t === 'bye') { conn._close(); return; }
+      if ('d' in m) { if (m.d && m.d.__bye) { conn._close(); return; } conn._data(m.d); }
+    };
+    ws.onclose = () => { clearInterval(ping); conn._close(); };
+    conn.on('close', () => { clearInterval(ping); try { ws.close(); } catch (e) { /* zamknięte */ } });
+    return { conn };
+  }
+
   async function peerHost(kind, code, onConn) {
     await loadScript(PEERJS);
     const peer = new window.Peer(peerId(kind, code));
@@ -187,12 +278,15 @@
   async function host(kind, onConn, preferred) {
     for (let attempt = 0; attempt < 5; attempt++) {
       const code = attempt === 0 && normCode(preferred).length === 4 ? normCode(preferred) : rand(4);
-      const [p, m] = await Promise.allSettled([peerHost(kind, code, onConn), mqttHost(kind, code, onConn)]);
-      if (p.status === 'fulfilled' && p.value === 'taken') { if (m.status === 'fulfilled') m.value(); continue; } // kod zajęty – losujemy inny
+      const [w, p, m] = await Promise.allSettled([RELAY_URL ? wsHost(kind, code, onConn) : Promise.reject(new Error('off')),
+        peerHost(kind, code, onConn), mqttHost(kind, code, onConn)]);
+      const wsOk = w.status === 'fulfilled' && typeof w.value === 'function';
       const peerOk = p.status === 'fulfilled' && typeof p.value === 'function';
       const mqttOk = m.status === 'fulfilled';
-      const close = () => { if (peerOk) p.value(); if (mqttOk) m.value(); };
-      if (peerOk || mqttOk) return { code, direct: peerOk, relay: mqttOk, close };
+      const close = () => { if (wsOk) w.value(); if (peerOk) p.value(); if (mqttOk) m.value(); };
+      // kod zajęty – losujemy inny
+      if ((p.status === 'fulfilled' && p.value === 'taken') || (w.status === 'fulfilled' && w.value === 'taken')) { close(); continue; }
+      if (wsOk || peerOk || mqttOk) return { code, server: wsOk, direct: peerOk, relay: mqttOk, close };
       throw new Error('offline');
     }
     throw new Error('unavailable-id');
@@ -204,6 +298,11 @@
     code = normCode(code);
     // ?relay=1 – od razu przez serwer pośredniczący (diagnostyka i testy)
     if (/[?&]relay=1/.test(window.location.search)) return mqttConnect(kind, code);
+    // najpierw własny serwer pośredniczący (szybki i działa w każdej sieci); gdy go nie ma albo nie odpowiada – jak dawniej
+    if (RELAY_URL) return wsConnect(kind, code).catch(() => race(kind, code));
+    return race(kind, code);
+  }
+  function race(kind, code) {
     const tries = [peerConnect(kind, code), mqttConnect(kind, code)];
     let winner = null;
     let failed = 0;
@@ -237,7 +336,7 @@
 
   // wersja aplikacji (taka sama jak pamięć podręczna w sw.js) – gdy gospodarz ma nowszą, duży ekran i telefony graczy
   // same się odświeżają (inaczej np. telewizor otwarty przed aktualizacją nie zna nowych ekranów)
-  const version = '49';
+  const version = '50';
   // pobranie świeżych plików (z pominięciem pamięci podręcznej przeglądarki) i przeładowanie strony – raz na wersję
   async function updateTo(ver) {
     const key = 'songster.reloadedFor';
