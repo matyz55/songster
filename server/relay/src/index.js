@@ -88,9 +88,11 @@ export default {
     const m = url.pathname.match(ROOM);
     if (!m) return new Response('Songster relay', { status: url.pathname === '/' ? 200 : 404 });
     if (request.headers.get('Upgrade') !== 'websocket') return new Response('expected websocket', { status: 426 });
-    // opcjonalnie: tylko strony gry (zmienna ALLOWED_ORIGINS w ustawieniach Workera, adresy po przecinku)
+    // tylko strony gry (ALLOWED_ORIGINS w wrangler.jsonc, adresy po przecinku) i uruchomienie lokalne
     const allowed = (env.ALLOWED_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean);
-    if (allowed.length && !allowed.includes(request.headers.get('Origin') || '')) return new Response('forbidden', { status: 403 });
+    const origin = request.headers.get('Origin') || '';
+    const local = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+    if (allowed.length && !local && !allowed.includes(origin)) return new Response('forbidden', { status: 403 });
     const room = env.ROOMS.get(env.ROOMS.idFromName(m[1].toUpperCase()));
     return room.fetch(request);
   },

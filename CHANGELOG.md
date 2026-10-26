@@ -1037,3 +1037,7 @@ Wersja próbna wyglądu 6.0:
 - Gra na kilku urządzeniach: telefony i duży ekran łączą się teraz najpierw przez własny serwer Songstera (Cloudflare) – działa w każdej sieci, także komórkowej, z małym opóźnieniem. Gdy serwer nie odpowiada, gra łączy się jak dotąd.
 - „Tak to leciało!”: gdy piosenka się nie odtwarza, gra nie zmienia jej już sama. Do wyboru: inny film, „🔁 Druga piosenka z kategorii” albo „⏭ Inna piosenka” (bez zużycia koła ratunkowego).
 - „Tak to leciało!”: wracają filmy odrzucone dawniej tylko dlatego, że nie ruszyły same – w katalogu jest teraz 600 piosenek (+18), z playlisty „Tak to leciało” 291 z 324. Na tym urządzeniu wracają też filmy odrzucone samoczynnie; zostają pominięte tylko te, które zgłosiłeś.
+
+## 5.57.1 – 26.10.2026 (`???????`)
+
+- Serwer połączeń Songstera obsługuje już tylko grę (https://matyz55.github.io/songster/) – inne strony nie mogą zużywać jego darmowego limitu.

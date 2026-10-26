@@ -22,8 +22,8 @@ przekazuje wiadomości gry w ramach pokoju (4-znakowy kod). Dopóki adres serwer
 5. Przekaż ten adres (nie jest tajny) – trafi do `net.js` jako `RELAY_URL` (z `wss://` zamiast `https://`).
    Każda kolejna zmiana w `server/relay` wdroży się sama po wysłaniu na tę gałąź.
 
-Opcjonalnie: w ustawieniach Workera (**Settings** → **Variables**) zmienna `ALLOWED_ORIGINS` z adresem strony gry
-(np. `https://matyz55.github.io`) – wtedy z serwera skorzysta tylko gra.
+Z serwera mogą korzystać tylko strony z `ALLOWED_ORIGINS` w `wrangler.jsonc` (adres gry: `https://matyz55.github.io`)
+oraz uruchomienie lokalne (localhost) – inne strony dostają odmowę (403).
 
 ## Limity planu darmowego (dokumentacja Cloudflare)
 

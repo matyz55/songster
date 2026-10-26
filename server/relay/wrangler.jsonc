@@ -4,6 +4,8 @@
   "name": "songster-relay",
   "main": "src/index.js",
   "compatibility_date": "2025-09-01",
+  // strony, które mogą korzystać z serwera (adres gry; localhost – testy i uruchomienie lokalne)
+  "vars": { "ALLOWED_ORIGINS": "https://matyz55.github.io" },
   "durable_objects": {
     "bindings": [{ "name": "ROOMS", "class_name": "Room" }]
   },
