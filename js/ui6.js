@@ -44,20 +44,24 @@ function ui6Pager(box, opts = {}) {
     const hs = heads();
     let active = -1;
     hs.forEach((h, i) => { if (pageOf(h) <= p.page) active = i; });
-    if (hs.length > 1) {
-      tabs.replaceChildren(...hs.map((h, i) => el('button', {
-        type: 'button', role: 'tab', class: `ui6-tab${i === active ? ' on' : ''}`, 'aria-selected': String(i === active),
-        onclick: () => p.go(pageOf(h)),
-      }, (h.dataset.tab || h.textContent).trim())));
-      count.classList.add('hidden');
-    } else {
-      // bez zakładek – kropki stron
+    // bez zakładek – kropki stron
+    const dots = () => {
       tabs.replaceChildren(...Array.from({ length: p.pages }, (_, i) => el('button', {
         type: 'button', class: `ui6-dot${i === p.page ? ' on' : ''}`, 'aria-label': T('Strona {0}', i + 1), onclick: () => p.go(i),
       })));
       count.classList.toggle('hidden', p.pages < 6);
       tabs.classList.toggle('hidden', p.pages >= 6);
-    }
+    };
+    if (hs.length > 1) {
+      tabs.classList.remove('hidden');
+      tabs.replaceChildren(...hs.map((h, i) => el('button', {
+        type: 'button', role: 'tab', class: `ui6-tab${i === active ? ' on' : ''}`, 'aria-selected': String(i === active),
+        onclick: () => p.go(pageOf(h)),
+      }, (h.dataset.tab || h.textContent).trim())));
+      count.classList.add('hidden');
+      // za mało miejsca na nazwy sekcji (np. telefon poziomo – pasek stoi między przyciskami) – kropki zamiast zakładek
+      if (tabs.scrollWidth > tabs.clientWidth + 1) dots();
+    } else dots();
   }
   p.update = () => {
     if (!box.offsetParent) return;
