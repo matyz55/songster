@@ -851,3 +851,5 @@ body.no-anim *, body.no-anim *::before, body.no-anim *::after { animation: none 
 .ly-film-tag.ok { color: var(--accent-2); }
 .ly-film-tag.bad { color: var(--gold); }
 .ly-film-skip { justify-self: center; }
+.ly-film.top { border-color: var(--accent-2); box-shadow: 0 0 0 1px var(--accent-2) inset; }
+.ly-film-tag { color: var(--accent-2); }

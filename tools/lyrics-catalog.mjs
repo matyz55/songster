@@ -197,6 +197,10 @@ const hasVideo = (v) => !!(v && v.id);
 const retryDue = (v) => v === undefined || v === null
   || (!!v.none && v.tries < MAX_TRIES && Date.now() - Date.parse(v.none) >= RETRY_DAYS * 864e5);
 const noVideo = (prev) => ({ none: new Date().toISOString().slice(0, 10), tries: (prev === null ? 1 : (prev && prev.tries) || 0) + 1 });
+// zapasowe filmy: piosenka z mniej niż dwoma działającymi filmami szuka ich ponownie co RETRY_DAYS dni (altsSearched:
+// data ostatniego szukania; dawne „true” – szukanie z mniejszą liczbą wyników, więc od razu ponownie)
+const usableIds = (v) => (v.alts || [v.id]).filter((id) => !BAD.has(id));
+const altsDue = (v) => typeof v.altsSearched !== 'string' || Date.now() - Date.parse(v.altsSearched) >= RETRY_DAYS * 864e5;
 const MAX_SEARCHES = 95; // dzienny limit search.list to 100
 const SEARCH_PAUSE = 2000; // przerwa między wyszukiwaniami (limit zapytań na minutę)
 const isoSec = (d) => { const m = d.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/) || []; return (+m[1] || 0) * 3600 + (+m[2] || 0) * 60 + (+m[3] || 0); };
@@ -348,7 +352,7 @@ async function stepYoutube() {
       // zostają filmy, które nadal pasują (do któregoś wariantu tekstu); główny – pierwszy z nich
       const s = songByKey.get(k);
       const ok = s && lr[k] ? (yt[k].alts || [yt[k].id]).map((id) => now.get(id)).filter((v) => fits(v, lr[k], s)) : [];
-      if (ok.length) yt[k] = { ...entry(ok[0], yt[k].src, ok.map((v) => v.id), ok), ...(yt[k].altsSearched ? { altsSearched: true } : {}) };
+      if (ok.length) yt[k] = { ...entry(ok[0], yt[k].src, ok.map((v) => v.id), ok), ...(yt[k].altsSearched ? { altsSearched: yt[k].altsSearched } : {}) };
       else { delete yt[k]; removed += 1; }
     }
     save('youtube-pl.json', yt);
@@ -362,7 +366,9 @@ async function stepYoutube() {
   const have = catalogCounts(lr, yt);
   const score = (s) => wantedFirst(s) + (s.p || 0) + (tagged(s) ? 40 : 0) + thinBonus(s, have);
   const queue = [...candidates.filter((s) => lr[key(s)] && !hasVideo(yt[key(s)]) && retryDue(yt[key(s)])).sort((a, b) => score(b) - score(a)),
-    ...candidates.filter((s) => lr[key(s)] && hasVideo(yt[key(s)]) && !yt[key(s)].alts && !yt[key(s)].altsSearched)];
+    // piosenki, których wszystkie filmy nie działają u graczy (bad-videos.json), potem te z jednym działającym filmem
+    ...candidates.filter((s) => lr[key(s)] && hasVideo(yt[key(s)]) && usableIds(yt[key(s)]).length < 2 && altsDue(yt[key(s)]))
+      .sort((a, b) => usableIds(yt[key(a)]).length - usableIds(yt[key(b)]).length || score(b) - score(a))];
   for (const s of queue) {
     const l = lr[key(s)];
     if (searchCalls >= MAX_SEARCHES) break;
@@ -370,8 +376,9 @@ async function stepYoutube() {
     if (searchCalls) await sleep(SEARCH_PAUSE);
     let data, vids = [];
     try {
-      // videoSyndicated – tylko filmy, które można odtwarzać poza youtube.com
-      data = await ytApi('search', { part: 'id', type: 'video', maxResults: 8, q, regionCode: 'PL', videoEmbeddable: 'true', videoSyndicated: 'true' });
+      // videoSyndicated – tylko filmy, które można odtwarzać poza youtube.com; jedno zapytanie kosztuje tyle samo
+      // niezależnie od liczby wyników – bierzemy 25, żeby było z czego wybrać filmy zapasowe
+      data = await ytApi('search', { part: 'id', type: 'video', maxResults: 25, q, regionCode: 'PL', videoEmbeddable: 'true', videoSyndicated: 'true' });
       if (!data) continue; // błąd – bez zapisu, piosenka wróci przy następnym uruchomieniu
       const ids = (data.items || []).map((x) => x.id.videoId).filter(Boolean);
       if (ids.length && !(vids = await videoInfo(ids))) continue;
@@ -379,9 +386,12 @@ async function stepYoutube() {
     const prev = yt[key(s)];
     const ok = vids.filter((v) => fits(v, l, s));
     if (hasVideo(prev)) {
-      // zapasowe filmy dla piosenki, która już ma film
-      const all = [prev.id, ...ok.map((v) => v.id).filter((id) => id !== prev.id)].slice(0, MAX_ALTS);
-      yt[key(s)] = { ...prev, ...(all.length > 1 ? { alts: all } : {}), dur: { ...(prev.dur || {}), ...Object.fromEntries(ok.map((v) => [v.id, v.d])) }, altsSearched: true };
+      // zapasowe filmy dla piosenki, która już ma film: najpierw działające, potem nowe; niedziałające (bad-videos) na końcu
+      ok.sort(rank(s, l));
+      const keep = [...new Set([...usableIds(prev), ...ok.map((v) => v.id).filter((id) => !BAD.has(id))])].slice(0, MAX_ALTS);
+      const all = [...keep, ...(prev.alts || [prev.id]).filter((id) => BAD.has(id))];
+      yt[key(s)] = { ...prev, id: all[0], ...(all.length > 1 ? { alts: all } : {}), dur: { ...(prev.dur || {}), ...Object.fromEntries(ok.map((v) => [v.id, v.d])) },
+        altsSearched: new Date().toISOString().slice(0, 10) };
       save('youtube-pl.json', yt);
       continue;
     }
@@ -402,6 +412,9 @@ const BAD = new Set(Object.entries(load('bad-videos.json', {})).filter(([, why])
 // przesunięcia tekstu względem filmu (s; dodatnie – tekst później) ustawione przez graczy przyciskami pod piosenką
 // i przekazane w raporcie – tools/lyrics-data/offsets.json: { id: sekundy }; w katalogu czwarta liczba przy filmie
 const OFFSETS = load('offsets.json', {});
+// filmy, które ruszyły w grze u graczy (raport ze sprawdzarki: „ruszyły w grze”) – tools/lyrics-data/good-videos.json:
+// { id: data }; w katalogu stoją na początku listy filmów piosenki (gra poleca pierwszy)
+const GOOD = load('good-videos.json', {});
 function stepBuild() {
   const lr = load('lrclib-pl.json', {});
   const yt = load('youtube-pl.json', {});
@@ -420,6 +433,7 @@ function stepBuild() {
       const m = d ? lrFor(d, l) : [l.id, l.d];
       if (m) alts.push(OFFSETS[id] ? [id, m[0], m[1], OFFSETS[id]] : [id, m[0], m[1]]);
     }
+    alts.sort((a, b) => (b[0] in GOOD) - (a[0] in GOOD));
     if (alts.length) out[key(s)] = alts;
   }
   const js = '// Tryb „Tak to leciało!”: piosenka → [[film YouTube, tekst w LRCLIB, długość w s, przesunięcie tekstu w s (opcjonalnie)], …] (gra próbuje kolejnych filmów)\n'

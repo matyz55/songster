@@ -1219,7 +1219,7 @@ window.I18N_EN = {
  "📍 Edyta Górniak – rok i miejsce urodzenia: ok. 4000 lat p.n.e., Wszechświat": "📍 Edyta Górniak – year and place of birth: c. 4000 BC, the Universe",
  "📍 Maryla Rodowicz – rok i miejsce urodzenia: A co, już sylwester?": "📍 Maryla Rodowicz – year and place of birth: What, is it New Year's Eve already?",
  "Tak to leciało! – sprawdź filmy": "Tak to leciało! – check videos",
- "Część filmów z YouTube nie odtwarza się poza YouTube (decyzja wytwórni) i nie da się tego sprawdzić z góry. Tutaj gra po kolei włączy bez dźwięku wszystkie filmy z katalogu – te, które nie działają, przestaną się pojawiać na tym urządzeniu, a raport możesz przekazać twórcy gry.": "Some YouTube videos can't be played outside YouTube (the label's decision) and this can't be checked in advance. Here the game plays every catalogue video in turn, muted – the ones that don't work stop appearing on this device, and you can pass the report on to the game's author.",
+ "Część filmów z YouTube nie odtwarza się poza YouTube (decyzja wytwórni) i nie da się tego sprawdzić z góry. Tutaj gra po kolei włączy bez dźwięku wszystkie filmy z katalogu (odtwarzacz musi być widoczny na ekranie) – te, które nie działają, będą w grze oznaczone i na końcu listy filmów, a raport możesz przekazać twórcy gry.": "Some YouTube videos can't be played outside YouTube (the label's decision) and this can't be checked in advance. Here the game plays every catalogue video in turn, muted (the player has to be visible on screen) – the ones that don't work are marked in the game and listed last, and you can pass the report on to the game's author.",
  "▶ Sprawdź filmy": "▶ Check videos",
  "⏹ Zatrzymaj": "⏹ Stop",
  "📋 Kopiuj raport": "📋 Copy report",
@@ -1424,5 +1424,14 @@ window.I18N_EN = {
  "⚠️ {0} Wybierz inny film.": "⚠️ {0} Choose another video.",
  "Ta piosenka nie działa na tym urządzeniu.": "This song doesn't work on this device.",
  "🔁 Druga piosenka z kategorii: {0}": "🔁 The other song in this category: {0}",
- "⚠️ {0} Wybierz inny film albo zmień piosenkę.": "⚠️ {0} Choose another video or change the song."
+ "⚠️ {0} Wybierz inny film albo zmień piosenkę.": "⚠️ {0} Choose another video or change the song.",
+ "Przyciski odtwarzacza YouTube – film uruchamiasz ▶ na samym filmie (włącza się samo, gdy przeglądarka nie pozwala grze uruchamiać filmów)": "YouTube player buttons – you start the video with ▶ on the video itself (switches on by itself when the browser doesn't let the game start videos)",
+ "Wybierz film i dotknij ▶ na filmie": "Choose a video and tap ▶ on the video",
+ "polecany": "recommended",
+ "YouTube nie odtwarza teraz filmów na tym urządzeniu (np. przez VPN, blokadę reklam albo sieć) – spróbuj za chwilę albo w innej sieci.": "YouTube isn't playing videos on this device right now (e.g. because of a VPN, an ad blocker or the network) – try again in a moment or on another network.",
+ "▶ Dotknij odtwarzania na filmie.": "▶ Tap play on the video.",
+ "Przewiń do odtwarzacza – sprawdzanie czeka, aż będzie widoczny.": "Scroll to the player – the check waits until it's visible.",
+ "YouTube nie odtwarza teraz filmów na tym urządzeniu (np. przez VPN, blokadę reklam albo sieć) – sprawdzanie przerwane, wyniki nie zostały zapisane.": "YouTube isn't playing videos on this device right now (e.g. because of a VPN, an ad blocker or the network) – the check was stopped and the results weren't saved.",
+ "Sprawdzone filmy: {0} z {1}, nie odtwarza się: {2} (w grze oznaczone i na końcu listy filmów).": "Videos checked: {0} of {1}, not playing: {2} (marked in the game and listed last).",
+ "Przed piosenką wybierasz film z YouTube – polecany jest pierwszy (działał już na tym urządzeniu albo jest najlepiej dopasowany); możesz też od razu dotknąć ▶ na filmie. Gdy film nie rusza, dotknij ▶ na filmie, wybierz inny film albo zmień piosenkę – na drugą z kategorii albo inną (bez zużycia koła ratunkowego).": "Before the song you choose a YouTube video – the recommended one is first (it has already worked on this device or is the best match); you can also tap ▶ on the video straight away. If the video doesn't start, tap ▶ on the video, choose another video or change the song – to the other one in the category or a different one (without using a lifeline)."
 };

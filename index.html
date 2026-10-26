@@ -712,7 +712,8 @@
     </section>
     <section class="card" id="lyc-card">
       <h2>Tak to leciało! – sprawdź filmy</h2>
-      <p class="muted small">Część filmów z YouTube nie odtwarza się poza YouTube (decyzja wytwórni) i nie da się tego sprawdzić z góry. Tutaj gra po kolei włączy bez dźwięku wszystkie filmy z katalogu – te, które nie działają, przestaną się pojawiać na tym urządzeniu, a raport możesz przekazać twórcy gry.</p>
+      <p class="muted small">Część filmów z YouTube nie odtwarza się poza YouTube (decyzja wytwórni) i nie da się tego sprawdzić z góry. Tutaj gra po kolei włączy bez dźwięku wszystkie filmy z katalogu (odtwarzacz musi być widoczny na ekranie) – te, które nie działają, będą w grze oznaczone i na końcu listy filmów, a raport możesz przekazać twórcy gry.</p>
+      <label class="check"><input type="checkbox" id="ly-tap-toggle"> Przyciski odtwarzacza YouTube – film uruchamiasz ▶ na samym filmie (włącza się samo, gdy przeglądarka nie pozwala grze uruchamiać filmów)</label>
       <p class="muted" id="lyc-summary"></p>
       <div id="lyc-box" class="lyc-box hidden"><div id="lyc-player"></div></div>
       <p class="muted" id="lyc-status"></p>
@@ -873,6 +874,7 @@
     <ol>
       <li>Każdy gracz ma planszę 3×3: 9 kategorii (wykonawcy, tematy, dekady…), w każdej 2 piosenki do wyboru. Zagrana kategoria zostaje na planszy wyszarzona. Nad nimi czeka „Hit za 100 000 zł” – dostępny dopiero na końcu: wtedy grasz o 100 000 zł albo rezygnujesz i zabierasz 75 000 zł.</li>
       <li>Piosenka gra z YouTube od początku, a tekst przewija się jak w karaoke. Przed wersem do uzupełnienia muzyka milknie – trzeba podać cały wers (który wcześniej w piosence nie padł); puste pola pokazują liczbę słów. Wpisz je albo zaśpiewaj (🎤) i zatwierdź „Tak to leciało!”.</li>
+      <li>Przed piosenką wybierasz film z YouTube – polecany jest pierwszy (działał już na tym urządzeniu albo jest najlepiej dopasowany); możesz też od razu dotknąć ▶ na filmie. Gdy film nie rusza, dotknij ▶ na filmie, wybierz inny film albo zmień piosenkę – na drugą z kategorii albo inną (bez zużycia koła ratunkowego).</li>
       <li>Drabinka: 500, 1000, 2000, 5000, 10 000, 15 000, 25 000, 50 000, 75 000 zł i w finale 100 000 zł. Z każdym etapem więcej słów i dalsza część piosenki. Po 5. piosence 10 000 zł jest gwarantowane – pomyłka później kończy grę z tą kwotą, wcześniej – bez wygranej. Przed każdą piosenką można zrezygnować i zabrać wygraną; przed finałem rezygnacja daje 75 000 zł, a w finale nie ma kół ratunkowych – pomyłka w finale daje 50 000 zł.</li>
       <li>Koła ratunkowe (na całą grę): 🔤 trzy słowa – odsłaniasz łącznie 3 słowa, w jednej piosence albo w kilku; 🔁 wymiana piosenki na drugą z kategorii; 🎯 trzy wersje wersu – jedna jest prawdziwa; w multiplayerze także 🙋 pomoc suflera – wybrany gracz podpowiada (na swoim telefonie).</li>
       <li>W multiplayerze gracze grają po kolei, każdy na swojej drabince; wygrywa najwyższa wygrana.</li>

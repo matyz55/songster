@@ -1041,3 +1041,14 @@ Wersja próbna wyglądu 6.0:
 ## 5.57.1 – 26.10.2026 (`1cd83ab`)
 
 - Serwer połączeń Songstera obsługuje już tylko grę (https://matyz55.github.io/songster/) – inne strony nie mogą zużywać jego darmowego limitu.
+
+## 5.58.0 – 26.10.2026 (`???????`)
+
+- „Tak to leciało!”: polecany film czeka już w odtwarzaczu – możesz go wybrać z listy albo od razu dotknąć ▶ na filmie. Pierwszy na liście jest film, który działał na tym urządzeniu (albo najlepiej dopasowany).
+- Gdy tekst piosenki jest już pobrany, film rusza od razu po wyborze, bez czekania. Chwilowy błąd serwera z tekstami – gra próbuje jeszcze raz.
+- Szybciej wykrywamy, że przeglądarka nie pozwala uruchomić filmu (zamiast 8 s – od razu albo po 3 s); na takim urządzeniu od następnej piosenki odtwarzacz ma przyciski YouTube i film uruchamiasz ▶ na filmie. Można to też włączyć w Ustawieniach.
+- Błąd YouTube przy filmie nie usuwa go od razu: film znika na tym urządzeniu dopiero, gdy nie działa w dwóch różnych dniach. Gdy kilka filmów z rzędu nie działa, gra pokazuje, że to raczej blokada urządzenia albo sieci (np. VPN), i niczego nie odrzuca.
+- Inna długość filmu tuż po starcie (np. reklama przed filmem) nie przerywa piosenki od razu – gra sprawdza jeszcze przez 10 s.
+- Sprawdzarka filmów w Ustawieniach niczego nie ukrywa (filmy oznacza i stawia na końcu listy), czeka, aż odtwarzacz jest widoczny na ekranie (wymóg YouTube), i przerywa sprawdzanie przy blokadzie urządzenia.
+- Na komputerze film wybierzesz też cyframi 1–5.
+- Katalog: 49 piosenek dostało filmy zapasowe (piosenek z jednym filmem jest 82 zamiast 131); codzienne dociąganie szuka teraz więcej filmów zapasowych.

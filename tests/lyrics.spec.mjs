@@ -189,7 +189,7 @@ test('Tak to leciało! (multiplayer): kolejka graczy i pomoc suflera', async ({ 
 
 test('Tak to leciało!: oba filmy w kategorii niedostępne – „Inna piosenka” bierze piosenkę z katalogu', async ({ page }) => {
   await startLyrics(page);
-  await page.evaluate(() => { window.__ytFail = state.players[0].board[0].songs.map((it) => it.yts[0]); });
+  const failed = await page.evaluate(() => { window.__ytFail = state.players[0].board[0].songs.map((it) => it.yts[0]); return window.__ytFail; });
   await page.locator('.ly-cat').first().click();
   await page.locator('.ly-song').first().click();
   await pickFilm(page);
@@ -200,8 +200,79 @@ test('Tak to leciało!: oba filmy w kategorii niedostępne – „Inna piosenka�
   await page.locator('.ly-film-skip').click();
   await toAnswer(page);
   expect(await page.evaluate(() => window.__ytFail.includes(state.lyrics.cur.videoId))).toBe(false);
-  // niedziałające filmy (błąd 150) są zapamiętane i pomijane w następnych grach
-  expect(await page.evaluate(() => store.get('lyBadVideos', []).length)).toBe(2);
+  // błąd YouTube (150) zapisany dopiero po starcie innego filmu; film nie znika od razu (może to być chwilowa blokada)
+  const log = await page.evaluate(() => store.get('lyVidLog', {}));
+  expect(failed.map((id) => log[id] && log[id].err)).toEqual(['150', '150']);
+  expect(await page.evaluate(() => store.get('lyBadVideos', []).length)).toBe(0);
+  expect(await page.evaluate((ids) => ids.map((id) => lyCatalog().some((it) => it.yts.includes(id))), failed)).toEqual([true, true]);
+  // ten sam błąd innego dnia – film pomijany na tym urządzeniu
+  expect(await page.evaluate((id) => {
+    const all = store.get('lyVidLog', {}); all[id].d = '2020-01-01'; store.set('lyVidLog', all);
+    lyVidLog(id, { err: '150' });
+    return [store.get('lyVidLog', {})[id].n, lyCatalog().some((it) => it.yts.includes(id))];
+  }, failed[0])).toEqual([2, false]);
+});
+
+test('Tak to leciało!: kilka filmów z rzędu z błędem YouTube – blokada urządzenia, filmy nie są zapisywane jako niedziałające', async ({ page }) => {
+  await startLyrics(page);
+  const failed = await page.evaluate(() => {
+    const songs = lyCatalog().slice(0, 3);
+    window.__ytFail = songs.map((it) => it.yts[0]);
+    lyPlay(songs[0], songs[1], 'test');
+    return window.__ytFail;
+  });
+  await pickFilm(page);
+  await page.locator('.ly-film-other').click();
+  await pickFilm(page);
+  await expect.poll(() => page.evaluate(() => state.lyrics.hardRow.length)).toBe(2);
+  await page.evaluate((songs) => lyPlay(lyCatalog().find((it) => it.yts[0] === songs[2]), null, 'test'), failed);
+  await pickFilm(page);
+  await expect(page.locator('#ly-answer .ly-flash')).toContainText('YouTube nie odtwarza teraz filmów');
+  // potem film działa – wcześniejsze błędy nie trafiają do dziennika
+  await page.locator('.ly-film-skip').click();
+  await toAnswer(page);
+  const log = await page.evaluate(() => store.get('lyVidLog', {}));
+  expect(failed.filter((id) => log[id] && log[id].err)).toEqual([]);
+});
+
+test('Tak to leciało!: ▶ na polecanym filmie w odtwarzaczu wybiera ten film', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    const pl = window.SONGS.filter((s) => s.c === 'PL').slice(0, 400);
+    window.LYRICS_SONGS = Object.fromEntries(pl.map((s, i) => [songKey(s), [[`vid${i}`, 1000 + i, 180], [`alt${i}`, 1000 + i, 180]]]));
+    // drugi film działał wcześniej na tym urządzeniu – jest polecany
+    store.set('lyVidLog', { alt0: { ok: 1, d: '2026-10-01' }, alt1: { ok: 1, d: '2026-10-01' }, alt2: { ok: 1, d: '2026-10-01' } });
+  });
+  await page.click('#btn-single');
+  await page.click('.mode[data-mode=lyrics]');
+  await page.click('#btn-start');
+  await page.evaluate(() => { const it = lyCatalog().find((x) => x.yts[1] === 'alt0'); lyPlay(it, null, 'test'); });
+  await expect.poll(() => page.evaluate(() => window.__ytCued)).toBe('alt0');
+  await expect(page.locator('.ly-film').first()).toContainText('działał');
+  await expect.poll(() => page.evaluate(() => lyLyricsDone.size > 0)).toBe(true);
+  await page.evaluate(() => { lyYT.playVideo(); lyYT.opts.events.onStateChange({ data: 1 }); });
+  await expect.poll(() => page.evaluate(() => [state.phase, state.lyrics.cur.videoId, state.lyrics.cur.started])).toEqual(['play', 'alt0', true]);
+  await expect(page.locator('.ly-film')).toHaveCount(0);
+});
+
+test('Tak to leciało!: urządzenie blokuje odtwarzanie – od następnej piosenki odtwarzacz z przyciskami', async ({ page }) => {
+  await startLyrics(page);
+  await page.evaluate(() => { window.__ytNoPlay = [state.players[0].board[0].songs[0].yts[0]]; });
+  await page.locator('.ly-cat').first().click();
+  await page.locator('.ly-song').first().click();
+  await pickFilm(page);
+  await page.evaluate(() => lyYT.opts.events.onAutoplayBlocked());
+  await expect(page.locator('#ly-answer .ly-flash')).toContainText('Przeglądarka nie pozwoliła');
+  expect(await page.evaluate(() => store.get('lyTapPlay', false))).toBe(true);
+  // gracz dotyka ▶ w odtwarzaczu – gra rusza
+  await page.evaluate(() => { lyYT.playVideo(); lyYT.opts.events.onStateChange({ data: 1 }); });
+  await expect(page.locator('.ly-film')).toHaveCount(0);
+  // następna piosenka: nowy odtwarzacz z przyciskami
+  await page.evaluate(() => lyPlay(lyAnySong(), null, 'test'));
+  await expect.poll(() => page.evaluate(() => lyYT && lyYT.opts.playerVars.controls)).toBe(1);
+  expect(await page.evaluate(() => window.__ytDestroyed)).toBe(1);
+  await expect(page.locator('.ly-films-title')).toContainText('dotknij ▶ na filmie');
+  await expect(page.locator('#ly-tap-toggle')).toBeChecked({ checked: false }); // ustawienia odświeżają się przy otwarciu
 });
 
 test('Tak to leciało!: filmy odrzucone dawniej samoczynnie wracają, zgłoszone przez gracza – nie', async ({ page }) => {
@@ -377,7 +448,7 @@ test('Tak to leciało!: odsłonięte słowo jest wpisane w pole – cały prawid
   await expect(page.locator('#ly-answer .verdict')).toContainText('500 zł');
 });
 
-test('Tak to leciało!: sprawdzarka filmów w ustawieniach pomija filmy, które się nie odtwarzają, i daje raport', async ({ page }) => {
+test('Tak to leciało!: sprawdzarka filmów w ustawieniach oznacza filmy, które się nie odtwarzają, i daje raport', async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => {
     window.LYRICS_SONGS = { 'A|a': [['ok1', 1, 180], ['zly1', 2, 180]], 'B|b': ['ok2', 3, 180], 'C|c': [['dl1', 4, 100]] };
@@ -392,9 +463,12 @@ test('Tak to leciało!: sprawdzarka filmów w ustawieniach pomija filmy, które 
   expect(r.checked.ok1.ok).toBe(true);
   expect(r.checked.zly1.err).toBe('150');
   expect(r.checked.dl1.err).toBe('dl80'); // film 180 s, nagranie z tekstem 100 s
-  expect(r.bad.sort()).toEqual(['dl1', 'zly1']);
+  // nic nie jest ukrywane – w grze niedziałający film jest na końcu listy i oznaczony
+  expect(r.bad).toEqual([]);
   expect(r.rep).toContain('zly1:150');
   await expect(page.locator('#lyc-copy')).toBeVisible();
+  expect(await page.evaluate(() => lyFilmChoices({ it: { vids: [{ id: 'zly1' }, { id: 'nowy' }, { id: 'ok1' }] }, failed: {} })
+    .map((v) => [v.id, v.log && v.log.ok]))).toEqual([['ok1', 1], ['nowy', null], ['zly1', 0]]);
 });
 
 test('Tak to leciało!: zapasowy film ma własny tekst dopasowany do swojej długości', async ({ page }) => {

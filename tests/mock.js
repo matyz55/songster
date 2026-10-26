@@ -63,6 +63,9 @@
       if (window.__ytFail && window.__ytFail.includes(o.videoId)) { this.t0 = null; setTimeout(() => this.opts.events.onError({ data: 150 }), 20); return; }
       setTimeout(() => this.opts.events.onStateChange({ data: 1 }), 10);
     }
+    // film czeka w odtwarzaczu (miniatura i ▶) – nie gra, dopóki ktoś nie dotknie ▶
+    cueVideoById(o) { this.vid = o.videoId; this.base = o.startSeconds || 0; this.t0 = null; window.__ytCued = o.videoId; setTimeout(() => this.opts.events.onStateChange({ data: 5 }), 5); }
+    destroy() { window.__ytDestroyed = (window.__ytDestroyed || 0) + 1; }
     getCurrentTime() { return this.t0 == null ? this.base : this.base + ((performance.now() - this.t0) / 1000) * window.__ytSpeed; }
     pauseVideo() { this.base = this.getCurrentTime(); this.t0 = null; }
     playVideo() { if (this.t0 == null) this.t0 = performance.now(); }
