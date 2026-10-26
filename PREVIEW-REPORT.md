@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 1203 z 7094 piosenek (ostatnio 2026-10-25, w tym uruchomieniu: 150).
+Sprawdzono dotąd 1353 z 7094 piosenek (ostatnio 2026-10-26, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -216,3 +216,26 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Molesta Ewenement & Jamal – Tak Miało Być | 2006 | 2026-10-25 |
 | Pono – Pierdolę to | 2006 | 2026-10-25 |
 | Agnieszka Włodarczyk – Jak oni śpiewają | 2007 | 2026-10-25 |
+| Grupa Operacyjna – Mordo ty moja | 2007 | 2026-10-26 |
+| Jerzy Połomski – Czas nas zmienia | 2007 | 2026-10-26 |
+| Kombii – Myśl o Tobie | 2007 | 2026-10-26 |
+| Natalia Lesz – Power Of Atracttion | 2007 | 2026-10-26 |
+| Trebunie-Tutki – Filozofia dramatu | 2007 | 2026-10-26 |
+| Pezet & Kociołek – Gdyby miało nie być jutra | 2007 | 2026-10-26 |
+| Sokół & Pono & Franek Kimono & Jędker – W aucie | 2007 | 2026-10-26 |
+| Ania Dąbrowska – W spodniach czy w sukience | 2008 | 2026-10-26 |
+| Blue Café – Czas nie będzie czekał | 2008 | 2026-10-26 |
+| Ewelina Flinta – Bądź światoczuły | 2008 | 2026-10-26 |
+| Jacek Stachursky – Na Falochronie | 2008 | 2026-10-26 |
+| Magda Umer – Koncert Jesienny na Dwa Świerszcze | 1972 | 2026-10-26 |
+| O.S.T.R. – 1980 | 2008 | 2026-10-26 |
+| O.S.T.R. – Jak nie ty, to kto? | 2008 | 2026-10-26 |
+| The Jet Set – The Beat of Your Heart | 2008 | 2026-10-26 |
+| Andrzej Piaseczny – Rysowane tobie | 2009 | 2026-10-26 |
+| Anna Maria Jopek – Sypka Warszawa | 2009 | 2026-10-26 |
+| Bad Light District – Street of Frozen Phantoms | 2009 | 2026-10-26 |
+| Closterkeller – 12 dni | 2009 | 2026-10-26 |
+| Elżbieta Adamiak – Trwaj chwilo, trwaj | 2009 | 2026-10-26 |
+| Kuba Badach – Obecny | 2009 | 2026-10-26 |
+| Blenders – Astropunk | 2010 | 2026-10-26 |
+| Jacek Stachursky – Zostańmy Razem | 2010 | 2026-10-26 |
