@@ -1042,7 +1042,7 @@ Wersja próbna wyglądu 6.0:
 
 - Serwer połączeń Songstera obsługuje już tylko grę (https://matyz55.github.io/songster/) – inne strony nie mogą zużywać jego darmowego limitu.
 
-## 5.58.0 – 26.10.2026 (`???????`)
+## 5.58.0 – 26.10.2026 (`f245b06`)
 
 - „Tak to leciało!”: polecany film czeka już w odtwarzaczu – możesz go wybrać z listy albo od razu dotknąć ▶ na filmie. Pierwszy na liście jest film, który działał na tym urządzeniu (albo najlepiej dopasowany).
 - Gdy tekst piosenki jest już pobrany, film rusza od razu po wyborze, bez czekania. Chwilowy błąd serwera z tekstami – gra próbuje jeszcze raz.
