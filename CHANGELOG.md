@@ -1019,3 +1019,10 @@ Wersja próbna wyglądu 6.0:
 ## 5.54.11 – 26.10.2026 (`590f1e4`)
 
 - „Tak to leciało!”: katalog 582 piosenek, +0 (z playlisty „Tak to leciało” 287 z 324).
+
+## 5.55.0 – 26.10.2026 (`???????`)
+
+- „Tak to leciało!”: przed każdą piosenką wybierasz film z propozycji (miniatura, długość i znaczek, czy film działał już na tym urządzeniu). Dotknięcie filmu od razu go uruchamia, więc przeglądarka nie blokuje odtwarzania.
+- Gdy film nie ruszy w 8 sekund albo przeglądarka go zablokuje, gra nie przeskakuje sama dalej: możesz dotknąć ▶ na filmie, wybrać inny film albo pominąć piosenkę („⏭ Inna piosenka”, bez zużycia koła ratunkowego).
+- Na stałe pomijane są już tylko filmy usunięte z YouTube, bez zgody na odtwarzanie poza YouTube i pokazujące tekst. Filmy, które przy sprawdzaniu tylko nie ruszyły w czasie, znowu są do wyboru (z oznaczeniem).
+- Raport ze sprawdzarki filmów (Ustawienia) zawiera teraz też, które filmy ruszyły w grze, a które nie i dlaczego (kod błędu YouTube, blokada przeglądarki albo brak startu).

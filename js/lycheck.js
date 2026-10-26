@@ -82,7 +82,13 @@ function lycReport() {
   const off = Object.entries(store.get('lyOffsets', {})).filter(([, o]) => o).map(([id, o]) => `${id}:${o > 0 ? '+' : ''}${o}`);
   // zgłoszenia z gry („Zła wersja piosenki”, „film pokazuje tekst”)
   const rep = store.get('lyReports', []).filter((r) => r.v).map((r) => `${r.v}:${r.r || 'zgl'}`).filter((x, i, a) => a.indexOf(x) === i);
+  // start filmów w grze: które ruszyły, a które nie (kod błędu YouTube, „blokada” autoodtwarzania, „timeout”)
+  const log = Object.entries(store.get('lyVidLog', {}));
+  const okIds = log.filter(([, r]) => r.ok).map(([id]) => id);
+  const noIds = log.filter(([, r]) => !r.ok).map(([id, r]) => `${id}:${r.err}`);
   return `Songster – Tak to leciało! – filmy, które się nie odtwarzają (${bad.length}): ${bad.join(' ')}`
+    + (okIds.length ? ` · ruszyły w grze (${okIds.length}): ${okIds.join(' ')}` : '')
+    + (noIds.length ? ` · nie ruszyły w grze (${noIds.length}): ${noIds.join(' ')}` : '')
     + (off.length ? ` · przesunięcia tekstu (${off.length}): ${off.join(' ')}` : '')
     + (rep.length ? ` · zgłoszenia z gry (${rep.length}): ${rep.join(' ')}` : '');
 }
@@ -94,7 +100,8 @@ function lycRender() {
   $('#lyc-summary').textContent = checked.length
     ? T('Sprawdzone filmy: {0} z {1}, nie odtwarza się: {2} (pomijane na tym urządzeniu).', checked.length, list.length, bad.length)
     : T('Filmów w katalogu: {0}. Sprawdzanie trwa kilka minut – filmy grają bez dźwięku.', list.length);
-  $('#lyc-copy').classList.toggle('hidden', !bad.length && !Object.values(store.get('lyOffsets', {})).some(Boolean) && !store.get('lyReports', []).length);
+  $('#lyc-copy').classList.toggle('hidden', !bad.length && !Object.values(store.get('lyOffsets', {})).some(Boolean) && !store.get('lyReports', []).length
+    && !Object.keys(store.get('lyVidLog', {})).length);
 }
 $('#lyc-run').addEventListener('click', () => lycRun(false));
 $('#lyc-stop').addEventListener('click', () => { lycStop = true; });

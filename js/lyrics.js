@@ -41,7 +41,10 @@ function lyCatalog() {
       : raw.map(([id, lr, d]) => ({ id, lr, d }));
     // czwarta liczba (o ile jest) – przesunięcie tekstu względem filmu w sekundach (ustalone przez graczy)
     if (typeof raw[1] !== 'number') raw.forEach(([, , , off], i) => { if (off) all[i].off = off; });
-    const vids = all.filter((v) => !bad.has(v.id));
+    // ukryte są filmy zgłoszone albo niedostępne na YouTube; taki, który przy sprawdzaniu tylko nie ruszył w czasie,
+    // zostaje do wyboru (z oznaczeniem)
+    const checked = store.get('lyChecked', {});
+    const vids = all.filter((v) => !bad.has(v.id) || (checked[v.id] && checked[v.id].err === 'timeout'));
     return { song: s, vids, yts: vids.map((v) => v.id), lr: vids.length ? vids[0].lr : 0, d: vids.length ? vids[0].d : 0 };
   }).filter((it) => it.yts.length);
 }
@@ -280,7 +283,9 @@ async function lyPlayer() {
       events: {
         onReady: () => resolve(lyYT),
         onStateChange: (e) => lyOnState(e.data),
-        onError: (e) => lyVideoFailed(T('Film niedostępny na YouTube (kod {0})', e.data)),
+        onError: (e) => lyVideoFailed(T('Film niedostępny na YouTube (kod {0})', e.data), String(e.data)),
+        // przeglądarka zablokowała odtwarzanie bez dotknięcia – gracz uruchamia film ▶ w odtwarzaczu albo wybiera inny
+        onAutoplayBlocked: () => lyStalled('blokada'),
       },
     });
   });
@@ -290,23 +295,64 @@ function lyNoCaptions() {
   try { lyYT.unloadModule('captions'); lyYT.unloadModule('cc'); } catch (e) { /* starszy odtwarzacz */ }
   try { lyYT.setOption('captions', 'track', {}); } catch (e) { /* bez tej opcji */ }
 }
-// film, który po wczytaniu sam nie ruszył (np. wymaga kliknięcia na YouTube), jest zapisywany na tym urządzeniu
-// i pomijany w kolejnych grach (jak zgłoszony – widać go w ustawieniach); gdy nie rusza kilka filmów z rzędu,
-// to raczej przeglądarka blokuje autoodtwarzanie – wtedy nic nie zapisujemy, a gracz uruchamia film przyciskiem
-const lyAutoplayMs = () => window.__lyAutoplayMs || 12000;
-const LY_AUTOPLAY_DEVICE = 3;
-function lyNoAutoplay() {
+// Gracz zawsze wybiera film z propozycji (miniatura, długość, czy działał wcześniej na tym urządzeniu) – dotknięcie
+// uruchamia odtwarzanie, więc przeglądarka go nie blokuje. Film, który nie ruszył w kilka sekund, nie jest odrzucany:
+// gracz może dotknąć ▶ w odtwarzaczu albo wybrać inny. Przebieg startu (działał / kod błędu / blokada / brak startu)
+// jest zapisywany na tym urządzeniu i trafia do raportu ze sprawdzarki (Ustawienia).
+const lyAutoplayMs = () => window.__lyAutoplayMs || 8000;
+const LY_HARD_ERR = ['100', '101', '150']; // film usunięty albo bez zgody na odtwarzanie poza YouTube
+function lyVidLog(id, res) {
+  if (!id) return;
+  const all = store.get('lyVidLog', {});
+  all[id] = { ...res, d: new Date().toISOString().slice(0, 10) };
+  const keys = Object.keys(all);
+  if (keys.length > 800) keys.slice(0, keys.length - 800).forEach((k) => delete all[k]);
+  store.set('lyVidLog', all);
+}
+// film wczytany, ale nie gra: blokada autoodtwarzania albo brak startu w czasie – pokazujemy wybór filmów
+function lyStalled(why) {
   const ly = state.lyrics;
-  const cur = ly.cur;
-  ly.noAuto = [...(ly.noAuto || []), cur.videoId];
-  if (ly.noAuto.length >= LY_AUTOPLAY_DEVICE) {
-    ly.noAuto.forEach((id) => lyUnreport(id));
-    ly.manualPlay = true;
-    lyRender();
-    return;
-  }
-  store.set('lyReports', [...store.get('lyReports', []), { k: songKey(cur.it.song), v: cur.videoId, l: cur.lrId, d: new Date().toISOString().slice(0, 10), why: 'autoplay' }].slice(-200));
-  lyVideoFailed(T('Film nie odtworzył się automatycznie.'));
+  const cur = ly && ly.cur;
+  if (!cur || cur.started || cur.pick || !cur.videoId || !['loading', 'play'].includes(state.phase)) return;
+  cur.pick = true;
+  cur.stall = why;
+  lyFlash(why === 'blokada' ? T('Przeglądarka nie pozwoliła włączyć filmu – dotknij ▶ na filmie albo wybierz inny.')
+    : T('Film nie ruszył – dotknij ▶ na filmie albo wybierz inny.'));
+  lyRender();
+}
+// propozycje filmów: najpierw te, które działały na tym urządzeniu, potem niesprawdzone, na końcu te, które nie ruszyły
+function lyFilmChoices(cur) {
+  const log = store.get('lyVidLog', {});
+  const rank = (id) => (log[id] ? (log[id].ok ? 0 : 2) : 1);
+  return cur.it.vids.map((v, i) => ({ ...v, i, log: log[v.id] }))
+    .filter((v) => !cur.failed[v.id])
+    .sort((a, b) => rank(a.id) - rank(b.id) || a.i - b.i);
+}
+function lyPickVideo(i) {
+  const ly = state.lyrics;
+  const cur = ly && ly.cur;
+  if (!cur || !cur.pick) return;
+  // poprzedni film nie ruszył, a gracz wybrał inny – zapisujemy przyczynę
+  if (cur.stall && cur.videoId) lyVidLog(cur.videoId, { err: cur.stall });
+  cur.pick = false;
+  cur.stall = null;
+  const same = cur.lines && cur.it.vids[i].lr === cur.lrId && state.phase === 'play';
+  cur.vi = i;
+  if (same) { lyRender(); lyLoadVideo(lyYT); return; }
+  state.phase = 'loading';
+  lyRender();
+  lyStartSong();
+}
+function lyFilmsEl(cur) {
+  const list = lyFilmChoices(cur);
+  return el('div', { class: 'ly-films' },
+    el('p', { class: 'ly-films-title' }, T('Wybierz film – dotknij, aby odtworzyć')),
+    el('div', { class: 'ly-films-list' }, list.map((v, n) => el('button', { class: 'ly-film', style: `--i:${n}`, onclick: () => lyPickVideo(v.i) },
+      el('img', { src: `https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`, alt: '', loading: 'lazy' }),
+      el('span', { class: 'ly-film-info' }, el('b', {}, T('Film {0}', n + 1)), el('span', { class: 'muted' }, lyClock(v.d || 0)),
+        v.id === cur.videoId && cur.stall ? el('span', { class: 'ly-film-tag bad' }, T('nie ruszył – dotknij ▶ na filmie'))
+          : v.log ? el('span', { class: `ly-film-tag ${v.log.ok ? 'ok' : 'bad'}` }, v.log.ok ? T('✓ działał') : T('⚠️ wcześniej nie ruszył')) : '')))),
+    Object.keys(cur.failed).length || cur.stall ? el('button', { class: 'ghost small ly-film-skip', onclick: () => lySongFailed(T('Pominięto piosenkę.')) }, T('⏭ Inna piosenka')) : '');
 }
 function lyStop() {
   clearInterval(lyTick);
@@ -357,14 +403,16 @@ function lyAnySong(extraAvoid = []) {
 }
 function lyPlay(it, other, cat) {
   const ly = state.lyrics;
-  ly.cur = { it, other, cat, vi: 0, gap: null, lines: null, given: [], text: '', revealed: new Set(), variants: null, hint: null, started: false };
+  ly.cur = { it, other, cat, vi: 0, gap: null, lines: null, given: [], text: '', revealed: new Set(), variants: null, hint: null, started: false, pick: true, failed: {} };
   ly.pickCat = null;
   ly.hitAsk = false;
   ly.used.add(songKey(it.song));
   ly.played.add(songKey(it.song));
   state.phase = 'loading';
   lyRender();
-  lyStartSong();
+  // w tle: odtwarzacz i teksty wszystkich filmów – po wyborze filmu piosenka rusza od razu
+  lyPlayer().catch(() => {});
+  lyPrefetch(it.vids.map((v) => v.lr));
 }
 function lyMiniNext() {
   const it = lyAnySong();
@@ -423,7 +471,7 @@ function lyChangeVideo() {
   store.set('lyReports', [...store.get('lyReports', []), { k: songKey(cur.it.song), v: cur.videoId, l: cur.lrId, r: 'tekst', d: new Date().toISOString().slice(0, 10) }].slice(-200));
   if (state.phase !== 'play') { lyMarkBad(cur.videoId); lyFlash(T('Ten film nie pojawi się w kolejnych grach.')); lyRender(); return; }
   try { cur.startAt = Math.max(0, lyYT.getCurrentTime() - 1); } catch (e) { /* odtwarzacz niedostępny */ }
-  lyVideoFailed(T('Film pokazywał tekst piosenki.'));
+  lyVideoFailed(T('Film pokazywał tekst piosenki.'), 'tekst');
 }
 $('#ly-sync-video').addEventListener('click', lyChangeVideo);
 $('#ly-sync-early').addEventListener('click', () => lyShift(1));
@@ -453,7 +501,7 @@ async function lyStartSong() {
     if (!cur.gap) throw new Error('brak miejsca na przerwę');
     cur.given = cur.gap.blanks.map(() => '');
     // minigra: od początku zwrotki albo refrenu z przerwą (kilka wersów wcześniej), a nie od początku piosenki
-    cur.startAt = ly.mini ? Math.max(0, lines[Math.max(0, cur.gap.line - 4)].t - 1.5 + lyOffset({ ...cur, videoId: cur.it.yts[cur.vi] })) : 0;
+    cur.startAt = ly.mini ? Math.max(0, lines[Math.max(0, cur.gap.line - 4)].t - 1.5 + lyOffset({ ...cur, videoId: cur.it.vids[cur.vi].id })) : 0;
     state.phase = 'play';
     lyRender();
     lyLoadVideo(player);
@@ -466,24 +514,28 @@ function lyLoadVideo(player) {
   const cur = state.lyrics.cur;
   cur.started = false;
   cur.loadedAt = Date.now();
-  cur.videoId = cur.it.yts[cur.vi];
+  cur.videoId = cur.it.vids[cur.vi].id;
   player.loadVideoById({ videoId: cur.videoId, startSeconds: cur.startAt || 0 });
   clearInterval(lyTick);
   lyTick = setInterval(lyOnTick, 50);
 }
-function lyVideoFailed(msg) {
+function lyVideoFailed(msg, why = '') {
   const ly = state.lyrics;
   const cur = ly && ly.cur;
   if (!cur || !['loading', 'play'].includes(state.phase)) return;
-  if (cur.videoId) lyMarkBad(cur.videoId);
-  if (cur.vi + 1 < cur.it.yts.length) {
-    cur.vi += 1;
-    // zapasowy film z innym tekstem (inna długość nagrania) – wczytujemy jego tekst i wyznaczamy przerwę od nowa
-    if (cur.it.vids[cur.vi].lr !== cur.lrId) { clearInterval(lyTick); lyTick = null; state.phase = 'loading'; lyRender(); lyStartSong(); return; }
-    lyLoadVideo(lyYT);
-    return;
+  lyStop();
+  if (cur.videoId) {
+    cur.failed[cur.videoId] = why || 'err';
+    if (why !== 'tekst') lyVidLog(cur.videoId, { err: why || 'err' });
+    // na stałe pomijamy tylko filmy niedostępne na YouTube i pokazujące tekst
+    if (LY_HARD_ERR.includes(why) || why === 'tekst') lyMarkBad(cur.videoId);
   }
-  lySongFailed(msg);
+  cur.started = false;
+  cur.stall = null;
+  if (!lyFilmChoices(cur).length) { lySongFailed(msg); return; }
+  cur.pick = true;
+  lyFlash(T('⚠️ {0} Wybierz inny film.', msg));
+  lyRender();
 }
 // komunikat (np. że piosenka się nie wczytała) – znika sam po kilku sekundach
 let lyMsgTimer = null;
@@ -504,6 +556,8 @@ function lySongFailed(msg) {
   const ly = state.lyrics;
   const cur = ly.cur;
   lyStop();
+  // pominięcie piosenki, gdy film nie ruszył – przyczyna do raportu
+  if (cur.stall && cur.videoId) lyVidLog(cur.videoId, { err: cur.stall });
   ly.fails += 1;
   lyFlash(T('⚠️ {0} Gramy inną piosenkę.', msg));
   const next = cur.other && !ly.played.has(songKey(cur.other.song)) ? cur.other : (ly.fails <= 8 ? lyAnySong() : null);
@@ -521,11 +575,13 @@ function lyOnState(s) {
   if (!cur) return;
   // pierwsze odtwarzanie: długość filmu musi pasować do nagrania z tekstem (inaczej wersy by się rozjechały)
   if (s === 1) lyNoCaptions();
-  if (s === 1 && !cur.started) {
+  if (s === 1 && !cur.started && cur.videoId) {
     cur.started = true;
-    state.lyrics.noAuto = [];
+    cur.pick = false;
+    cur.stall = null;
     const d = lyYT.getDuration();
-    if (cur.dur && d && Math.abs(d - cur.dur) > LY_MAX_DIFF + 0.5) { lyVideoFailed(T('Film ma inną długość niż nagranie z tekstem.')); return; }
+    if (cur.dur && d && Math.abs(d - cur.dur) > LY_MAX_DIFF + 0.5) { lyVideoFailed(T('Film ma inną długość niż nagranie z tekstem.'), 'dl'); return; }
+    lyVidLog(cur.videoId, { ok: 1 });
     state.lyrics.fails = 0;
   }
   if (state.phase === 'play' || state.phase === 'result') lyRender();
@@ -533,7 +589,7 @@ function lyOnState(s) {
 function lyOnTick() {
   const cur = state.lyrics && state.lyrics.cur;
   if (!cur || !lyYT || !lyYT.getCurrentTime) return;
-  if (state.phase === 'play' && !cur.started && !state.lyrics.manualPlay && Date.now() - cur.loadedAt > lyAutoplayMs()) { lyNoAutoplay(); return; }
+  if (state.phase === 'play' && !cur.started && !cur.pick && Date.now() - cur.loadedAt > lyAutoplayMs()) { lyStalled('timeout'); return; }
   const t = lyNow();
   if (state.phase === 'play' && cur.gap && cur.started && t >= cur.gap.pauseAt) {
     lyYT.pauseVideo();
@@ -912,7 +968,8 @@ function lyRender() {
   const seek = state.phase === 'result' && !(ly.mini && ly.mini.relay);
   $('#ly-seek').classList.toggle('hidden', !seek);
   $('#ly-seek-play').textContent = lyYT && lyYT.getPlayerState && lyYT.getPlayerState() === 1 ? '⏸' : '▶';
-  $('#ly-status').textContent = state.phase === 'loading' ? T('Wczytywanie piosenki…')
+  $('#ly-status').textContent = cur && cur.pick && !cur.stall && state.phase === 'loading' ? ''
+    : state.phase === 'loading' ? T('Wczytywanie piosenki…')
     : state.phase === 'play' && !(cur && cur.lines) ? T('Wczytywanie tekstu…') : '';
   lyRenderLyrics(lyNow());
   lyRenderSync();
@@ -960,6 +1017,10 @@ function lyRenderAnswer() {
   const ly = state.lyrics;
   const cur = ly.cur;
   const box = $('#ly-answer');
+  if (cur && cur.pick && ['loading', 'play'].includes(state.phase)) {
+    box.replaceChildren(lyFilmsEl(cur), ly.msg ? el('p', { class: 'muted ly-flash' }, ly.msg) : '', el('p', { class: 'muted small ly-credit' }, T('Tekst: lrclib.net · Film: YouTube')));
+    return;
+  }
   if (!cur || !['play', 'answer', 'result'].includes(state.phase)) { box.replaceChildren(); return; }
   const me = lyMe();
   const final = !ly.mini && me.stage >= 9;
@@ -968,9 +1029,7 @@ function lyRenderAnswer() {
   const flash = ly.msg ? el('p', { class: 'muted ly-flash' }, ly.msg) : '';
   if (state.phase === 'play') {
     // w trakcie śpiewania koła ratunkowe jako przyciski; odsłonięcie słowa i trzy wersje działają dopiero przy przerwie
-    // przeglądarka blokuje autoodtwarzanie – film uruchamia gracz
-    const manual = ly.manualPlay && !cur.started ? el('button', { class: 'primary ly-manual', onclick: () => { try { lyYT.playVideo(); } catch (e) { /* */ } } }, T('▶ Odtwórz piosenkę')) : '';
-    box.replaceChildren(manual, ly.mini || final ? '' : lyLifeBtns(me, cur, true), flash, credit);
+    box.replaceChildren(ly.mini || final ? '' : lyLifeBtns(me, cur, true), flash, credit);
     return;
   }
   if (state.phase === 'result') {

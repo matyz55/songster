@@ -455,3 +455,11 @@ html.ui6 #ly-sync > button + button::before { content: "·"; display: inline-blo
 @media (max-width: 600px) and (orientation: portrait) {
   html.ui6 #ly-stage:has(.ly-variants) #ly-song { display: none; }
 }
+/* wybór filmu przed piosenką: kolumna obok odtwarzacza (na telefonie pod nim), miniatury obok siebie */
+html.ui6 #ly-answer .ly-films { margin: 0; gap: calc(var(--gap) * .6); min-height: 0; }
+html.ui6 #ly-answer .ly-films-title { font-size: clamp(1rem, .9rem + .5vmin, 1.4rem); }
+html.ui6 #ly-answer .ly-films-list { grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); gap: calc(var(--gap) * .6); overflow: auto; min-height: 0; }
+html.ui6 #ly-answer .ly-film { min-height: var(--tap); padding: calc(var(--gap) * .4); }
+html.ui6 #ly-answer .ly-film-info { font-size: max(13px, .85rem); }
+html.ui6 #ly-answer .ly-film-tag { font-size: max(13px, .8rem); }
+html.ui6 #ly-answer .ly-film-skip { min-height: var(--tap); }

@@ -351,6 +351,9 @@ const lyrics = [
     await capture(page, { id: 'lyrics-2-piosenki', group: g, title: 'Wybór piosenki w kategorii', desc: 'Dwie piosenki z rokiem wydania.' });
     await page.evaluate(() => { window.__ytSpeed = 1; });
     await page.locator('.ly-song').first().click();
+    await page.evaluate(() => { const cur = state.lyrics.cur; cur.it.vids.push({ ...cur.it.vids[0], id: 'alt0' }); lyVidLog(cur.it.vids[0].id, { ok: 1 }); lyRender(); });
+    await capture(page, { id: 'lyrics-2b-film', group: g, title: 'Wybór filmu', desc: 'Przed piosenką gracz wybiera film – dotknięcie uruchamia odtwarzanie.' });
+    await page.locator('.ly-film').first().click();
     await page.waitForFunction(() => state.phase === 'play' && state.lyrics.cur && state.lyrics.cur.lines, null, { timeout: 20000 });
     await page.waitForTimeout(2500);
     await capture(page, { id: 'lyrics-3-spiew', group: g, title: 'W trakcie piosenki', desc: 'Film gra, tekst przewija się jak w karaoke.' });
@@ -382,6 +385,7 @@ const lyrics = [
   { id: 'relay', group: 'Tak to leciało!', title: 'Sztafeta karaoke', timeout: 180000, async run({ newPage, capture }) {
     const page = await newPage();
     await startMode(page, 'relay', { ctx: 'multi', n: 3, rounds: 1, prep: lyCatalogPrep });
+    await page.locator('.ly-film').first().click();
     await page.waitForFunction(() => state.phase === 'answer', null, { timeout: 30000 });
     await capture(page, { id: 'relay-1-przerwa', group: this.group, title: 'Sztafeta – przerwa dla gracza', desc: 'Odpowiada pierwszy gracz.' });
     await page.evaluate(() => { const inp = document.querySelector('#ly-input'); inp.value = 'zupełnie inne słowa'; inp.dispatchEvent(new Event('input')); lySubmit(); });

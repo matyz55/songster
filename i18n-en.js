@@ -1045,7 +1045,6 @@ window.I18N_EN = {
  "Nie udało się odtworzyć: ": "Playback failed: ",
  "⏸ Pauza": "⏸ Pause",
  "⏭ Pomiń (🪙 {0})": "⏭ Skip (🪙 {0})",
- "⏭ Inna piosenka": "⏭ Another song",
  "wymagany": "required",
  "opcjonalnie – za żeton": "optional – for a token",
  "Dokładny rok wydania (wymagany)": "Exact release year (required)",
@@ -1412,5 +1411,15 @@ window.I18N_EN = {
  "🏆 {0} wygrywa imprezę!": "🏆 {0} wins the party!",
  "📋 Szczegóły rundy": "📋 Round details",
  "🔥 Finał: Ostatnie odliczanie": "🔥 Final: The Last Countdown",
- "🏆 Imprezę wygrywa {0} – ostatni na placu w finale!": "🏆 {0} wins the party – last one standing in the final!"
+ "🏆 Imprezę wygrywa {0} – ostatni na placu w finale!": "🏆 {0} wins the party – last one standing in the final!",
+ "Przeglądarka nie pozwoliła włączyć filmu – dotknij ▶ na filmie albo wybierz inny.": "The browser didn't allow the video to start – tap ▶ on the video or choose another one.",
+ "Film nie ruszył – dotknij ▶ na filmie albo wybierz inny.": "The video didn't start – tap ▶ on the video or choose another one.",
+ "Wybierz film – dotknij, aby odtworzyć": "Choose a video – tap to play",
+ "Film {0}": "Video {0}",
+ "nie ruszył – dotknij ▶ na filmie": "didn't start – tap ▶ on the video",
+ "✓ działał": "✓ worked",
+ "⚠️ wcześniej nie ruszył": "⚠️ didn't start before",
+ "Pominięto piosenkę.": "Song skipped.",
+ "⏭ Inna piosenka": "⏭ Another song",
+ "⚠️ {0} Wybierz inny film.": "⚠️ {0} Choose another video."
 };

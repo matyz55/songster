@@ -840,3 +840,14 @@ body.no-anim *, body.no-anim *::before, body.no-anim *::after { animation: none 
 .ly-sync:hover, .ly-sync:focus-within { opacity: 1; }
 .ly-sync button { background: none; border: 0; padding: 2px 4px; min-height: 0; color: inherit; font: inherit; text-decoration: underline dotted; cursor: pointer; box-shadow: none; }
 .ly-sync #ly-sync-off { margin-left: 6px; font-variant-numeric: tabular-nums; }
+/* „Tak to leciało!”: wybór filmu przed piosenką – miniatura, długość, czy działał na tym urządzeniu */
+.ly-films { display: grid; gap: 8px; margin: 8px 0; }
+.ly-films-title { margin: 0; text-align: center; font-weight: 600; }
+.ly-films-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.ly-film { display: flex; flex-direction: column; align-items: stretch; gap: 4px; padding: 6px; text-align: left; min-height: 0; }
+.ly-film img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 6px; background: #000; }
+.ly-film-info { display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: baseline; font-size: .9rem; }
+.ly-film-tag { flex-basis: 100%; font-size: .8rem; }
+.ly-film-tag.ok { color: var(--accent-2); }
+.ly-film-tag.bad { color: var(--gold); }
+.ly-film-skip { justify-self: center; }
