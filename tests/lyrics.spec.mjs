@@ -159,10 +159,10 @@ test('Tak to leciało!: film niedostępny – gra nie zmienia piosenki sama, gra
   await page.locator('.ly-cat').first().click();
   await page.locator('.ly-song').first().click();
   await pickFilm(page);
-  // komunikat między wyborem a źródłami; piosenka zostaje ta sama, dopóki gracz nie zdecyduje
+  // komunikat nad wyborem (wyjaśnia, co się stało); piosenka zostaje ta sama, dopóki gracz nie zdecyduje
   await expect(page.locator('#ly-answer .ly-flash')).toContainText('zmień piosenkę');
   const order = await page.evaluate(() => [...document.querySelectorAll('#ly-answer > *')].map((e) => e.className));
-  expect(order.indexOf('muted ly-flash')).toBe(order.length - 2);
+  expect(order.indexOf('muted ly-flash')).toBe(0);
   await expect(page.locator('#ly-msg')).toBeHidden();
   await page.waitForTimeout(500);
   expect(await page.evaluate(() => songKey(state.lyrics.cur.it.song))).toBe(first);

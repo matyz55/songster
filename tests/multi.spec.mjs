@@ -538,3 +538,22 @@ test('żetony: ikonka i liczba („🪙 3”) w tytule tury, tablicy wyników i 
   await expect(page.locator('#btn-skip')).toHaveText('⏭ Pomiń (🪙 1)');
   await expect(page.getByRole('button', { name: 'Kup tę kartę (🪙 3)' })).toBeVisible();
 });
+
+test('duży ekran: wyniki po grze bez powtórzeń (tabela ligi i momenty idą osobno)', async ({ page }) => {
+  await lobby(page, 3);
+  await page.click('.mode[data-mode=melody]');
+  await page.fill('#rounds', '1');
+  await page.click('#btn-start');
+  await ready(page);
+  await page.evaluate(() => endGame());
+  expect(await screen(page)).toBe('end');
+  // przechwycenie migawki wysyłanej do dużego ekranu (kanał w tej samej przeglądarce)
+  const snap = await page.evaluate(() => {
+    let last = null;
+    tvChannel = { postMessage: (m) => { if (m && m.screen) last = m; } };
+    tvSync();
+    return last;
+  });
+  expect(snap.ranking).toHaveLength(3);
+  expect(snap.league.length).toBeGreaterThan(0);
+});

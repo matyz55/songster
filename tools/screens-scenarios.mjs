@@ -353,6 +353,14 @@ const lyrics = [
     await page.locator('.ly-song').first().click();
     await page.evaluate(() => { const cur = state.lyrics.cur; cur.it.vids.push({ ...cur.it.vids[0], id: 'alt0' }); lyVidLog(cur.it.vids[0].id, { ok: 1 }); lyRender(); });
     await capture(page, { id: 'lyrics-2b-film', group: g, title: 'Wybór filmu', desc: 'Przed piosenką gracz wybiera film – dotknięcie uruchamia odtwarzanie.' });
+    await page.evaluate(() => {
+      const cur = state.lyrics.cur;
+      cur.failed[cur.it.vids[0].id] = 'lyr';
+      lyFlash(T('⚠️ Nie udało się wczytać tekstu do tego filmu – wybierz inny film albo spróbuj jeszcze raz.'));
+      lyRender();
+    });
+    await capture(page, { id: 'lyrics-2c-film-blad', group: g, title: 'Wybór filmu po kłopocie', desc: 'Tekst do filmu się nie wczytał – drugi film do wyboru, pierwszy do ponownej próby, zmiana piosenki.' });
+    await page.evaluate(() => { const cur = state.lyrics.cur; delete cur.failed[cur.it.vids[0].id]; lyRender(); });
     await page.locator('.ly-film').first().click();
     await page.waitForFunction(() => state.phase === 'play' && state.lyrics.cur && state.lyrics.cur.lines, null, { timeout: 20000 });
     await page.waitForTimeout(2500);

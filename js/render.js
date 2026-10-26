@@ -47,10 +47,13 @@ function render() {
     $('#guess-song').closest('.suggest-wrap').classList.toggle('hidden', !kind);
     $('#guess-solved').classList.add('hidden');
     $('#guess-year').classList.toggle('hidden', !fields.year);
-    const base = { both: T('Wpisz tytuł lub wykonawcę – od 3 liter pojawią się podpowiedzi'), title: T('Wpisz tytuł – od 3 liter pojawią się podpowiedzi'),
-      artist: T('Wpisz wykonawcę – od 3 liter pojawią się podpowiedzi') }[kind] || '';
+    // wąski ekran (telefon): krótsza podpowiedź – długa była ucinana w połowie zdania
+    const narrow = window.matchMedia && matchMedia('(max-width: 600px)').matches;
+    const base = (narrow ? { both: T('Tytuł lub wykonawca'), title: T('Tytuł piosenki'), artist: T('Wykonawca') }
+      : { both: T('Wpisz tytuł lub wykonawcę – od 3 liter pojawią się podpowiedzi'), title: T('Wpisz tytuł – od 3 liter pojawią się podpowiedzi'),
+        artist: T('Wpisz wykonawcę – od 3 liter pojawią się podpowiedzi') })[kind] || '';
     const required = ['title', 'artist'].some((part) => fields[part] && ex.includes(part));
-    $('#guess-song').placeholder = isMelody() ? base : `${base} (${required ? T('wymagany') : T('opcjonalnie – za żeton')})`;
+    $('#guess-song').placeholder = isMelody() ? base : `${base} (${required ? T('wymagany') : narrow ? T('za żeton') : T('opcjonalnie – za żeton')})`;
     $('#guess-year').placeholder = T('Dokładny rok wydania (wymagany)');
     $('#btn-guess').classList.toggle('hidden', !isMelody());
     $('#btn-giveup').classList.toggle('hidden', state.mode !== 'melody');

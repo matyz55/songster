@@ -234,7 +234,10 @@ function tvSync() {
   if (screen === 'end') {
     snap.winner = txt('#winner-title');
     // w imprezie – klasyfikacja całej imprezy, a nie tylko ostatniej minigry
-    snap.ranking = ($('.party-standings') ? $$('.party-standings li') : $$('#ranking li')).map((li) => li.textContent);
+    // tylko wyniki tej gry – bez tabeli ligi i „najciekawszych momentów” (są w #ranking, ale idą osobno; wcześniej
+    // duży ekran pokazywał graczy dwa razy)
+    snap.ranking = ($('.party-standings') ? $$('.party-standings li') : $$('#ranking li').filter((li) => !li.closest('.league-box, .moments-box, .party-box')))
+      .map((li) => li.textContent);
     if ($('.party-box p')) snap.next = $('.party-box p').textContent;
     snap.league = $$('.league-standings li').map((li) => li.textContent);
     snap.moments = $$('.moments li').map((li) => li.textContent);

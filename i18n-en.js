@@ -1423,7 +1423,6 @@ window.I18N_EN = {
  "⏭ Inna piosenka": "⏭ Another song",
  "⚠️ {0} Wybierz inny film.": "⚠️ {0} Choose another video.",
  "Ta piosenka nie działa na tym urządzeniu.": "This song doesn't work on this device.",
- "🔁 Druga piosenka z kategorii: {0}": "🔁 The other song in this category: {0}",
  "⚠️ {0} Wybierz inny film albo zmień piosenkę.": "⚠️ {0} Choose another video or change the song.",
  "Przyciski odtwarzacza YouTube – film uruchamiasz ▶ na samym filmie (włącza się samo, gdy przeglądarka nie pozwala grze uruchamiać filmów)": "YouTube player buttons – you start the video with ▶ on the video itself (switches on by itself when the browser doesn't let the game start videos)",
  "Wybierz film i dotknij ▶ na filmie": "Choose a video and tap ▶ on the video",
@@ -1442,5 +1441,8 @@ window.I18N_EN = {
  "inna długość niż nagranie": "different length than the recording",
  "YouTube: niedostępny (kod {0})": "YouTube: unavailable (code {0})",
  "nie ruszył – spróbuj jeszcze raz": "didn't start – try again",
- "Filmy tej piosenki nie zadziałały – spróbuj jeszcze raz albo zmień piosenkę.": "This song's videos didn't work – try again or change the song."
+ "Filmy tej piosenki nie zadziałały – spróbuj jeszcze raz albo zmień piosenkę.": "This song's videos didn't work – try again or change the song.",
+ "Tytuł piosenki": "Song title",
+ "za żeton": "for a token",
+ "🔁 Druga piosenka z kategorii:": "\ud83d\udd01 The other song in this category:"
 };

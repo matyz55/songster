@@ -463,3 +463,32 @@ html.ui6 #ly-answer .ly-film { min-height: var(--tap); padding: calc(var(--gap) 
 html.ui6 #ly-answer .ly-film-info { font-size: max(13px, .85rem); }
 html.ui6 #ly-answer .ly-film-tag { font-size: max(13px, .8rem); }
 html.ui6 #ly-answer .ly-film-skip { min-height: var(--tap); }
+/* lista filmów jako zwarte wiersze (miniatura, numer, długość, znaczek) – mieści się także z filmami do ponownej próby
+   i przyciskami zmiany piosenki; przyciski zmiany piosenki obok siebie */
+html.ui6 #ly-answer .ly-films-list { grid-template-columns: minmax(0, 1fr); gap: calc(var(--gap) * .45); }
+html.ui6 #ly-answer .ly-film { flex-direction: row; align-items: center; gap: .6em; padding: .3em .6em .3em .3em; text-align: left; }
+html.ui6 #ly-answer .ly-film img { flex: none; width: clamp(72px, 24%, 120px); border-radius: 6px; }
+html.ui6 #ly-answer .ly-film-info { flex: 1 1 auto; min-width: 0; }
+html.ui6 #ly-answer .ly-film-switch { display: flex; flex-wrap: wrap; gap: calc(var(--gap) * .5); }
+html.ui6 #ly-answer .ly-film-switch > button { min-height: var(--tap); margin: 0; }
+html.ui6 #ly-answer .ly-film-other { flex: 1 1 60%; min-width: 0; font-size: max(13px, .85rem); line-height: 1.2; white-space: normal; }
+html.ui6 #ly-answer .ly-film-skip { flex: 1 1 30%; }
+/* wybór filmu: najpierw wyjaśnienie (komunikat), potem filmy; przy kłopotach na telefonie bez linijki źródeł (brak miejsca) */
+html.ui6 #ly-answer:has(> .ly-films) > .ly-flash { order: -1; }
+@media (orientation: portrait), (max-width: 760px) and (min-height: 521px) {
+  html.ui6 #ly-answer:has(.ly-film-switch) > .ly-credit { display: none; }
+}
+/* mało miejsca (np. telefon poziomo): lista filmów przewija się sama, a przyciski zmiany piosenki zostają widoczne */
+html.ui6 #ly-answer > .ly-films { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+html.ui6 #ly-answer .ly-films-list { flex: 0 1 auto; min-height: 0; overflow-y: auto; }
+@media (max-height: 520px) {
+  html.ui6 #ly-answer .ly-film img { width: 56px; }
+  html.ui6 #ly-answer .ly-films-title { font-size: .9rem; }
+  html.ui6 #ly-answer .ly-film-switch > button { min-height: 36px; padding-top: .2em; padding-bottom: .2em; }
+}
+@media (max-height: 520px) {
+  html.ui6 #ly-answer:has(> .ly-flash) .ly-films-title { display: none; }
+}
+@media (max-height: 520px) {
+  html.ui6 #ly-answer:has(.ly-film-switch) > .ly-credit { display: none; }
+}

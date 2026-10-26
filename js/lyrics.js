@@ -429,6 +429,8 @@ function lyPickVideo(i, fromPlayer = false) {
   cur.stall = null;
   cur.vi = i;
   cur.cuedVi = null;
+  // komunikat o poprzednim filmie (np. „nie wczytał się tekst”) nie dotyczy już wybranego filmu
+  ly.msg = '';
   if (!fromPlayer) lyShowVideo();
   const alt = cur.it.vids[i];
   const go = () => {
@@ -482,15 +484,18 @@ function lyFilmsEl(cur) {
   return el('div', { class: 'ly-films' },
     el('p', { class: 'ly-films-title' }, !list.length ? (tried.length ? T('Filmy tej piosenki nie zadziałały – spróbuj jeszcze raz albo zmień piosenkę.') : T('Ta piosenka nie działa na tym urządzeniu.'))
       : tap ? T('Wybierz film i dotknij ▶ na filmie') : T('Wybierz film – dotknij, aby odtworzyć')),
-    list.length || tried.length ? el('div', { class: 'ly-films-list' },
+    // lista może się przewijać sama, gdy filmów jest dużo (data-ui6-scroll – zamierzone przewijanie w wyglądzie 6.0)
+    list.length || tried.length ? el('div', { class: 'ly-films-list', 'data-ui6-scroll': '' },
       ...list.map((v, n) => film(v, n, n === 0 ? ' top' : '',
         v.id === cur.videoId && cur.stall ? el('span', { class: 'ly-film-tag bad' }, T('nie ruszył – dotknij ▶ na filmie'))
           : v.log ? el('span', { class: `ly-film-tag ${v.log.ok ? 'ok' : 'bad'}` }, v.log.ok ? T('✓ działał') : T('⚠️ wcześniej nie ruszył'))
             : n === 0 ? el('span', { class: 'ly-film-tag' }, T('polecany')) : '')),
       ...tried.map((v, n) => film(v, list.length + n, ' failed', el('span', { class: 'ly-film-tag bad' }, lyFailLabel(v.why))))) : '',
     trouble ? el('div', { class: 'ly-film-switch' },
-      other ? el('button', { class: list.length ? 'ly-film-other' : 'primary ly-film-other', onclick: () => lySwitchSong(other) },
-        T('🔁 Druga piosenka z kategorii: {0}', `${other.song.t} — ${artistLine(other.song)}`)) : '',
+      // druga piosenka z kategorii: krótki opis i tytuł w jednej linijce (pełna nazwa w podpowiedzi)
+      other ? el('button', { class: list.length ? 'ly-film-other' : 'primary ly-film-other', onclick: () => lySwitchSong(other),
+        title: `${other.song.t} — ${artistLine(other.song)}` },
+      el('span', { class: 'ly-other-k' }, T('🔁 Druga piosenka z kategorii:')), el('b', { class: 'ly-other-t' }, other.song.t)) : '',
       el('button', { class: 'ghost small ly-film-skip', onclick: () => lySwitchSong(null) }, T('⏭ Inna piosenka'))) : '');
 }
 document.addEventListener('keydown', (e) => {
@@ -1250,7 +1255,8 @@ function lyRenderAnswer() {
   const cur = ly.cur;
   const box = $('#ly-answer');
   if (cur && cur.pick && ['loading', 'play'].includes(state.phase)) {
-    box.replaceChildren(lyFilmsEl(cur), ly.msg ? el('p', { class: 'muted ly-flash' }, ly.msg) : '', el('p', { class: 'muted small ly-credit' }, T('Tekst: lrclib.net · Film: YouTube')));
+    // najpierw wyjaśnienie (np. że tekst się nie wczytał), potem wybór filmu albo zmiana piosenki
+    box.replaceChildren(ly.msg ? el('p', { class: 'muted ly-flash' }, ly.msg) : '', lyFilmsEl(cur), el('p', { class: 'muted small ly-credit' }, T('Tekst: lrclib.net · Film: YouTube')));
     return;
   }
   if (!cur || !['play', 'answer', 'result'].includes(state.phase)) { box.replaceChildren(); return; }
