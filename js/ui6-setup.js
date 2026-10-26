@@ -11,6 +11,15 @@ if (UI6 && $('#screen-setup')) {
   const scr = $('#screen-setup');
   const cards = $$('#screen-setup > section.card');
   const [pl, songs, play, level, rules] = [$('#sec-players'), ...cards.filter((c) => c.id !== 'sec-players')];
+  // filtr piosenek niecenzuralnych dotyczy piosenek, nie poziomu – w kreatorze stoi w sekcji „Piosenki”
+  // (pierwszy krok – poziom i gracz – mieści się wtedy na jednym ekranie telefonu)
+  const noExp = $('#no-explicit') && $('#no-explicit').closest('label');
+  if (noExp && songs) songs.append(noExp, ...(noExp.nextElementSibling ? [noExp.nextElementSibling] : []));
+  // zakładki stron kroku: krótkie nazwy sekcji zamiast samych kropek – widać, co jest na kolejnych stronach
+  for (const [c, n] of [[pl, 'Gracze'], [level, 'Poziom'], [songs, 'Piosenki'], [play, 'Odtwarzanie'], [rules, 'Zasady']]) {
+    const h = c && c.querySelector(':scope > h2');
+    if (h) h.dataset.tab = T(n);
+  }
   // dwa kroki: na pierwszej karcie gracze (jeden gracz – imię) i poziom trudności, na drugiej piosenki i zasady trybu
   const STEPS = [
     { name: 'Gracze i poziom', icon: '👥', cards: [pl, level] },
@@ -29,7 +38,7 @@ if (UI6 && $('#screen-setup')) {
     track.append(s.el);
     // pierwsza karta jest w kroku od razu – pudełko ze stronami wstawia się przed nią
     s.el.append(s.head, s.cards[0]);
-    s.pager = ui6Paginate(s.el, s.cards, { cls: 'ui6-spages' });
+    s.pager = ui6Paginate(s.el, s.cards, { cls: 'ui6-spages', tabs: ':scope > .card > h2' });
     s.flow = s.pager.flow;
   }
   const back = $('#btn-back');

@@ -1052,3 +1052,13 @@ Wersja próbna wyglądu 6.0:
 - Sprawdzarka filmów w Ustawieniach niczego nie ukrywa (filmy oznacza i stawia na końcu listy), czeka, aż odtwarzacz jest widoczny na ekranie (wymóg YouTube), i przerywa sprawdzanie przy blokadzie urządzenia.
 - Na komputerze film wybierzesz też cyframi 1–5.
 - Katalog: 49 piosenek dostało filmy zapasowe (piosenek z jednym filmem jest 82 zamiast 131); codzienne dociąganie szuka teraz więcej filmów zapasowych.
+
+## 5.58.1 – 26.10.2026 (`???????`)
+
+- „Tak to leciało!”: gdy nie wczytał się tekst do wybranego filmu (np. przeciążony serwer z tekstami), gra nie uznaje już całej piosenki za niedziałającą – inne filmy tej piosenki zostają do wyboru, a ten sam film można wybrać jeszcze raz. Gra sama próbuje pobrać tekst kilka razy (po 1,5 s, 3 s i 6 s).
+- „Tak to leciało!”: gdy piosenka nie działa, wszystkie jej filmy nadal są na liście (z opisem, co poszło nie tak) – można je sprawdzić jeszcze raz, zanim zmienisz piosenkę. Po nieudanym filmie następny polecany czeka już w odtwarzaczu, a numery filmów się nie zmieniają.
+- „Tak to leciało!”: piosenka z samymi krótkimi wersami nie odpada na wysokim etapie – przerwa wypada wtedy w krótszym wersie.
+- Obecny wygląd na telefonie: ekran „Tak to leciało!” nie przesuwa się już na boki.
+- Kilka nowych osiągnięć naraz pokazuje się w jednym powiadomieniu (zamiast stosu zasłaniającego przyciski).
+- Baza: trzy piosenki zapisane dwukrotnie (np. „I Gotta Feeling”) nie trafią już do jednej gry dwa razy; przy tytułach „A / B” (obie strony singla) zaliczana jest każda z nazw.
+- Wygląd 6.0: w ustawieniach gry zakładki z nazwami sekcji („Piosenki · Odtwarzanie · Zasady”) zamiast samych kropek; „Pomijaj piosenki niecenzuralne” jest w sekcji „Piosenki”, więc pierwszy krok mieści się na jednym ekranie telefonu.

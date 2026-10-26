@@ -713,7 +713,7 @@ body.no-anim *, body.no-anim *::before, body.no-anim *::after { animation: none 
 /* ---------- Tak to leciało! ---------- */
 #ly-scores { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
 #ly-scores .score.out { opacity: .55; }
-.ly-wrap { display: grid; grid-template-columns: 220px 1fr; gap: 16px; align-items: start; }
+.ly-wrap { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 16px; align-items: start; }
 .ly-side { padding: 12px; }
 .ly-ladder { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; gap: 3px; }
 .ly-ladder li { display: flex; justify-content: space-between; padding: 4px 10px; border-radius: 8px; background: var(--panel-2); font-size: .92rem; }
@@ -760,14 +760,14 @@ body.no-anim *, body.no-anim *::before, body.no-anim *::after { animation: none 
 .ly-helper { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 8px 0; }
 .ly-credit { text-align: center; margin: 14px 0 0; }
 .ly-flash { text-align: center; margin: 12px 0 0; color: var(--gold); }
-.ly-wrap:has(#ly-ladder.hidden) { grid-template-columns: 1fr; }
+.ly-wrap:has(#ly-ladder.hidden) { grid-template-columns: minmax(0, 1fr); }
 .ly-submit { display: block; width: 100%; margin: 10px 0 8px; padding: 14px; font-size: 1.15rem; }
 .ly-lifebtns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 8px 0; }
 .ly-lifebtns button { padding: 10px 6px; font-size: .9rem; white-space: normal; }
 .ly-lifebtns button.on { border-color: var(--gold); box-shadow: inset 0 0 0 2px var(--gold); }
 .ly-extra { justify-content: center; }
 @media (max-width: 720px) {
-  .ly-wrap { grid-template-columns: 1fr; }
+  .ly-wrap { grid-template-columns: minmax(0, 1fr); }
   .ly-side { order: 2; }
   .ly-ladder { flex-direction: row; flex-wrap: wrap; }
   .ly-ladder li { flex: 1 1 30%; }
@@ -853,3 +853,5 @@ body.no-anim *, body.no-anim *::before, body.no-anim *::after { animation: none 
 .ly-film-skip { justify-self: center; }
 .ly-film.top { border-color: var(--accent-2); box-shadow: 0 0 0 1px var(--accent-2) inset; }
 .ly-film-tag { color: var(--accent-2); }
+.ly-film.failed { opacity: .72; }
+.ly-film.failed img { filter: grayscale(1); }

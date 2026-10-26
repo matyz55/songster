@@ -49,15 +49,19 @@ function checkAchievements() {
   const day = new Date().toISOString().slice(0, 10);
   for (const a of fresh) got[a.id] = day;
   store.set('achievements', got);
-  for (const a of fresh) toast(`${a.icon} ${T('Nowe osiągnięcie: {0}', a.name())}`);
+  // kilka naraz (np. po pierwszej grze) – jedno powiadomienie zamiast stosu zasłaniającego ekran
+  if (fresh.length <= 2) for (const a of fresh) toast(`${a.icon} ${T('Nowe osiągnięcie: {0}', a.name())}`);
+  else toast(`🏆 ${T('Nowe osiągnięcia ({0}): {1}', fresh.length, fresh.map((a) => a.name()).join(', '))}`, 6500);
   return fresh;
 }
-function toast(text) {
+// powiadomienie na kilka sekund; naraz najwyżej dwa (starsze znika)
+function toast(text, ms = 4500) {
   let box = $('#toasts');
   if (!box) { box = el('div', { id: 'toasts', class: 'toasts', role: 'status', 'aria-live': 'polite' }); document.body.append(box); }
+  while (box.children.length >= 2) box.firstChild.remove();
   const t = el('div', { class: 'toast' }, text);
   box.append(t);
-  setTimeout(() => t.remove(), 4500);
+  setTimeout(() => t.remove(), ms);
 }
 function achievementsCard() {
   const list = achievementsState();

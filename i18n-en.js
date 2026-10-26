@@ -1433,5 +1433,14 @@ window.I18N_EN = {
  "Przewiń do odtwarzacza – sprawdzanie czeka, aż będzie widoczny.": "Scroll to the player – the check waits until it's visible.",
  "YouTube nie odtwarza teraz filmów na tym urządzeniu (np. przez VPN, blokadę reklam albo sieć) – sprawdzanie przerwane, wyniki nie zostały zapisane.": "YouTube isn't playing videos on this device right now (e.g. because of a VPN, an ad blocker or the network) – the check was stopped and the results weren't saved.",
  "Sprawdzone filmy: {0} z {1}, nie odtwarza się: {2} (w grze oznaczone i na końcu listy filmów).": "Videos checked: {0} of {1}, not playing: {2} (marked in the game and listed last).",
- "Przed piosenką wybierasz film z YouTube – polecany jest pierwszy (działał już na tym urządzeniu albo jest najlepiej dopasowany); możesz też od razu dotknąć ▶ na filmie. Gdy film nie rusza, dotknij ▶ na filmie, wybierz inny film albo zmień piosenkę – na drugą z kategorii albo inną (bez zużycia koła ratunkowego).": "Before the song you choose a YouTube video – the recommended one is first (it has already worked on this device or is the best match); you can also tap ▶ on the video straight away. If the video doesn't start, tap ▶ on the video, choose another video or change the song – to the other one in the category or a different one (without using a lifeline)."
+ "Przed piosenką wybierasz film z YouTube – polecany jest pierwszy (działał już na tym urządzeniu albo jest najlepiej dopasowany); możesz też od razu dotknąć ▶ na filmie. Gdy film nie rusza, dotknij ▶ na filmie, wybierz inny film albo zmień piosenkę – na drugą z kategorii albo inną (bez zużycia koła ratunkowego).": "Before the song you choose a YouTube video – the recommended one is first (it has already worked on this device or is the best match); you can also tap ▶ on the video straight away. If the video doesn't start, tap ▶ on the video, choose another video or change the song – to the other one in the category or a different one (without using a lifeline).",
+ "Nowe osiągnięcia ({0}): {1}": "New achievements ({0}): {1}",
+ "Poziom": "Level",
+ "Serwer z tekstami jest przeciążony – próbuję jeszcze raz…": "The lyrics server is overloaded – trying again…",
+ "⚠️ Nie udało się wczytać tekstu do tego filmu – wybierz inny film albo spróbuj jeszcze raz.": "⚠️ Couldn't load the lyrics for this video – choose another video or try again.",
+ "brak tekstu – spróbuj jeszcze raz": "no lyrics – try again",
+ "inna długość niż nagranie": "different length than the recording",
+ "YouTube: niedostępny (kod {0})": "YouTube: unavailable (code {0})",
+ "nie ruszył – spróbuj jeszcze raz": "didn't start – try again",
+ "Filmy tej piosenki nie zadziałały – spróbuj jeszcze raz albo zmień piosenkę.": "This song's videos didn't work – try again or change the song."
 };

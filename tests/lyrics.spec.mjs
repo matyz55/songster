@@ -30,12 +30,12 @@ async function playToGap(page) {
 }
 // przed każdą piosenką gracz wybiera film (dotknięcie uruchamia odtwarzanie)
 async function pickFilm(page) {
-  await page.locator('.ly-film').first().click();
+  await page.locator('.ly-film:not(.failed)').first().click();
 }
 // do przerwy w piosence – z wyborem filmu, gdy gra go pokazuje
 async function toAnswer(page) {
   await expect.poll(async () => {
-    if (await page.locator('.ly-film').count()) await page.locator('.ly-film').first().click({ timeout: 1000 }).catch(() => {});
+    if (await page.locator('.ly-film:not(.failed)').count()) await page.locator('.ly-film:not(.failed)').first().click({ timeout: 1000 }).catch(() => {});
     return page.evaluate(() => state.phase);
   }, { timeout: 20000 }).toBe('answer');
 }
@@ -166,7 +166,9 @@ test('Tak to leciało!: film niedostępny – gra nie zmienia piosenki sama, gra
   await expect(page.locator('#ly-msg')).toBeHidden();
   await page.waitForTimeout(500);
   expect(await page.evaluate(() => songKey(state.lyrics.cur.it.song))).toBe(first);
-  await expect(page.locator('.ly-film')).toHaveCount(0);
+  // niedziałający film zostaje do sprawdzenia jeszcze raz (oznaczony)
+  await expect(page.locator('.ly-film:not(.failed)')).toHaveCount(0);
+  await expect(page.locator('.ly-film.failed')).toContainText('YouTube: niedostępny (kod 150)');
   await page.locator('.ly-film-other').click();
   await expect.poll(() => page.evaluate(() => songKey(state.lyrics.cur.it.song))).toBe(other);
   expect(await page.evaluate(() => state.players[0].lifes.swap)).toBe(true);
@@ -211,6 +213,32 @@ test('Tak to leciało!: oba filmy w kategorii niedostępne – „Inna piosenka�
     lyVidLog(id, { err: '150' });
     return [store.get('lyVidLog', {})[id].n, lyCatalog().some((it) => it.yts.includes(id))];
   }, failed[0])).toEqual([2, false]);
+});
+
+test('Tak to leciało!: tekst do filmu się nie wczytał – drugi film tej piosenki i ponowna próba, bez zmiany piosenki', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    const pl = window.SONGS.filter((s) => s.c === 'PL').slice(0, 400);
+    // dwa filmy z osobnymi wariantami tekstu; tekst pierwszego – serwer przeciążony (503)
+    window.LYRICS_SONGS = Object.fromEntries(pl.map((s, i) => [songKey(s), [[`vid${i}`, 1000 + i, 180], [`alt${i}`, 5000 + i, 180]]]));
+    window.__lrFail = pl.map((s, i) => 1000 + i);
+    window.__lrRetryMs = 5;
+  });
+  await page.click('#btn-single');
+  await page.click('.mode[data-mode=lyrics]');
+  await page.click('#btn-start');
+  const song = await page.evaluate(() => { const it = lyCatalog().find((x) => x.yts[0] === 'vid0'); lyPlay(it, lyCatalog().find((x) => x.yts[0] === 'vid1'), 'test'); return songKey(it.song); });
+  await page.locator('.ly-film[data-key="1"]').click();
+  // ta sama piosenka: film 1 oznaczony „brak tekstu”, film 2 do wyboru
+  await expect(page.locator('.ly-film.failed')).toContainText('brak tekstu');
+  await expect(page.locator('#ly-answer .ly-flash')).toContainText('Nie udało się wczytać tekstu do tego filmu');
+  expect(await page.evaluate(() => songKey(state.lyrics.cur.it.song))).toBe(song);
+  await expect(page.locator('.ly-film:not(.failed)')).toHaveCount(1);
+  // serwer znów działa – ponowna próba pierwszego filmu
+  await page.evaluate(() => { window.__lrFail = []; });
+  await page.locator('.ly-film.failed').click();
+  await toAnswer(page);
+  expect(await page.evaluate(() => [state.lyrics.cur.videoId, songKey(state.lyrics.cur.it.song)])).toEqual(['vid0', song]);
 });
 
 test('Tak to leciało!: kilka filmów z rzędu z błędem YouTube – blokada urządzenia, filmy nie są zapisywane jako niedziałające', async ({ page }) => {

@@ -165,8 +165,15 @@ przewija się jak w karaoke, a przed wersem do uzupełnienia muzyka milknie. Odp
 (rozpoznawanie mowy przeglądarki). Katalog piosenek (`lyrics-catalog.js`, bez tekstów) buduje
 `tools/lyrics-catalog.mjs`: `lrclib` (teksty z czasami), `youtube` (filmy – wymaga zmiennej `YOUTUBE_API_KEY` z kluczem
 YouTube Data API v3; film musi dać się osadzić, nie może być zablokowany w Polsce, a jego długość musi zgadzać się
-z nagraniem z tekstem ±3 s) i `build`. Wyniki pośrednie (tylko identyfikatory i długości) są w `tools/lyrics-data`, więc kolejne uruchomienia kontynuują pracę (piosenkę bez pasującego filmu narzędzie szuka jeszcze raz najwcześniej po 30 dniach, najwyżej dwa razy). Piosenka może mieć kilka filmów – gra próbuje kolejnych, a te, których nie da się odtworzyć
-(np. wytwórnia zablokowała odtwarzanie na innych stronach), zapamiętuje na tym urządzeniu i pomija. Kafelek trybu pojawia
+z nagraniem z tekstem ±3 s) i `build`. Wyniki pośrednie (tylko identyfikatory i długości) są w `tools/lyrics-data`, więc kolejne uruchomienia kontynuują pracę (piosenkę bez pasującego filmu narzędzie szuka jeszcze raz najwcześniej po 30 dniach, najwyżej dwa razy). Piosenka może mieć kilka filmów (piosenki z mniej niż dwoma działającymi filmami
+narzędzie co 30 dni szuka ponownie) – przed piosenką gracz wybiera film z listy (miniatura, długość, znaczek „działał”
+albo „wcześniej nie ruszył”), a polecany czeka już w odtwarzaczu (wystarczy dotknąć ▶). Gdy film nie rusza, gra nie zmienia
+piosenki sama: gracz dotyka ▶ na filmie, wybiera inny film albo zmienia piosenkę (druga z kategorii albo inna – bez zużycia
+koła). Urządzenie, na którym przeglądarka nie pozwala grze uruchamiać filmów (zdarzenie `onAutoplayBlocked`), dostaje
+odtwarzacz z przyciskami YouTube. Błąd YouTube (100/101/150) zapisuje się dopiero po starcie innego filmu, a film znika
+na tym urządzeniu po błędzie w dwóch różnych dniach (kilka błędów z rzędu bez żadnego startu to raczej blokada urządzenia
+albo sieci, np. VPN). Raport ze sprawdzarki filmów (Ustawienia) zawiera też filmy, które ruszyły w grze – trafiają do
+`tools/lyrics-data/good-videos.json` i są w katalogu pierwsze na liście; niedziałające – do `bad-videos.json`. Kafelek trybu pojawia
 się, gdy katalog ma co najmniej 40 piosenek. W Imprezie jest minigra „Tak to leciało!” – piosenka od zwrotki lub refrenu
 z wersem do uzupełnienia, dobra odpowiedź = 1 pkt.
 

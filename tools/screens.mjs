@@ -124,5 +124,7 @@ for (const sc of SCENARIOS) {
 }
 writeFileSync(`${OUT}/manifest.json`, JSON.stringify({ generated: new Date().toISOString(), devices: { ...DEVICES, ...TV_DEVICES }, screens: manifest }, null, 1));
 console.log(`ekranów: ${manifest.filter((m) => !m.failed).length}, błędów: ${failed}`);
-await browser.close();
+// zamknięcie przeglądarki potrafi zawisnąć (otwarte połączenia scenariuszy z dużym ekranem) – po 5 s kończymy i tak
+await Promise.race([browser.close(), new Promise((r) => setTimeout(r, 5000))]);
 server.kill();
+process.exit(0);

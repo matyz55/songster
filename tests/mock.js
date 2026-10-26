@@ -41,6 +41,8 @@
     }
     if (url.startsWith('https://lrclib.net/api/get/')) {
       const id = url.split('/').pop();
+      // __lrFail: serwer z tekstami przeciążony (503) dla tych tekstów
+      if (window.__lrFail && window.__lrFail.includes(Number(id))) { window.__lrCalls = (window.__lrCalls || 0) + 1; return new Response('ServerOverloaded', { status: 503 }); }
       const pad = (n) => String(n).padStart(2, '0');
       const lines = Array.from({ length: 40 }, (_, i) => {
         const t = 8 + i * 4;

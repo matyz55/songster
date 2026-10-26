@@ -1,7 +1,7 @@
 'use strict';
 
 // aktualna wersja gry – ta sama co ostatni wpis w CHANGELOG.md (pokazywana na dole ekranu startowego)
-const GAME_VERSION = '5.58.0';
+const GAME_VERSION = '5.58.1';
 
 /* ---------- narzędzia ---------- */
 const $ = (sel) => document.querySelector(sel);
@@ -99,6 +99,21 @@ function celebrate() {
 
 /* ---------- piosenki, flagi, poprawki dat ---------- */
 const songKey = (s) => s.a + '|' + s.t;
+// ta sama piosenka zapisana w bazie dwa razy (np. z różnych źródeł, inną wielkością liter) – zostaje jeden wpis z uzupełnionymi
+// polami, żeby w jednej grze nie trafiła się dwa razy
+(function dedupeSongs() {
+  const seen = new Map();
+  window.SONGS = window.SONGS.filter((s) => {
+    const k = songKey(s).toLowerCase();
+    const first = seen.get(k);
+    if (!first) { seen.set(k, s); return true; }
+    for (const [f, v] of Object.entries(s)) {
+      if (first[f] == null || first[f] === '' || (f === 'p' && v > first[f])) first[f] = v;
+      else if (Array.isArray(first[f]) && Array.isArray(v)) first[f] = [...new Set([...first[f], ...v])];
+    }
+    return false;
+  });
+}());
 
 // piosenki zagrane w tej sesji (do zamknięcia karty) – kolejne rozgrywki losują najpierw spośród pozostałych
 const played = (() => {

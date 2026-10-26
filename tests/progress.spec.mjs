@@ -12,7 +12,9 @@ test('osiągnięcia: wyliczane ze statystyk, nowe pokazują się jako powiadomie
   const fresh = await page.evaluate(() => checkAchievements().map((a) => a.id));
   expect(fresh).toEqual(expect.arrayContaining(['first-win', 'streak10', 'decades']));
   expect(fresh).not.toContain('streak25');
-  await expect(page.locator('.toast').first()).toContainText('Nowe osiągnięcie');
+  // kilka naraz – jedno powiadomienie z liczbą i nazwami (zamiast stosu zasłaniającego ekran)
+  await expect(page.locator('.toast')).toHaveCount(1);
+  await expect(page.locator('.toast')).toContainText(`Nowe osiągnięcia (${fresh.length})`);
   // drugi raz – już nic nowego
   expect(await page.evaluate(() => checkAchievements().length)).toBe(0);
   await page.click('#btn-stats');

@@ -134,8 +134,11 @@
   function titleVariants(t) {
     const noParens = t.replace(/\s*[([].*?[)\]]/g, '').trim();
     const inParens = (t.match(/[([](.*?)[)\]]/) || [])[1];
-    const beforeSlash = t.split(/\s*\/\s*/)[0];
-    return [t, noParens, beforeSlash, inParens && noParens.length < 4 ? inParens : null].filter(Boolean);
+    // „A / B” (np. obie strony singla) – zaliczamy każdą część
+    // („24/7” czy „AC/DC” zostają całe – dzielimy tylko, gdy każda część ma co najmniej 4 znaki)
+    const parts = t.split(/\s*\/\s*/);
+    const slashParts = parts.length < 2 ? [] : parts.every((x) => norm(x).length >= 4) ? parts : norm(parts[0]).length >= 4 ? [parts[0]] : [];
+    return [t, noParens, ...slashParts, inParens && noParens.length < 4 ? inParens : null].filter(Boolean);
   }
 
   function artistVariants(song) {
