@@ -765,6 +765,11 @@ body.no-anim *, body.no-anim *::before, body.no-anim *::after { animation: none 
 .ly-lifebtns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 8px 0; }
 .ly-lifebtns button { padding: 10px 6px; font-size: .9rem; white-space: normal; }
 .ly-lifebtns button.on { border-color: var(--gold); box-shadow: inset 0 0 0 2px var(--gold); }
+/* trzy wersje wersu: wybrana wersja (wpisana do pola) zaznaczona */
+.ly-variants button.on { border-color: var(--accent-2); box-shadow: inset 0 0 0 2px var(--accent-2); }
+.ly-variants button.on::before { content: "✓ "; }
+/* „gramy o” przy bieżącej kwocie – tylko w zwiniętym pasku drabinki na telefonie (wygląd 6.0) */
+.ly-stake { display: none; }
 .ly-extra { justify-content: center; }
 @media (max-width: 720px) {
   .ly-wrap { grid-template-columns: minmax(0, 1fr); }

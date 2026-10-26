@@ -640,3 +640,74 @@ test('Tak to leciało!: „film pokazuje tekst – zmień film” bierze inny fi
   expect(r.bad).toContain(first);
   expect(r.rep).toContain(`${first}:tekst`);
 });
+
+test('6.0 na telefonie: pasek – sama stawka, śpiewany wers zawsze widoczny, w przerwie kropki, pole, koła i podpisane 🎤/✋, wybrana z trzech wersji w polu', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 640 });
+  await page.goto('/');
+  await page.evaluate(() => localStorage.setItem('songster.ui6', '1'));
+  await startLyrics(page);
+  // drugi etap (500 zł wygrane) – przy przerwie można zrezygnować
+  await page.evaluate(() => { Object.assign(state.players[0], { stage: 1, score: 500 }); lyRender(); });
+  // pasek u góry: tylko kwota, o którą toczy się gra; stuknięcie – cała drabinka, 100 000 zł w osobnym wierszu
+  const rungs = page.locator('#ly-ladder .ly-ladder li:visible');
+  await expect(rungs).toHaveCount(1);
+  await expect(rungs).toContainText('gramy o');
+  await expect(rungs).toContainText('1000 zł');
+  await page.locator('#ly-ladder').click();
+  await expect(rungs).toHaveCount(10);
+  const [top, other] = await page.evaluate(() => ['li.top', 'li:not(.top)'].map((s) => document.querySelector(`#ly-ladder ${s}`).getBoundingClientRect().width));
+  expect(top).toBeGreaterThan(other * 2);
+  await page.locator('#ly-ladder').click();
+  await expect(rungs).toHaveCount(1);
+  await page.locator('.ly-cat:not(.done)').first().click();
+  await page.locator('.ly-song').first().click();
+  // śpiewany wers – także ostatni przed przerwą – nigdy nie jest schowany (sprawdzane co 10 ms do przerwy)
+  await page.evaluate(() => {
+    window.__nowSeen = 0;
+    window.__nowHidden = [];
+    window.__nowWatch = setInterval(() => {
+      const n = state.phase === 'play' && document.querySelector('#ly-lines p.now');
+      if (!n) return;
+      window.__nowSeen++;
+      if (getComputedStyle(n).display === 'none') window.__nowHidden.push(n.textContent);
+    }, 10);
+  });
+  await pickFilm(page);
+  await toAnswer(page);
+  expect(await page.evaluate(() => { clearInterval(window.__nowWatch); return window.__nowSeen; })).toBeGreaterThan(5);
+  expect(await page.evaluate(() => window.__nowHidden)).toEqual([]);
+  // przerwa: kropki, pole z „Tak to leciało!”, koła ratunkowe i „✋ Rezygnuję” z napisem (nie ikonka mikrofonu)
+  for (const sel of ['.ly-dots', '#ly-input', '.ly-submit', '.ly-lifebtns', '#ly-answer .ly-quit']) await expect(page.locator(sel)).toBeVisible();
+  await expect(page.locator('#ly-answer .ly-quit')).toHaveText('✋ Rezygnuję – zabieram 500 zł');
+  expect(await page.evaluate(() => getComputedStyle(document.querySelector('#ly-answer .ly-quit'), '::before').content)).toBe('none');
+  if (await page.evaluate(() => !!LySpeech)) await expect(page.locator('#ly-answer .ly-sing')).toHaveText('🎤 Zaśpiewaj zamiast pisać');
+  // trzy wersje: kropki, pole i koła zostają; stuknięta wersja trafia do pola i jest zaznaczona
+  await page.getByRole('button', { name: /Trzy wersje wersu/ }).click();
+  await expect(page.locator('.ly-variants button')).toHaveCount(3);
+  for (const sel of ['.ly-dots', '#ly-input', '.ly-submit', '.ly-lifebtns']) await expect(page.locator(sel)).toBeVisible();
+  const pick = page.locator('.ly-variants button').nth(1);
+  const text = await pick.textContent();
+  await pick.click();
+  await expect(page.locator('#ly-input')).toHaveValue(text);
+  await expect(page.locator('.ly-variants button[aria-pressed=true]')).toHaveText(text);
+  await expect(page.locator('.ly-variants button.on')).toHaveCount(1);
+  expect(await page.evaluate(() => ui6Check())).toMatchObject({ scrollY: false, scrollX: false });
+});
+
+test('Tak to leciało!: trzy wersje po odsłonięciu słowa – odsłonięte słowo stoi w każdej wersji na swoim miejscu', async ({ page }) => {
+  await startLyrics(page);
+  await playToGap(page);
+  const n = await page.evaluate(() => state.lyrics.cur.gap.blanks.length);
+  test.skip(n < 2, 'przerwa z jednym słowem');
+  await page.getByRole('button', { name: /Odsłoń słowo/ }).click();
+  await page.locator('.ly-dot').nth(1).click();
+  await page.getByRole('button', { name: /Trzy wersje wersu/ }).click();
+  const want = await page.evaluate(() => state.lyrics.cur.gap.blanks.map((b) => b.want));
+  const vs = await page.locator('.ly-variants button').allTextContents();
+  expect(vs.length).toBeGreaterThanOrEqual(2);
+  for (const v of vs) expect(v.split(' ')[1]).toBe(want[1]);
+  // wybrana wersja w polu – prawdziwa wersja jest zaliczona w całości
+  await page.locator('.ly-variants button', { hasText: new RegExp(`^${want.join(' ').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`) }).click();
+  await page.getByRole('button', { name: 'Tak to leciało!' }).click();
+  await expect(page.locator('#ly-answer .verdict')).toContainText('Tak to leciało!');
+});

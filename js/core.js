@@ -1,7 +1,7 @@
 'use strict';
 
 // aktualna wersja gry – ta sama co ostatni wpis w CHANGELOG.md (pokazywana na dole ekranu startowego)
-const GAME_VERSION = '5.58.4';
+const GAME_VERSION = '5.58.5';
 
 /* ---------- narzędzia ---------- */
 const $ = (sel) => document.querySelector(sel);

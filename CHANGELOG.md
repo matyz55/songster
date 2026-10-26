@@ -1078,3 +1078,18 @@ Wersja próbna wyglądu 6.0:
 
 - „Tak to leciało!”: gra pobiera w tle teksty do wszystkich filmów piosenek z planszy (a nie tylko do pierwszego), więc chwilowe przeciążenie serwera z tekstami rzadziej psuje start piosenki.
 - „Tak to leciało!”: w 18 piosenkach (np. „Nieznajomy”, „Biała flaga”) polecana jest teraz wersja z płyty studyjnej, a nagranie koncertowe jest na końcu listy filmów.
+
+## 5.58.5 – 26.10.2026 (`…`)
+
+- „Tak to leciało!”: wybrana wersja z koła ratunkowego „Trzy wersje wersu” jest zaznaczona (✓) i wpisana do pola odpowiedzi. Słowo odsłonięte wcześniej stoi w każdej wersji na swoim miejscu – wcześniej wybór wersji z innym słowem w tym miejscu przesuwał słowa w odpowiedzi.
+- „Tak to leciało!”: przycisk rozpoznawania mowy ma pełny napis „🎤 Zaśpiewaj zamiast pisać”.
+- Wygląd 6.0 na telefonie, „Tak to leciało!”:
+  - ostatni wers przed przerwą znów jest widoczny w trakcie piosenki;
+  - w przerwie widać kropki słów, pole odpowiedzi z „Tak to leciało!”, koła ratunkowe, a pod nimi podpisane, kolorowe przyciski „🎤 Zaśpiewaj zamiast pisać” i „✋ Rezygnuję – zabieram …” – wcześniej obie opcje wyglądały jak jednakowe ikonki mikrofonu (druga była w rzeczywistości rezygnacją);
+  - przy otwartej klawiaturze nad nią zostają kropki, pole i koła ratunkowe;
+  - przy trzech wersjach wersu kropki, pole i koła ratunkowe zostają na ekranie, a wersje są pod polem;
+  - nagłówek piosenki: w pierwszym wierszu kategoria i rok, z prawej liczba słów do odgadnięcia; w drugim tytuł i wykonawca;
+  - u góry tylko kwota, o którą toczy się gra („gramy o 1000 zł”); stuknięcie pokazuje całą drabinkę – 100 000 zł w osobnym wierszu, pod nią po trzy kwoty w wierszu; na początku przerwy drabinka sama się zwija;
+  - gdy na małym telefonie wszystko się nie mieści (np. kilku graczy i trzy wersje wersu), dół ekranu można przewinąć.
+- Wygląd 6.0, telefon poziomo: rozwinięta drabinka w dwóch rzędach na całą szerokość, tytuł i wykonawca w jednej linijce.
+- Wygląd 6.0 na komputerze: „🎤 Zaśpiewaj zamiast pisać” i „✋ Rezygnuję” stoją obok siebie, więc przy trzech wersjach wersu mieści się cała prawa kolumna.

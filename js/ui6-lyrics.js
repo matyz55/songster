@@ -1,6 +1,6 @@
 'use strict';
 // Songster 6.0 – lyrics: zmiany układu dla nowego wyglądu (działa tylko przy UI6)
-// Na telefonach drabinka kwot jest wąskim paskiem (bieżący etap i główna nagroda) – stuknięcie pokazuje całą drabinkę.
+// Na telefonach drabinka kwot jest wąskim paskiem (kwota, o którą toczy się gra) – stuknięcie pokazuje całą drabinkę.
 if (UI6) {
   const ladder = $('#ly-ladder');
   const strip = matchMedia('(orientation: portrait), (max-height: 520px), (max-width: 760px)');
@@ -21,6 +21,10 @@ if (UI6) {
     sync();
   };
   ladder.addEventListener('click', toggle);
+  // przerwa na odpowiedź: rozwinięta drabinka zwija się sama (miejsce na kropki, pole i koła ratunkowe)
+  new MutationObserver(() => {
+    if (ladder.classList.contains('open') && $('#ly-input')) { ladder.classList.remove('open'); sync(); }
+  }).observe($('#ly-answer'), { childList: true });
   ladder.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
   strip.addEventListener('change', sync);
   sync();

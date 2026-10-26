@@ -360,11 +360,15 @@ const lyrics = [
       lyRender();
     });
     await capture(page, { id: 'lyrics-2c-film-blad', group: g, title: 'Wybór filmu po kłopocie', desc: 'Tekst do filmu się nie wczytał – drugi film do wyboru, pierwszy do ponownej próby, zmiana piosenki.' });
-    await page.evaluate(() => { const cur = state.lyrics.cur; delete cur.failed[cur.it.vids[0].id]; lyRender(); });
+    // drugi etap (gra o 1000 zł, 500 zł już wygrane) – przy przerwie widać też „✋ Rezygnuję”
+    await page.evaluate(() => { const cur = state.lyrics.cur; delete cur.failed[cur.it.vids[0].id]; Object.assign(state.players[0], { stage: 1, score: 500 }); lyRender(); });
     await page.locator('.ly-film').first().click();
     await page.waitForFunction(() => state.phase === 'play' && state.lyrics.cur && state.lyrics.cur.lines, null, { timeout: 20000 });
     await page.waitForTimeout(2500);
     await capture(page, { id: 'lyrics-3-spiew', group: g, title: 'W trakcie piosenki', desc: 'Film gra, tekst przewija się jak w karaoke.' });
+    await page.evaluate(() => document.querySelector('#ly-ladder').classList.add('open'));
+    await capture(page, { id: 'lyrics-3b-drabinka', group: g, title: 'Cała drabinka (telefon: po stuknięciu paska)', desc: 'Na telefonie u góry widać tylko kwotę, o którą toczy się gra; stuknięcie pokazuje całą drabinkę.' });
+    await page.evaluate(() => document.querySelector('#ly-ladder').classList.remove('open'));
     await page.evaluate(() => { window.__ytSpeed = 60; });
     await page.waitForFunction(() => state.phase === 'answer', null, { timeout: 30000 }).catch(async (e) => {
       throw new Error(`${e.message} | ${await page.evaluate(() => JSON.stringify({ ph: state.phase, st: state.lyrics.cur.started, t: lyYT && lyYT.getCurrentTime(), gap: state.lyrics.cur.gap && state.lyrics.cur.gap.pauseAt, tick: !!lyTick }))}`);
@@ -372,6 +376,8 @@ const lyrics = [
     await capture(page, { id: 'lyrics-4-przerwa', group: g, title: 'Przerwa – dokończ wers', desc: 'Muzyka milknie, gracz wpisuje brakujący wers.' });
     await page.evaluate(() => lyThree());
     await capture(page, { id: 'lyrics-5-trzy-wersje', group: g, title: 'Koło ratunkowe: trzy wersje wersu', desc: '' });
+    await page.locator('.ly-variants button').first().click();
+    await capture(page, { id: 'lyrics-5b-wybrana-wersja', group: g, title: 'Wybrana wersja wersu', desc: 'Stuknięta wersja jest zaznaczona i wpisana do pola – „Tak to leciało!” ją sprawdza.' });
     await page.evaluate(() => {
       const cur = state.lyrics.cur;
       const inp = document.querySelector('#ly-input');

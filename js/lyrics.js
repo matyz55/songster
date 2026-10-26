@@ -264,7 +264,7 @@ function lyRelayGaps(lines, duration, n) {
 }
 // „trzy wersje wersu”: dwie błędne wersje z podmienionymi słowami (z tej samej piosenki) – wielkość liter jak w oryginale
 const lyCaseLike = (w, like) => (/^\p{Lu}/u.test(like) ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : w.toLowerCase());
-function lyVariants(lines, gap) {
+function lyVariants(lines, gap, keep = new Set()) {
   const want = gap.blanks.map((b) => b.want);
   const pool = [...new Set(lines.flatMap((l) => lyWords(l.text)).map((w) => w.replace(/[^\p{L}\p{N}'’-]/gu, '')))]
     .filter((w) => w && !want.some((x) => lyFold(x) === lyFold(w)));
@@ -272,7 +272,7 @@ function lyVariants(lines, gap) {
   for (let tries = 0; variants.size < 3 && tries < 60; tries++) {
     const v = want.slice();
     const changes = Math.min(v.length, 1 + Math.floor(Math.random() * 2));
-    for (const idx of shuffle(v.map((_, i) => i)).slice(0, changes)) {
+    for (const idx of shuffle(v.map((_, i) => i).filter((i) => !keep.has(i))).slice(0, changes)) {
       // podobna długość słowa – trudniej odróżnić
       const near = pool.filter((w) => Math.abs(w.length - lyNorm(v[idx]).length) <= 2);
       const w = (near.length ? near : pool)[Math.floor(Math.random() * (near.length || pool.length))];
@@ -495,7 +495,7 @@ function lyFilmsEl(cur) {
       // druga piosenka z kategorii: krótki opis i tytuł w jednej linijce (pełna nazwa w podpowiedzi)
       other ? el('button', { class: list.length ? 'ly-film-other' : 'primary ly-film-other', onclick: () => lySwitchSong(other),
         title: `${other.song.t} — ${artistLine(other.song)}` },
-      el('span', { class: 'ly-other-k' }, T('🔁 Druga piosenka z kategorii:')), el('b', { class: 'ly-other-t' }, other.song.t)) : '',
+      el('span', { class: 'ly-other-k' }, T('🔁 Druga piosenka z kategorii:')), el('b', { class: 'ly-other-t', 'data-ui6-trunc': '1' }, other.song.t)) : '',
       el('button', { class: 'ghost small ly-film-skip', onclick: () => lySwitchSong(null) }, T('⏭ Inna piosenka'))) : '');
 }
 document.addEventListener('keydown', (e) => {
@@ -872,7 +872,7 @@ function lyThree() {
   const cur = state.lyrics.cur;
   if (!lyMe().lifes.three || state.phase !== 'answer') return;
   lyMe().lifes.three = false;
-  cur.variants = lyVariants(cur.lines, cur.gap);
+  cur.variants = lyVariants(cur.lines, cur.gap, cur.revealed);
   lyRender();
 }
 // pomoc suflera (multiplayer): wybrany gracz wpisuje podpowiedź (na swoim telefonie albo na tym urządzeniu)
@@ -1123,10 +1123,12 @@ function lyEnd() {
 
 /* ---------- widok ---------- */
 function lyLadderEl(p) {
+  // „here” – etap gracza (także przegrany albo wygrany na końcu) – na telefonie zwinięty pasek pokazuje tylko jego kwotę
+  const here = Math.min(p.stage, LY_LADDER.length - 1);
   return el('ol', { class: 'ly-ladder', reversed: true }, LY_LADDER.slice().reverse().map((v, ri) => {
     const i = LY_LADDER.length - 1 - ri;
-    const cls = [i < p.stage ? 'done' : '', i === p.stage && !p.out ? 'now' : '', i === LY_SAFE ? 'safe' : '', i === 9 ? 'top' : ''].join(' ').trim();
-    return el('li', { class: cls }, el('span', {}, String(i + 1)), el('b', {}, lyMoney(v)));
+    const cls = [i < p.stage ? 'done' : '', i === p.stage && !p.out ? 'now' : '', i === here ? 'here' : '', i === LY_SAFE ? 'safe' : '', i === 9 ? 'top' : ''].join(' ').trim();
+    return el('li', { class: cls }, el('span', {}, String(i + 1)), i === p.stage && !p.out ? el('em', { class: 'ly-stake' }, T('gramy o')) : '', el('b', {}, lyMoney(v)));
   }));
 }
 // koła ratunkowe – w finale (hit za 100 000 zł) znikają
@@ -1197,10 +1199,12 @@ function lyRender() {
   }
   const cur = ly.cur;
   $('#ly-song').replaceChildren(...(cur ? [
-    el('span', { class: 'ly-songtags' }, el('span', { class: 'ly-tag' }, cur.cat), el('span', { class: 'ly-tag' }, String(cur.it.song.y)),
+    el('span', { class: 'ly-songtags' }, el('span', { class: 'ly-tag ly-cat-tag', title: cur.cat, 'data-ui6-trunc': '1' }, cur.cat), el('span', { class: 'ly-tag' }, String(cur.it.song.y)),
       // ile słów do uzupełnienia – wiadomo zaraz po wyborze piosenki (przed jej startem)
       cur.gap ? el('span', { class: 'ly-tag ly-words-tag' }, lyWordsLabel(cur.gap.blanks.length)) : ''),
-    el('b', { class: 'ly-songtitle' }, cur.it.song.t), el('span', { class: 'ly-songartist' }, artistLine(cur.it.song))] : []));
+    // tytuł i wykonawca – na niskim ekranie w przerwie w jednej linijce (skracane wielokropkiem, pełny napis w podpowiedzi)
+    el('b', { class: 'ly-songtitle', title: cur.it.song.t, 'data-ui6-trunc': '1' }, cur.it.song.t),
+    el('span', { class: 'ly-songartist', title: artistLine(cur.it.song), 'data-ui6-trunc': '1' }, artistLine(cur.it.song))] : []));
   // w trakcie piosenki bez zapowiedzi przerwy – ma być zaskoczeniem
   const seek = state.phase === 'result' && !(ly.mini && ly.mini.relay);
   $('#ly-seek').classList.toggle('hidden', !seek);
@@ -1237,9 +1241,12 @@ function lyRenderLyrics(t) {
   let rows;
   if (state.phase === 'answer') rows = seq.slice(Math.max(0, p - 1), p + 1); // przerwa: wers wcześniej i bieżący, dalej pola
   else {
-    let start = p < 0 ? 0 : Math.max(0, p - 1);
-    start = Math.max(0, Math.min(start, seq.length - LY_ROWS));
-    rows = seq.slice(start, start + LY_ROWS);
+    // tyle wierszy, ile widać (wygląd 6.0 na telefonie pokazuje mniej – --ly-rows), żeby podświetlony wers był zawsze
+    // widoczny – także ostatni przed przerwą, gdy tekst stoi, a podświetlenie schodzi niżej
+    const vis = parseInt(getComputedStyle(box).getPropertyValue('--ly-rows'), 10) || LY_ROWS;
+    let start = p < 0 ? 0 : Math.max(0, p - (vis > 1 ? 1 : 0));
+    start = Math.max(0, Math.min(start, seq.length - vis));
+    rows = seq.slice(start, start + vis);
   }
   const gapSet = new Set(cur.gap.lines);
   const k = rows.map((i) => `${i}${i === now ? '*' : ''}`).join('|');
@@ -1299,7 +1306,8 @@ function lyRenderAnswer() {
     class: `ly-dot${cur.revealed.has(i) ? ' shown' : (given[i] ? ' filled' : '')}${cur.picking && !cur.revealed.has(i) ? ' pick' : ''}`,
     style: `--i:${i}`, onclick: () => { if (cur.picking) lyRevealWord(i); },
   }, cur.revealed.has(i) ? b.want : '')));
-  const input = el('input', { id: 'ly-input', type: 'text', autocomplete: 'off', spellcheck: 'false', placeholder: T('Dokończ wers…'), 'aria-label': T('Dokończ wers') });
+  // długi wers przewija się w polu (data-ui6-trunc – zamierzone dla kontroli wyglądu 6.0)
+  const input = el('input', { id: 'ly-input', type: 'text', autocomplete: 'off', spellcheck: 'false', placeholder: T('Dokończ wers…'), 'aria-label': T('Dokończ wers'), 'data-ui6-trunc': '1' });
   input.value = cur.text || '';
   input.addEventListener('input', () => {
     cur.text = input.value;
@@ -1309,7 +1317,14 @@ function lyRenderAnswer() {
   input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); lySubmit(); } });
   const parts = [el('div', { id: 'ly-blanks', class: 'ly-blanks' }, el('p', { class: 'ly-count' }, T('Brakuje słów: {0}', cur.gap.blanks.length)), dots, input)];
   if (cur.variants) {
-    parts.push(el('div', { class: 'ly-variants' }, cur.variants.map((v) => el('button', { class: 'ghost', onclick: () => { lySetText(cur, lyWords(v)); lyRender(); } }, v))));
+    // odsłonięte słowa są pewne – w każdej wersji stoją na swoim miejscu (wersje różniące się tylko nimi łączą się w jedną);
+    // stuknięta wersja trafia do pola odpowiedzi i zostaje podświetlona
+    const fixed = (v) => lyWords(v).map((w, j) => (cur.revealed.has(j) ? cur.gap.blanks[j].want : w)).join(' ');
+    const chosen = lyKey(cur.text || '');
+    parts.push(el('div', { class: 'ly-variants' }, [...new Set(cur.variants.map(fixed))].map((v) => {
+      const on = !!chosen && lyKey(v) === chosen;
+      return el('button', { class: `ghost${on ? ' on' : ''}`, 'aria-pressed': String(on), onclick: () => { lySetText(cur, lyWords(v)); lyRender(); } }, v);
+    })));
   }
   if (cur.picking) parts.push(el('p', { class: 'muted small' }, T('Stuknij kropkę – słowo w tym miejscu zostanie odsłonięte.')));
   if (cur.hint) parts.push(el('p', { class: 'ly-hint' }, T('🙋 Podpowiedź suflera: {0}', cur.hint)));
@@ -1318,7 +1333,7 @@ function lyRenderAnswer() {
   parts.push(el('button', { class: 'primary ly-submit', onclick: lySubmit }, T('Tak to leciało!')));
   if (!ly.mini && !final) parts.push(lyLifeBtns(me, cur, false));
   const extra = el('div', { class: 'actions ly-extra' },
-    LySpeech ? el('button', { class: 'ghost', onclick: lySing, disabled: cur.listening }, cur.listening ? T('🎤 Słucham…') : T('🎤 Zaśpiewaj')) : null);
+    LySpeech ? el('button', { class: 'ghost ly-sing', onclick: lySing, disabled: cur.listening }, cur.listening ? T('🎤 Słucham…') : T('🎤 Zaśpiewaj zamiast pisać')) : null);
   if (!ly.mini && !final && state.players.length > 1 && me.lifes.help && cur.helper == null && !cur.hint) {
     extra.append(el('span', { class: 'ly-help' }, T('🙋 Sufler:'), state.players.map((p, i) => (i === state.turn ? null
       : el('button', { class: 'ghost small', onclick: () => lyAskHelper(i) }, p.name)))));
