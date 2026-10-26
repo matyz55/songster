@@ -1070,6 +1070,6 @@ Wersja próbna wyglądu 6.0:
 - Wygląd 6.0, „Tak to leciało!”: filmy jako zwarte wiersze (miniatura, numer, długość, opis) – lista z filmami do ponownej próby i przyciskami zmiany piosenki mieści się na telefonie pionowo i poziomo oraz na komputerze.
 - Telefon (oba wyglądy): krótsze podpowiedzi w polu odpowiedzi („Tytuł lub wykonawca (za żeton)”) – wcześniej były ucinane w połowie zdania.
 
-## 5.58.3 – 26.10.2026 (`???????`)
+## 5.58.3 – 26.10.2026 (`6290427`)
 
 - Wygląd 6.0: gdy nazwy sekcji ustawień nie mieszczą się w pasku (np. telefon trzymany poziomo), zamiast uciętych nazw pokazują się kropki stron.
