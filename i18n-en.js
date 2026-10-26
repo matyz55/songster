@@ -1421,5 +1421,8 @@ window.I18N_EN = {
  "⚠️ wcześniej nie ruszył": "⚠️ didn't start before",
  "Pominięto piosenkę.": "Song skipped.",
  "⏭ Inna piosenka": "⏭ Another song",
- "⚠️ {0} Wybierz inny film.": "⚠️ {0} Choose another video."
+ "⚠️ {0} Wybierz inny film.": "⚠️ {0} Choose another video.",
+ "Ta piosenka nie działa na tym urządzeniu.": "This song doesn't work on this device.",
+ "🔁 Druga piosenka z kategorii: {0}": "🔁 The other song in this category: {0}",
+ "⚠️ {0} Wybierz inny film albo zmień piosenkę.": "⚠️ {0} Choose another video or change the song."
 };

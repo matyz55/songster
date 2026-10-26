@@ -396,7 +396,9 @@ async function stepYoutube() {
 
 // filmy, które nie odtwarzają się w osadzonym odtwarzaczu na urządzeniach graczy (raport ze sprawdzarki w grze:
 // Ustawienia → Tak to leciało! → Sprawdź filmy) – tools/lyrics-data/bad-videos.json: { id: kod błędu }
-const BAD = new Set(Object.keys(load('bad-videos.json', {})));
+// „timeout” (film nie ruszył w czasie na urządzeniu gracza – zwykle blokada autoodtwarzania, nie wada filmu) nie wyklucza
+// filmu: gracz sam wybiera film przed piosenką, a dotknięcie go uruchamia
+const BAD = new Set(Object.entries(load('bad-videos.json', {})).filter(([, why]) => !/^timeout\b/.test(why)).map(([id]) => id));
 // przesunięcia tekstu względem filmu (s; dodatnie – tekst później) ustawione przez graczy przyciskami pod piosenką
 // i przekazane w raporcie – tools/lyrics-data/offsets.json: { id: sekundy }; w katalogu czwarta liczba przy filmie
 const OFFSETS = load('offsets.json', {});

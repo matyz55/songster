@@ -153,19 +153,22 @@ test('Tak to leciało!: koła ratunkowe – trzy słowa, trzy wersje, wymiana pi
   await expect(page.locator('#winner-title')).toContainText('bez wygranej');
 });
 
-test('Tak to leciało!: film niedostępny – gra sama bierze drugą piosenkę z kategorii', async ({ page }) => {
+test('Tak to leciało!: film niedostępny – gra nie zmienia piosenki sama, gracz wybiera drugą z kategorii', async ({ page }) => {
   await startLyrics(page);
-  await page.evaluate(() => { window.__ytFail = [state.players[0].board[0].songs[0].yts[0]]; window.__ytSpeed = 2; });
+  const [first, other] = await page.evaluate(() => { const s = state.players[0].board[0].songs; window.__ytFail = [s[0].yts[0]]; window.__ytSpeed = 2; return s.map((it) => songKey(it.song)); });
   await page.locator('.ly-cat').first().click();
   await page.locator('.ly-song').first().click();
-  // jedyny film nie działa – gra sama bierze drugą piosenkę (i znów pokazuje wybór filmu)
   await pickFilm(page);
-  // komunikat między wyborem filmu a źródłami; po chwili znika
-  await expect(page.locator('#ly-answer .ly-flash')).toContainText('Gramy inną piosenkę');
+  // komunikat między wyborem a źródłami; piosenka zostaje ta sama, dopóki gracz nie zdecyduje
+  await expect(page.locator('#ly-answer .ly-flash')).toContainText('zmień piosenkę');
   const order = await page.evaluate(() => [...document.querySelectorAll('#ly-answer > *')].map((e) => e.className));
   expect(order.indexOf('muted ly-flash')).toBe(order.length - 2);
   await expect(page.locator('#ly-msg')).toBeHidden();
-  await expect(page.locator('#ly-answer .ly-flash')).toHaveCount(0, { timeout: 9000 });
+  await page.waitForTimeout(500);
+  expect(await page.evaluate(() => songKey(state.lyrics.cur.it.song))).toBe(first);
+  await expect(page.locator('.ly-film')).toHaveCount(0);
+  await page.locator('.ly-film-other').click();
+  await expect.poll(() => page.evaluate(() => songKey(state.lyrics.cur.it.song))).toBe(other);
   expect(await page.evaluate(() => state.players[0].lifes.swap)).toBe(true);
 });
 
@@ -184,15 +187,32 @@ test('Tak to leciało! (multiplayer): kolejka graczy i pomoc suflera', async ({ 
   await expect(page.locator('#ly-scores .score')).toHaveCount(2);
 });
 
-test('Tak to leciało!: oba filmy w kategorii niedostępne – gra bierze inną piosenkę z katalogu', async ({ page }) => {
+test('Tak to leciało!: oba filmy w kategorii niedostępne – „Inna piosenka” bierze piosenkę z katalogu', async ({ page }) => {
   await startLyrics(page);
   await page.evaluate(() => { window.__ytFail = state.players[0].board[0].songs.map((it) => it.yts[0]); });
   await page.locator('.ly-cat').first().click();
   await page.locator('.ly-song').first().click();
+  await pickFilm(page);
+  await page.locator('.ly-film-other').click();
+  await pickFilm(page);
+  // drugiej piosenki z kategorii już nie ma – zostaje „Inna piosenka”
+  await expect(page.locator('.ly-film-other')).toHaveCount(0);
+  await page.locator('.ly-film-skip').click();
   await toAnswer(page);
   expect(await page.evaluate(() => window.__ytFail.includes(state.lyrics.cur.videoId))).toBe(false);
-  // niedziałające filmy są zapamiętane i pomijane w następnych grach
+  // niedziałające filmy (błąd 150) są zapamiętane i pomijane w następnych grach
   expect(await page.evaluate(() => store.get('lyBadVideos', []).length)).toBe(2);
+});
+
+test('Tak to leciało!: filmy odrzucone dawniej samoczynnie wracają, zgłoszone przez gracza – nie', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    localStorage.clear();
+    store.set('lyBadVideos', ['auto1', 'zgl1', 'chk1']);
+    store.set('lyReports', [{ k: 'a|b', v: 'auto1', why: 'autoplay' }, { k: 'a|c', v: 'zgl1' }]);
+  });
+  await page.reload();
+  expect(await page.evaluate(() => [store.get('lyBadVideos', []), store.get('lyReports', []).map((r) => r.v)])).toEqual([['zgl1'], ['zgl1']]);
 });
 
 test('Impreza: minigra „Tak to leciało!” – piosenka od zwrotki z przerwą, dobra odpowiedź = 1 pkt', async ({ page }) => {

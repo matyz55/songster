@@ -24,6 +24,15 @@ const LY_THEMES = window.LY_THEMES;
 const LY_SETS = window.LY_SETS;
 
 // filmy, które na tym urządzeniu nie dały się odtworzyć (np. właściciel zablokował osadzanie) – pomijane w kolejnych grach
+// jednorazowo (5.57): filmy odrzucone dawniej samoczynnie na tym urządzeniu (brak autoodtwarzania, błąd, sprawdzarka)
+// wracają do wyboru – gracz wybiera film sam; zostają odrzucone tylko te, które gracz zgłosił
+if (!store.get('lyBadReset1', false)) {
+  const reports = store.get('lyReports', []).filter((r) => r.why !== 'autoplay');
+  const keep = new Set(reports.map((r) => r.v));
+  store.set('lyReports', reports);
+  store.set('lyBadVideos', store.get('lyBadVideos', []).filter((id) => keep.has(id)));
+  store.set('lyBadReset1', true);
+}
 const lyBad = () => new Set(store.get('lyBadVideos', []));
 function lyMarkBad(id) {
   const list = store.get('lyBadVideos', []);
@@ -344,15 +353,21 @@ function lyPickVideo(i) {
   lyStartSong();
 }
 function lyFilmsEl(cur) {
-  const list = lyFilmChoices(cur);
+  const list = cur.noLyrics ? [] : lyFilmChoices(cur);
+  // po kłopotach z filmem: ręczna zmiana piosenki – najpierw druga z tej samej kategorii
+  const trouble = cur.dead || cur.stall || Object.keys(cur.failed).length;
+  const other = trouble && lyOtherFree(cur) ? cur.other : null;
   return el('div', { class: 'ly-films' },
-    el('p', { class: 'ly-films-title' }, T('Wybierz film – dotknij, aby odtworzyć')),
-    el('div', { class: 'ly-films-list' }, list.map((v, n) => el('button', { class: 'ly-film', style: `--i:${n}`, onclick: () => lyPickVideo(v.i) },
+    el('p', { class: 'ly-films-title' }, list.length ? T('Wybierz film – dotknij, aby odtworzyć') : T('Ta piosenka nie działa na tym urządzeniu.')),
+    list.length ? el('div', { class: 'ly-films-list' }, list.map((v, n) => el('button', { class: 'ly-film', style: `--i:${n}`, onclick: () => lyPickVideo(v.i) },
       el('img', { src: `https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`, alt: '', loading: 'lazy' }),
       el('span', { class: 'ly-film-info' }, el('b', {}, T('Film {0}', n + 1)), el('span', { class: 'muted' }, lyClock(v.d || 0)),
         v.id === cur.videoId && cur.stall ? el('span', { class: 'ly-film-tag bad' }, T('nie ruszył – dotknij ▶ na filmie'))
-          : v.log ? el('span', { class: `ly-film-tag ${v.log.ok ? 'ok' : 'bad'}` }, v.log.ok ? T('✓ działał') : T('⚠️ wcześniej nie ruszył')) : '')))),
-    Object.keys(cur.failed).length || cur.stall ? el('button', { class: 'ghost small ly-film-skip', onclick: () => lySongFailed(T('Pominięto piosenkę.')) }, T('⏭ Inna piosenka')) : '');
+          : v.log ? el('span', { class: `ly-film-tag ${v.log.ok ? 'ok' : 'bad'}` }, v.log.ok ? T('✓ działał') : T('⚠️ wcześniej nie ruszył')) : '')))) : '',
+    trouble ? el('div', { class: 'ly-film-switch' },
+      other ? el('button', { class: list.length ? 'ly-film-other' : 'primary ly-film-other', onclick: () => lySwitchSong(other) },
+        T('🔁 Druga piosenka z kategorii: {0}', `${other.song.t} — ${artistLine(other.song)}`)) : '',
+      el('button', { class: 'ghost small ly-film-skip', onclick: () => lySwitchSong(null) }, T('⏭ Inna piosenka'))) : '');
 }
 function lyStop() {
   clearInterval(lyTick);
@@ -506,7 +521,7 @@ async function lyStartSong() {
     lyRender();
     lyLoadVideo(player);
   } catch (e) {
-    if (ly.cur === cur) lySongFailed(T('Nie udało się wczytać tekstu tej piosenki.'));
+    if (ly.cur === cur) lySongFailed(T('Nie udało się wczytać tekstu tej piosenki.'), true);
   }
 }
 // kolejny film tej piosenki (katalog może mieć kilka); niedziałający zapamiętujemy na tym urządzeniu
@@ -552,15 +567,26 @@ function lyFlash(msg) {
   }, LY_MSG_MS);
 }
 // piosenka nie działa – druga piosenka z kategorii (bez zużycia koła), a gdy jej nie ma – inna z katalogu
-function lySongFailed(msg) {
+// piosenka nie działa (żaden film nie ruszył albo nie ma tekstu) – gra nie zmienia jej sama: gracz wybiera inny film,
+// drugą piosenkę z tej kategorii albo inną piosenkę (bez zużycia koła ratunkowego)
+function lySongFailed(msg, noLyrics = false) {
+  const cur = state.lyrics.cur;
+  lyStop();
+  cur.dead = true;
+  cur.noLyrics = noLyrics;
+  cur.pick = true;
+  lyFlash(T('⚠️ {0} Wybierz inny film albo zmień piosenkę.', msg));
+  lyRender();
+}
+// zmiana piosenki wybrana przez gracza (null – inna piosenka z katalogu); gdy nie ma żadnej – powrót do planszy
+function lySwitchSong(next) {
   const ly = state.lyrics;
   const cur = ly.cur;
   lyStop();
-  // pominięcie piosenki, gdy film nie ruszył – przyczyna do raportu
+  // film nie ruszył – przyczyna do raportu
   if (cur.stall && cur.videoId) lyVidLog(cur.videoId, { err: cur.stall });
   ly.fails += 1;
-  lyFlash(T('⚠️ {0} Gramy inną piosenkę.', msg));
-  const next = cur.other && !ly.played.has(songKey(cur.other.song)) ? cur.other : (ly.fails <= 8 ? lyAnySong() : null);
+  if (!next && ly.fails <= 8) next = lyAnySong();
   if (next) { lyPlay(next, null, cur.cat); return; }
   if (ly.mini) { lyNextTurn(); return; }
   const back = lyMe().board.find((c) => c.name === cur.cat);
@@ -570,6 +596,7 @@ function lySongFailed(msg) {
   state.phase = 'board';
   lyRender();
 }
+const lyOtherFree = (cur) => !!(cur.other && !state.lyrics.played.has(songKey(cur.other.song)));
 function lyOnState(s) {
   const cur = state.lyrics && state.lyrics.cur;
   if (!cur) return;

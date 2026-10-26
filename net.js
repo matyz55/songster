@@ -14,8 +14,8 @@
   // publiczny serwer shiftr.io (konto „public”) – kanały są jawne, dlatego przesyłamy wyłącznie stan gry
   const MQTT_URL = 'wss://public.cloud.shiftr.io';
   const MQTT_AUTH = { username: 'public', password: 'public' };
-  // adres serwera pośredniczącego po wdrożeniu (np. 'wss://songster-relay.nazwa.workers.dev'); pusty – kanał wyłączony
-  const RELAY_URL = window.SONGSTER_RELAY || '';
+  // adres serwera pośredniczącego (server/relay, wdrożony w Cloudflare Workers); pusty – kanał wyłączony
+  const RELAY_URL = window.SONGSTER_RELAY != null ? window.SONGSTER_RELAY : 'wss://songster-relay.matyz55.workers.dev';
   const ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // bez łatwych do pomylenia znaków (0/O, 1/I/L)
   const loaded = {};
   function loadScript(src) {
@@ -336,7 +336,7 @@
 
   // wersja aplikacji (taka sama jak pamięć podręczna w sw.js) – gdy gospodarz ma nowszą, duży ekran i telefony graczy
   // same się odświeżają (inaczej np. telewizor otwarty przed aktualizacją nie zna nowych ekranów)
-  const version = '50';
+  const version = '51';
   // pobranie świeżych plików (z pominięciem pamięci podręcznej przeglądarki) i przeładowanie strony – raz na wersję
   async function updateTo(ver) {
     const key = 'songster.reloadedFor';

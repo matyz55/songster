@@ -1031,3 +1031,9 @@ Wersja próbna wyglądu 6.0:
 
 - Gra na kilku urządzeniach: przygotowany własny, darmowy serwer pośredniczący (Cloudflare Workers). Gdy zostanie wdrożony i wpisany w grę, telefony i duży ekran połączą się przez niego – w każdej sieci, także komórkowej, z małym opóźnieniem. Do tego czasu gra łączy się jak dotąd.
 - Instrukcja wdrożenia serwera: `server/relay/README.md`.
+
+## 5.57.0 – 26.10.2026 (`???????`)
+
+- Gra na kilku urządzeniach: telefony i duży ekran łączą się teraz najpierw przez własny serwer Songstera (Cloudflare) – działa w każdej sieci, także komórkowej, z małym opóźnieniem. Gdy serwer nie odpowiada, gra łączy się jak dotąd.
+- „Tak to leciało!”: gdy piosenka się nie odtwarza, gra nie zmienia jej już sama. Do wyboru: inny film, „🔁 Druga piosenka z kategorii” albo „⏭ Inna piosenka” (bez zużycia koła ratunkowego).
+- „Tak to leciało!”: wracają filmy odrzucone dawniej tylko dlatego, że nie ruszyły same – w katalogu jest teraz 600 piosenek (+18), z playlisty „Tak to leciało” 291 z 324. Na tym urządzeniu wracają też filmy odrzucone samoczynnie; zostają pominięte tylko te, które zgłosiłeś.
