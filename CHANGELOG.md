@@ -1079,7 +1079,7 @@ Wersja próbna wyglądu 6.0:
 - „Tak to leciało!”: gra pobiera w tle teksty do wszystkich filmów piosenek z planszy (a nie tylko do pierwszego), więc chwilowe przeciążenie serwera z tekstami rzadziej psuje start piosenki.
 - „Tak to leciało!”: w 18 piosenkach (np. „Nieznajomy”, „Biała flaga”) polecana jest teraz wersja z płyty studyjnej, a nagranie koncertowe jest na końcu listy filmów.
 
-## 5.58.5 – 26.10.2026 (`…`)
+## 5.58.5 – 26.10.2026 (`70cddd1`)
 
 - „Tak to leciało!”: wybrana wersja z koła ratunkowego „Trzy wersje wersu” jest zaznaczona (✓) i wpisana do pola odpowiedzi. Słowo odsłonięte wcześniej stoi w każdej wersji na swoim miejscu – wcześniej wybór wersji z innym słowem w tym miejscu przesuwał słowa w odpowiedzi.
 - „Tak to leciało!”: przycisk rozpoznawania mowy ma pełny napis „🎤 Zaśpiewaj zamiast pisać”.
