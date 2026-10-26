@@ -1053,7 +1053,7 @@ Wersja próbna wyglądu 6.0:
 - Na komputerze film wybierzesz też cyframi 1–5.
 - Katalog: 49 piosenek dostało filmy zapasowe (piosenek z jednym filmem jest 82 zamiast 131); codzienne dociąganie szuka teraz więcej filmów zapasowych.
 
-## 5.58.1 – 26.10.2026 (`???????`)
+## 5.58.1 – 26.10.2026 (`0c4230e`)
 
 - „Tak to leciało!”: gdy nie wczytał się tekst do wybranego filmu (np. przeciążony serwer z tekstami), gra nie uznaje już całej piosenki za niedziałającą – inne filmy tej piosenki zostają do wyboru, a ten sam film można wybrać jeszcze raz. Gra sama próbuje pobrać tekst kilka razy (po 1,5 s, 3 s i 6 s).
 - „Tak to leciało!”: gdy piosenka nie działa, wszystkie jej filmy nadal są na liście (z opisem, co poszło nie tak) – można je sprawdzić jeszcze raz, zanim zmienisz piosenkę. Po nieudanym filmie następny polecany czeka już w odtwarzaczu, a numery filmów się nie zmieniają.
