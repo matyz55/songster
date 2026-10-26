@@ -1098,3 +1098,7 @@ Wersja próbna wyglądu 6.0:
 
 - „Tak to leciało!”: gdy przeglądarka ma rozpoznawanie mowy, ale ono w niej nie działa (np. Brave), „🎤 Zaśpiewaj zamiast pisać” pokazuje komunikat, że trzeba wpisać słowa, i znika na tym urządzeniu na 30 dni. Przy braku zgody na mikrofon albo gdy nic nie było słychać – komunikat, co zrobić.
 - „Tak to leciało!”: wersy z liczbami takimi jak „1000” czy „2000” nie są już odrzucane jak przeciągnięte okrzyki („uuu”) – mogą być zagadką jak inne wersy.
+
+## 5.58.7 – 26.10.2026 (`…`)
+
+- „Tak to leciało!”: przycisk śpiewania jest teraz w samym polu odpowiedzi – ikonka mikrofonu z prawej strony pola, jak w wyszukiwarce. Stuknięcie zaczyna słuchanie (w polu pojawia się „🎤 Słucham…”), ponowne stuknięcie je kończy, a rozpoznane słowa wpisują się do pola. Pod kołami ratunkowymi zostaje tylko „✋ Rezygnuję – zabieram …”.

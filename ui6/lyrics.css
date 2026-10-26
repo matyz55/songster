@@ -107,11 +107,12 @@ html.ui6 #ly-answer .ly-lifebtns { margin: 0; grid-template-columns: 1fr; gap: c
 html.ui6 #ly-answer .ly-lifebtns button { min-height: max(var(--tap), 5.5vmin); padding: .3em .6em; font-size: clamp(.85rem, .7rem + .5vmin, 1.25rem); }
 html.ui6 #ly-answer .ly-extra { flex-wrap: wrap; gap: calc(var(--gap) * .5); }
 html.ui6 #ly-answer .ly-extra button { flex: 1 1 auto; min-height: max(var(--tap), 5.5vmin); font-size: clamp(.85rem, .7rem + .5vmin, 1.25rem); }
-/* „🎤 Zaśpiewaj zamiast pisać” i „✋ Rezygnuję”: zaokrąglone, w kolorach, obok siebie – inne niż ramki kół ratunkowych */
+/* „✋ Rezygnuję”: zaokrąglony, złoty – inny niż ramki kół ratunkowych (🎤 jest w polu odpowiedzi) */
 html.ui6 #ly-answer > .actions.ly-extra { display: flex; flex-wrap: wrap; gap: calc(var(--gap) * .5); }
-html.ui6 #ly-answer > .ly-extra > :is(.ly-sing, .ly-quit) { flex: 1 1 0; min-width: 0; border: 0; border-radius: 999px; white-space: normal; line-height: 1.15; padding: .25em .8em; }
-html.ui6 #ly-answer > .ly-extra > .ly-sing { background: rgba(45, 226, 230, .12); color: var(--accent-2); }
-html.ui6 #ly-answer > .ly-extra > .ly-quit { background: rgba(255, 201, 60, .12); color: var(--gold); }
+html.ui6 #ly-answer > .ly-extra > .ly-quit { flex: 1 1 0; min-width: 0; border: 0; border-radius: 999px; white-space: normal; line-height: 1.15; padding: .25em .8em;
+  background: rgba(255, 201, 60, .12); color: var(--gold); }
+/* 🎤 w polu: okrągły, bez minimalnej wysokości przycisków (mieści się w polu) */
+html.ui6 #ly-answer .ly-field .ly-sing { min-height: 0; padding: 0; border-radius: 50%; }
 html.ui6 #ly-answer .ly-variants { margin: 0; }
 /* trzy wersje wersu: wersje pod polem odpowiedzi (stuknięcie wpisuje wersję do pola); bez linijki źródeł – widać ją w trakcie piosenki */
 html.ui6 #ly-answer:has(.ly-variants) > .ly-credit { display: none; }
@@ -212,14 +213,16 @@ html.ui6 #ly-answer .ly-helper { margin: 0; }
   html.ui6 #ly-answer .ly-blanks { display: contents; }
   html.ui6 #ly-answer .ly-count { display: none; } /* liczbę słów widać po kropkach (i w ich opisie dla czytników) */
   html.ui6 #ly-answer .ly-dots { flex: 1 1 100%; }
-  html.ui6 #ly-answer .ly-blanks #ly-input { order: 3; flex: 1 1 0; min-width: 0; padding: 8px 10px; font-size: 1.1rem; }
+  html.ui6 #ly-answer .ly-blanks .ly-field { order: 3; flex: 1 1 0; min-width: 0; }
+  html.ui6 #ly-answer .ly-blanks #ly-input { padding: 8px 10px; font-size: 1.1rem; }
+  html.ui6 #ly-answer .ly-field:has(.ly-sing) #ly-input { padding-right: 50px; }
   html.ui6 #ly-answer > .ly-submit { order: 5; flex: none; width: auto; min-height: var(--tap); padding: 0 .9em; font-size: 1rem; white-space: nowrap; }
   html.ui6 #ly-answer > .ly-variants { order: 6; }
   html.ui6 #ly-answer > .ly-lifebtns { order: 7; grid-template-columns: repeat(3, minmax(0, 1fr)); }
   html.ui6 #ly-answer > .ly-extra { order: 8; display: flex; flex-wrap: wrap; gap: 6px; }
   html.ui6 #ly-answer > .ly-flash { order: 9; }
   html.ui6 #ly-answer > .ly-credit { order: 10; font-size: .87rem; margin-top: 0; }
-  html.ui6 #ly-answer > .ly-extra > :is(.ly-sing, .ly-quit) { min-height: 40px; font-size: .87rem; }
+  html.ui6 #ly-answer > .ly-extra > .ly-quit { min-height: 40px; font-size: .87rem; }
   html.ui6 #ly-answer .ly-lifebtns button { font-size: .87rem; line-height: 1.12; padding: .15em .25em; }
   html.ui6 #ly-answer .ly-dot { min-width: 20px; height: 20px; }
   /* po odpowiedzi: „Dalej” na całą szerokość, pod nim zgłoszenie błędu jako dyskretna linijka */
@@ -278,12 +281,12 @@ html.ui6 #ly-answer .ly-helper { margin: 0; }
   html.ui6 #ly-answer .verdict { font-size: 1rem; }
   /* trzy wersje wersu: wybór wersji zastępuje pole (stuknięcie wpisuje ją do odpowiedzi), przycisk i koła w jednym rzędzie */
   html.ui6 #ly-stage:has(.ly-variants) #ly-lines, html.ui6 #ly-answer:has(.ly-variants) .ly-dots,
-  html.ui6 #ly-answer:has(.ly-variants) #ly-input, html.ui6 #ly-answer:has(.ly-variants) > .ly-extra,
+  html.ui6 #ly-answer:has(.ly-variants) .ly-field, html.ui6 #ly-answer:has(.ly-variants) > .ly-extra,
   html.ui6 #ly-answer:has(.ly-variants) > .ly-credit { display: none; }
   html.ui6 #ly-answer:has(.ly-variants) > .ly-lifebtns { flex: 1 1 0; order: 5; }
   html.ui6 #ly-answer .ly-variants button { min-height: 40px; }
   html.ui6 #ly-stage:has(#ly-input) #ly-lines p.past { display: none; }
-  html.ui6 #ly-answer > .ly-extra > :is(.ly-sing, .ly-quit) { min-height: 32px; font-size: .8rem; }
+  html.ui6 #ly-answer > .ly-extra > .ly-quit { min-height: 32px; font-size: .8rem; }
 }
 
 /* ---------- klawiatura ekranowa: zostaje film 200×200, obok ostatni wers; pole i przycisk tuż nad klawiaturą ---------- */

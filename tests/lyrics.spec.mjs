@@ -650,7 +650,7 @@ test('Tak to leciało!: „film pokazuje tekst – zmień film” bierze inny fi
   expect(r.rep).toContain(`${first}:tekst`);
 });
 
-test('6.0 na telefonie: pasek – sama stawka, śpiewany wers zawsze widoczny, w przerwie kropki, pole, koła i podpisane 🎤/✋, wybrana z trzech wersji w polu', async ({ page }) => {
+test('6.0 na telefonie: pasek – sama stawka, śpiewany wers zawsze widoczny, w przerwie kropki, pole z 🎤, koła i „✋ Rezygnuję”, wybrana z trzech wersji w polu', async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 640 });
   await page.goto('/');
   await page.evaluate(() => localStorage.setItem('songster.ui6', '1'));
@@ -690,7 +690,14 @@ test('6.0 na telefonie: pasek – sama stawka, śpiewany wers zawsze widoczny, w
   for (const sel of ['.ly-dots', '#ly-input', '.ly-submit', '.ly-lifebtns', '#ly-answer .ly-quit']) await expect(page.locator(sel)).toBeVisible();
   await expect(page.locator('#ly-answer .ly-quit')).toHaveText('✋ Rezygnuję – zabieram 500 zł');
   expect(await page.evaluate(() => getComputedStyle(document.querySelector('#ly-answer .ly-quit'), '::before').content)).toBe('none');
-  if (await page.evaluate(() => !!LySpeech)) await expect(page.locator('#ly-answer .ly-sing')).toHaveText('🎤 Zaśpiewaj zamiast pisać');
+  // 🎤 (gdy przeglądarka rozpoznaje mowę) – w polu odpowiedzi, z prawej, w jego obrysie
+  if (await page.evaluate(() => !!LySpeech)) {
+    const [f, m] = await Promise.all([page.locator('#ly-input').boundingBox(), page.locator('#ly-answer .ly-field .ly-sing').boundingBox()]);
+    expect(m.x).toBeGreaterThan(f.x + f.width / 2);
+    expect(m.x + m.width).toBeLessThanOrEqual(f.x + f.width + 1);
+    expect(m.y).toBeGreaterThanOrEqual(f.y - 1);
+    expect(m.y + m.height).toBeLessThanOrEqual(f.y + f.height + 1);
+  }
   // trzy wersje: kropki, pole i koła zostają; stuknięta wersja trafia do pola i jest zaznaczona
   await page.getByRole('button', { name: /Trzy wersje wersu/ }).click();
   await expect(page.locator('.ly-variants button')).toHaveCount(3);
@@ -743,5 +750,27 @@ test('Tak to leciało!: rozpoznawanie mowy – cisza daje komunikat, a przycisk 
   await playToGap(page);
   await page.getByRole('button', { name: '🎤 Zaśpiewaj zamiast pisać' }).click();
   await expect(page.locator('#ly-answer .ly-flash')).toContainText('Nic nie słychać');
-  await expect(page.locator('#ly-answer .ly-sing')).toHaveText('🎤 Zaśpiewaj zamiast pisać');
+  await expect(page.locator('#ly-answer .ly-sing')).toHaveAttribute('aria-label', '🎤 Zaśpiewaj zamiast pisać');
+});
+
+test('Tak to leciało!: 🎤 w polu odpowiedzi – zaśpiewane słowa trafiają do pola, ponowne stuknięcie kończy słuchanie', async ({ page }) => {
+  // atrapa rozpoznawania mowy: wynik podaje test, stop() kończy słuchanie
+  await page.addInitScript(() => {
+    window.SpeechRecognition = class { start() { window.__rec = this; } stop() { setTimeout(() => this.onend(), 10); } };
+  });
+  await startLyrics(page);
+  await playToGap(page);
+  const mic = page.locator('#ly-answer .ly-field .ly-sing');
+  await expect(mic).toHaveAttribute('aria-label', '🎤 Zaśpiewaj zamiast pisać');
+  await mic.click();
+  await expect(mic).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('#ly-input')).toHaveAttribute('placeholder', '🎤 Słucham…');
+  // z zaśpiewanego zdania do pola trafiają słowa pasujące do przerwy
+  const want = await page.evaluate(() => state.lyrics.cur.gap.blanks.map((b) => b.want).join(' '));
+  await page.evaluate((t) => window.__rec.onresult({ results: [[{ transcript: `no więc ${t}` }]] }), want);
+  await mic.click();
+  await expect(mic).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('#ly-input')).toHaveValue(want);
+  await page.getByRole('button', { name: 'Tak to leciało!' }).click();
+  await expect(page.locator('#ly-answer .verdict')).toContainText('Tak to leciało!');
 });

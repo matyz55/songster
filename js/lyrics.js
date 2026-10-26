@@ -926,16 +926,22 @@ const lySetText = (cur, words) => { cur.text = words.map((w) => w || '').join(' 
 const LySpeech = window.SpeechRecognition || window.webkitSpeechRecognition;
 const LY_SPEECH_OFF_MS = 30 * 86400000;
 const lySpeechOk = () => !!LySpeech && Date.now() - store.get('lySpeechOffAt', 0) > LY_SPEECH_OFF_MS;
+let lyRec = null; // trwające słuchanie – drugie stuknięcie 🎤 je kończy
+// mikrofon w polu odpowiedzi (jak w wyszukiwarce): kapsuła, łuk i podstawka
+const LY_MIC_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2.5" width="6" height="11.5" rx="3" fill="currentColor"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
 function lySing() {
   if (!lySpeechOk() || state.phase !== 'answer') return;
   const cur = state.lyrics.cur;
+  if (cur.listening) { if (lyRec) lyRec.stop(); return; }
   const rec = new LySpeech();
+  lyRec = rec;
   rec.lang = 'pl-PL';
   rec.interimResults = false;
   rec.maxAlternatives = 3;
   cur.listening = true;
   lyRender();
   rec.onresult = (e) => {
+    if (state.phase !== 'answer' || state.lyrics.cur !== cur) return;
     const alts = [...e.results[0]].map((a) => a.transcript);
     const want = cur.gap.blanks.map((b) => b.want);
     let best = null;
@@ -949,8 +955,9 @@ function lySing() {
     }
     if (best) lySetText(cur, best.win);
   };
-  rec.onend = () => { cur.listening = false; lyRender(); };
+  rec.onend = () => { if (lyRec === rec) lyRec = null; cur.listening = false; lyRender(); };
   rec.onerror = (e) => {
+    if (lyRec === rec) lyRec = null;
     cur.listening = false;
     const why = e && e.error;
     if (['network', 'service-not-allowed', 'language-not-supported'].includes(why)) {
@@ -960,7 +967,7 @@ function lySing() {
     else if (why === 'no-speech') lyFlash(T('🎤 Nic nie słychać – spróbuj jeszcze raz.'));
     lyRender();
   };
-  try { rec.start(); } catch (e) { cur.listening = false; lyRender(); }
+  try { rec.start(); } catch (e) { lyRec = null; cur.listening = false; lyRender(); }
 }
 // „Tak to leciało!” – sprawdzenie odpowiedzi
 function lySubmit() {
@@ -1321,7 +1328,7 @@ function lyRenderAnswer() {
     style: `--i:${i}`, onclick: () => { if (cur.picking) lyRevealWord(i); },
   }, cur.revealed.has(i) ? b.want : '')));
   // długi wers przewija się w polu (data-ui6-trunc – zamierzone dla kontroli wyglądu 6.0)
-  const input = el('input', { id: 'ly-input', type: 'text', autocomplete: 'off', spellcheck: 'false', placeholder: T('Dokończ wers…'), 'aria-label': T('Dokończ wers'), 'data-ui6-trunc': '1' });
+  const input = el('input', { id: 'ly-input', type: 'text', autocomplete: 'off', spellcheck: 'false', placeholder: cur.listening ? T('🎤 Słucham…') : T('Dokończ wers…'), 'aria-label': T('Dokończ wers'), 'data-ui6-trunc': '1' });
   input.value = cur.text || '';
   input.addEventListener('input', () => {
     cur.text = input.value;
@@ -1329,7 +1336,12 @@ function lyRenderAnswer() {
     $$('#ly-blanks .ly-dot').forEach((d, i) => { if (!cur.revealed.has(i)) d.classList.toggle('filled', !!g[i]); });
   });
   input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); lySubmit(); } });
-  const parts = [el('div', { id: 'ly-blanks', class: 'ly-blanks' }, el('p', { class: 'ly-count' }, T('Brakuje słów: {0}', cur.gap.blanks.length)), dots, input)];
+  // 🎤 w polu odpowiedzi (z prawej, jak w wyszukiwarce): śpiewanie zamiast pisania; stuknięcie w trakcie słuchania je kończy
+  const mic = lySpeechOk() ? el('button', { type: 'button', class: `ly-sing${cur.listening ? ' on' : ''}`, 'aria-pressed': String(!!cur.listening),
+    'aria-label': cur.listening ? T('🎤 Słucham…') : T('🎤 Zaśpiewaj zamiast pisać'), title: cur.listening ? T('🎤 Słucham…') : T('🎤 Zaśpiewaj zamiast pisać'), onclick: lySing }) : null;
+  if (mic) mic.innerHTML = LY_MIC_SVG;
+  const parts = [el('div', { id: 'ly-blanks', class: 'ly-blanks' }, el('p', { class: 'ly-count' }, T('Brakuje słów: {0}', cur.gap.blanks.length)), dots,
+    el('div', { class: 'ly-field' }, input, mic))];
   if (cur.variants) {
     // odsłonięte słowa są pewne – w każdej wersji stoją na swoim miejscu (wersje różniące się tylko nimi łączą się w jedną);
     // stuknięta wersja trafia do pola odpowiedzi i zostaje podświetlona
@@ -1346,8 +1358,7 @@ function lyRenderAnswer() {
   // „Tak to leciało!” na całą szerokość, pod nim trzy koła ratunkowe, na samym dole źródła
   parts.push(el('button', { class: 'primary ly-submit', onclick: lySubmit }, T('Tak to leciało!')));
   if (!ly.mini && !final) parts.push(lyLifeBtns(me, cur, false));
-  const extra = el('div', { class: 'actions ly-extra' },
-    lySpeechOk() ? el('button', { class: 'ghost ly-sing', onclick: lySing, disabled: cur.listening }, cur.listening ? T('🎤 Słucham…') : T('🎤 Zaśpiewaj zamiast pisać')) : null);
+  const extra = el('div', { class: 'actions ly-extra' });
   if (!ly.mini && !final && state.players.length > 1 && me.lifes.help && cur.helper == null && !cur.hint) {
     extra.append(el('span', { class: 'ly-help' }, T('🙋 Sufler:'), state.players.map((p, i) => (i === state.turn ? null
       : el('button', { class: 'ghost small', onclick: () => lyAskHelper(i) }, p.name)))));
