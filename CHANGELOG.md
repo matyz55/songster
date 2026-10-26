@@ -1074,7 +1074,7 @@ Wersja próbna wyglądu 6.0:
 
 - Wygląd 6.0: gdy nazwy sekcji ustawień nie mieszczą się w pasku (np. telefon trzymany poziomo), zamiast uciętych nazw pokazują się kropki stron.
 
-## 5.58.4 – 26.10.2026 (`???????`)
+## 5.58.4 – 26.10.2026 (`a497189`)
 
 - „Tak to leciało!”: gra pobiera w tle teksty do wszystkich filmów piosenek z planszy (a nie tylko do pierwszego), więc chwilowe przeciążenie serwera z tekstami rzadziej psuje start piosenki.
 - „Tak to leciało!”: w 18 piosenkach (np. „Nieznajomy”, „Biała flaga”) polecana jest teraz wersja z płyty studyjnej, a nagranie koncertowe jest na końcu listy filmów.
