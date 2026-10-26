@@ -1027,7 +1027,7 @@ Wersja próbna wyglądu 6.0:
 - Na stałe pomijane są już tylko filmy usunięte z YouTube, bez zgody na odtwarzanie poza YouTube i pokazujące tekst. Filmy, które przy sprawdzaniu tylko nie ruszyły w czasie, znowu są do wyboru (z oznaczeniem).
 - Raport ze sprawdzarki filmów (Ustawienia) zawiera teraz też, które filmy ruszyły w grze, a które nie i dlaczego (kod błędu YouTube, blokada przeglądarki albo brak startu).
 
-## 5.56.0 – 26.10.2026 (`???????`)
+## 5.56.0 – 26.10.2026 (`369a171`)
 
 - Gra na kilku urządzeniach: przygotowany własny, darmowy serwer pośredniczący (Cloudflare Workers). Gdy zostanie wdrożony i wpisany w grę, telefony i duży ekran połączą się przez niego – w każdej sieci, także komórkowej, z małym opóźnieniem. Do tego czasu gra łączy się jak dotąd.
 - Instrukcja wdrożenia serwera: `server/relay/README.md`.
