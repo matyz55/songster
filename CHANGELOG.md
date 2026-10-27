@@ -1110,3 +1110,7 @@ Wersja próbna wyglądu 6.0:
 ## 5.58.9 – 27.10.2026 (`37a8bda`)
 
 - Wygląd 6.0, „Tak to leciało!”: po odpowiedzi, gdy piosenka gra dalej, widać kilka wersów karaoke zamiast jednego – na telefonie trzy (wcześniejszy, śpiewany i następny), na niskim telefonie i poziomo dwa (wcześniejszy i śpiewany).
+
+## 5.59.0 – 27.10.2026 (`…`)
+
+- „Tak to leciało!”: przy wyborze filmu, pod zwykłymi filmami, można wybrać wersję bez wokalu – „podkład” albo „karaoke” (na filmie karaoke widać tekst, który może zdradzić odpowiedź). Polecany jest zawsze zwykły film. Na razie wersje bez wokalu ma 27 piosenek; codziennie dochodzą kolejne (do 30 piosenek dziennie).

@@ -51,6 +51,17 @@ function usableVideo(v, s) {
   if (!v.channel || !titleMatches(v, s) || !artistMatches(v, s)) return false;
   return isTopic(v.channel) || !BAD_TITLE.test(words(v.title || ''));
 }
+// wersja bez wokalu (do wyboru przed piosenką): podkład / instrumental / karaoke tej piosenki tego wykonawcy;
+// bez coverów, koncertów, remiksów i lekcji gry
+const KAR_TITLE = /\b(karaoke|instrumental|instrumentalna|podklad|podklad muzyczny|bez wokalu|playback|backing track)\b/;
+// bez podkładów z wyciętym jednym instrumentem (gitara, perkusja, bas – wokal zostaje) i wersji w innej tonacji
+const KAR_BAD = /\b(cover|live|na zywo|koncert|remix|tutorial|lekcja|nuty|chords|akordy|8d|slowed|sped up|guitar|gitar\w*|drum\w*|bass|bas|perkusj\w*|lower key|higher key|tonacj\w*|transp\w*)\b/;
+// „k” – karaoke albo tekst na filmie (może zdradzić odpowiedź), „i” – sam podkład
+const karKind = (v) => (/\b(karaoke|tekst\w*|slowa|lyrics?)\b/.test(words(v.title || '')) ? 'k' : 'i');
+function karVideo(v, s) {
+  const t = words(v.title || '');
+  return !!v.channel && KAR_TITLE.test(t) && !KAR_BAD.test(t) && titleMatches(v, s) && artistMatches(v, s);
+}
 function officialVideo(v, s) {
   if (!v.channel) return false;
   if (isTopic(v.channel)) return true;
@@ -201,7 +212,8 @@ const noVideo = (prev) => ({ none: new Date().toISOString().slice(0, 10), tries:
 // data ostatniego szukania; dawne „true” – szukanie z mniejszą liczbą wyników, więc od razu ponownie)
 const usableIds = (v) => (v.alts || [v.id]).filter((id) => !BAD.has(id));
 const altsDue = (v) => typeof v.altsSearched !== 'string' || Date.now() - Date.parse(v.altsSearched) >= RETRY_DAYS * 864e5;
-const MAX_SEARCHES = 95; // dzienny limit search.list to 100
+// dzienny limit search.list to 100; MAX_SEARCHES=0 – tylko ponowne sprawdzenie zapisanych filmów (bez wyszukiwań)
+const MAX_SEARCHES = process.env.MAX_SEARCHES === undefined ? 95 : Number(process.env.MAX_SEARCHES);
 const SEARCH_PAUSE = 2000; // przerwa między wyszukiwaniami (limit zapytań na minutę)
 const isoSec = (d) => { const m = d.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/) || []; return (+m[1] || 0) * 3600 + (+m[2] || 0) * 60 + (+m[3] || 0); };
 // Zwraca dane albo null przy błędzie (bez wyniku – nie zapisujemy wtedy „brak filmu”).
@@ -246,6 +258,9 @@ function lrFor(d, lr) {
   return best;
 }
 const fits = (v, lr, s) => v && v.embeddable && !v.blockedPL && !v.age && !!lrFor(v.d, lr) && usableVideo(v, s);
+const fitsKar = (v, lr, s) => v && v.embeddable && !v.blockedPL && !v.age && !!lrFor(v.d, lr) && karVideo(v, s);
+const MAX_KAR = 3;
+const KAR_SEARCHES = 30; // dziennie najwyżej tyle wyszukiwań wersji bez wokalu (reszta limitu – filmy zwykłe)
 const rank = (s, l) => (a, b) => (isTopic(b.channel) - isTopic(a.channel)) || (officialVideo(b, s) - officialVideo(a, s))
   || Math.abs(a.d - lrFor(a.d, l)[1]) - Math.abs(b.d - lrFor(b.d, l)[1]);
 const MAX_ALTS = 5;
@@ -338,7 +353,7 @@ async function stepYoutube() {
   // 2) ponowne sprawdzenie zapisanych filmów (1 jednostka na 50) – nieoficjalne, niedostępne lub niepasujące usuwamy,
   // żeby zostały wyszukane od nowa; pozostałym uzupełniamy kanał i tytuł
   const saved = Object.keys(yt).filter((k) => hasVideo(yt[k]) && !wd.has(k));
-  const savedIds = [...new Set(saved.flatMap((k) => yt[k].alts || [yt[k].id]))];
+  const savedIds = [...new Set(saved.flatMap((k) => [...(yt[k].alts || [yt[k].id]), ...((yt[k].kar && yt[k].kar.ids) || [])]))];
   const now = new Map();
   let checked = true;
   for (let i = 0; i < savedIds.length; i += 50) {
@@ -352,7 +367,9 @@ async function stepYoutube() {
       // zostają filmy, które nadal pasują (do któregoś wariantu tekstu); główny – pierwszy z nich
       const s = songByKey.get(k);
       const ok = s && lr[k] ? (yt[k].alts || [yt[k].id]).map((id) => now.get(id)).filter((v) => fits(v, lr[k], s)) : [];
-      if (ok.length) yt[k] = { ...entry(ok[0], yt[k].src, ok.map((v) => v.id), ok), ...(yt[k].altsSearched ? { altsSearched: yt[k].altsSearched } : {}) };
+      const karIds = yt[k].kar ? (yt[k].kar.ids || []).filter((id) => s && lr[k] && fitsKar(now.get(id), lr[k], s)) : [];
+      const kar = yt[k].kar && { ...yt[k].kar, ids: karIds, kind: Object.fromEntries(karIds.map((id) => [id, karKind(now.get(id))])) };
+      if (ok.length) yt[k] = { ...entry(ok[0], yt[k].src, ok.map((v) => v.id), ok), ...(yt[k].altsSearched ? { altsSearched: yt[k].altsSearched } : {}), ...(kar ? { kar } : {}) };
       else { delete yt[k]; removed += 1; }
     }
     save('youtube-pl.json', yt);
@@ -400,6 +417,33 @@ async function stepYoutube() {
     yt[key(s)] = entry(ok[0], 'search', ok.slice(0, MAX_ALTS).map((v) => v.id), ok);
     save('youtube-pl.json', yt);
   }
+  // 4) wersje bez wokalu (podkład / karaoke) dla piosenek z filmem – gracz może je wybrać przed piosenką;
+  // najpierw piosenki z playlisty i najpopularniejsze; piosenka bez wyniku wraca po RETRY_DAYS dniach
+  const karDue = (v) => !v.kar || typeof v.kar.searched !== 'string' || (!(v.kar.ids || []).length && Date.now() - Date.parse(v.kar.searched) >= RETRY_DAYS * 864e5);
+  const karQueue = ALL_PL.filter((s) => lr[key(s)] && hasVideo(yt[key(s)]) && karDue(yt[key(s)])).sort((a, b) => score(b) - score(a));
+  let karSearches = 0; let karFound = 0;
+  for (const s of karQueue) {
+    if (searchCalls >= MAX_SEARCHES || karSearches >= KAR_SEARCHES) break;
+    const l = lr[key(s)];
+    await sleep(SEARCH_PAUSE);
+    let vids = [];
+    try {
+      karSearches += 1;
+      const data = await ytApi('search', { part: 'id', type: 'video', maxResults: 15, q: `${SongMatch.mainArtist(s)} ${clean(s.t)} podkład karaoke instrumental`,
+        regionCode: 'PL', videoEmbeddable: 'true', videoSyndicated: 'true' });
+      if (!data) continue;
+      const ids = (data.items || []).map((x) => x.id.videoId).filter(Boolean);
+      if (ids.length && !(vids = await videoInfo(ids))) continue;
+    } catch { break; }
+    // najpierw podkłady bez tekstu na ekranie, potem karaoke; długość najbliższa nagraniu z tekstem
+    const ok = vids.filter((v) => fitsKar(v, l, s) && !BAD.has(v.id))
+      .sort((a, b) => (karKind(a) === 'k') - (karKind(b) === 'k') || Math.abs(a.d - lrFor(a.d, l)[1]) - Math.abs(b.d - lrFor(b.d, l)[1])).slice(0, MAX_KAR);
+    if (ok.length) karFound += 1;
+    yt[key(s)] = { ...yt[key(s)], kar: { ids: ok.map((v) => v.id), dur: Object.fromEntries(ok.map((v) => [v.id, v.d])),
+      kind: Object.fromEntries(ok.map((v) => [v.id, karKind(v)])), searched: new Date().toISOString().slice(0, 10) } };
+    save('youtube-pl.json', yt);
+  }
+  if (karSearches) console.log(`Wersje bez wokalu: wyszukiwania ${karSearches}, znalezione dla ${karFound} piosenek`);
   const found = Object.values(yt).filter(hasVideo).length;
   console.log(`YouTube: wyszukiwania ${searchCalls}, filmy dla ${found} piosenek (z Wikidata: ${[...wd.keys()].filter((k) => hasVideo(yt[k])).length})`);
 }
@@ -438,14 +482,21 @@ function stepBuild() {
       if (m) alts.push(OFFSETS[id] ? [id, m[0], m[1], OFFSETS[id]] : [id, m[0], m[1]]);
     }
     alts.sort((a, b) => (b[0] in GOOD) - (a[0] in GOOD));
-    if (alts.length) out[key(s)] = alts;
+    if (alts.length) {
+      for (const id of (v.kar && v.kar.ids) || []) {
+        const m = !BAD.has(id) && v.kar.dur[id] && lrFor(v.kar.dur[id], l);
+        if (m) alts.push([id, m[0], m[1], OFFSETS[id] || 0, (v.kar.kind || {})[id] || 'i']);
+      }
+      out[key(s)] = alts;
+    }
   }
-  const js = '// Tryb „Tak to leciało!”: piosenka → [[film YouTube, tekst w LRCLIB, długość w s, przesunięcie tekstu w s (opcjonalnie)], …] (gra próbuje kolejnych filmów)\n'
+  const js = '// Tryb „Tak to leciało!”: piosenka → [[film YouTube, tekst w LRCLIB, długość w s, przesunięcie tekstu w s (opcjonalnie),\n'
+    + '// wersja bez wokalu: „i” podkład, „k” karaoke (opcjonalnie)], …] (gracz wybiera film przed piosenką)\n'
     + '// – generuje tools/lyrics-catalog.mjs.\n'
     + '// Teksty nie są tu zapisane – gra pobiera je z lrclib.net w trakcie rozgrywki.\n'
     + `window.LYRICS_SONGS = ${JSON.stringify(out, null, 0).replace(/\],"/g, '],\n"')};\n`;
   writeFileSync(new URL('lyrics-catalog.js', dir), js);
-  console.log(`lyrics-catalog.js: ${Object.keys(out).length} piosenek`);
+  console.log(`lyrics-catalog.js: ${Object.keys(out).length} piosenek, z wersją bez wokalu: ${Object.values(out).filter((a) => a.some((x) => x[4])).length}`);
   const have = catalogCounts(lr, yt);
   console.log(`kategorie z co najmniej 2 piosenkami: ${CATS.filter((c) => (have.get(c.name) || 0) >= 2).length} z ${CATS.length}`
     + ` (mało piosenek: ${CATS.filter((c) => (have.get(c.name) || 0) < THIN).map((c) => c.name).join(', ')})`);

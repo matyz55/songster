@@ -774,3 +774,27 @@ test('Tak to leciało!: 🎤 w polu odpowiedzi – zaśpiewane słowa trafiają 
   await page.getByRole('button', { name: 'Tak to leciało!' }).click();
   await expect(page.locator('#ly-answer .verdict')).toContainText('Tak to leciało!');
 });
+
+test('Tak to leciało!: przy wyborze filmu wersja zwykła albo bez wokalu (podkład, karaoke) – osobna grupa, polecany zwykły film', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    const pl = window.SONGS.filter((s) => s.c === 'PL').slice(0, 400);
+    window.LYRICS_SONGS = Object.fromEntries(pl.map((s, i) => [songKey(s), [[`vid${i}`, 1000 + i, 180], [`ins${i}`, 1000 + i, 180, 0, 'i'], [`kar${i}`, 1000 + i, 180, 0, 'k']]]));
+  });
+  await page.click('#btn-single');
+  await page.click('.mode[data-mode=lyrics]');
+  await page.click('#btn-start');
+  await page.locator('.ly-cat:not(.done)').first().click();
+  await page.locator('.ly-song').first().click();
+  const films = page.locator('#ly-answer .ly-film');
+  await expect(films).toHaveCount(3);
+  await expect(films.first()).not.toHaveClass(/kar/);
+  await expect(films.first()).toContainText('polecany');
+  await expect(page.locator('#ly-answer .ly-films-sub')).toContainText('Bez wokalu');
+  await expect(films.nth(1)).toContainText('podkład');
+  await expect(films.nth(2)).toContainText('karaoke – tekst na filmie');
+  // wybór podkładu – piosenka gra z tym filmem i tym samym tekstem
+  await films.nth(1).click();
+  await expect.poll(() => page.evaluate(() => state.lyrics.cur.videoId)).toMatch(/^ins/);
+  await expect.poll(() => page.evaluate(() => state.phase), { timeout: 20000 }).toBe('answer');
+});

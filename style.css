@@ -865,6 +865,9 @@ body.no-anim *, body.no-anim *::before, body.no-anim *::after { animation: none 
 .ly-film-tag { flex-basis: 100%; font-size: .8rem; }
 .ly-film-tag.ok { color: var(--accent-2); }
 .ly-film-tag.bad { color: var(--gold); }
+/* wersje bez wokalu (podkład, karaoke) – osobna grupa pod zwykłymi filmami */
+.ly-films-sub { grid-column: 1 / -1; flex-basis: 100%; margin: 6px 0 0; font-size: .85rem; font-weight: 700; color: var(--muted); }
+.ly-film-tag.kar { color: #c9a7ff; }
 .ly-film-skip { justify-self: center; }
 .ly-film.top { border-color: var(--accent-2); box-shadow: 0 0 0 1px var(--accent-2) inset; }
 .ly-film-tag { color: var(--accent-2); }

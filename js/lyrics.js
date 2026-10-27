@@ -49,7 +49,7 @@ function lyCatalog() {
   return window.SONGS.filter((s) => cat[songKey(s)]).map((s) => {
     const raw = cat[songKey(s)];
     const all = typeof raw[1] === 'number' ? (Array.isArray(raw[0]) ? raw[0] : [raw[0]]).map((id) => ({ id, lr: raw[1], d: raw[2] }))
-      : raw.map(([id, lr, d]) => ({ id, lr, d }));
+      : raw.map(([id, lr, d, , kind]) => ({ id, lr, d, ...(kind ? { kar: kind } : {}) })); // kind: „i” podkład, „k” karaoke
     // czwarta liczba (o ile jest) – przesunięcie tekstu względem filmu w sekundach (ustalone przez graczy)
     if (typeof raw[1] !== 'number') raw.forEach(([, , , off], i) => { if (off) all[i].off = off; });
     // ukryte są filmy zgłoszone albo niedostępne na YouTube; taki, który przy sprawdzaniu tylko nie ruszył w czasie,
@@ -399,9 +399,10 @@ function lyFilmChoices(cur) {
   const chk = store.get('lyChecked', {});
   const info = (id) => log[id] || (chk[id] ? { ok: chk[id].ok ? 1 : 0, err: chk[id].err } : null);
   const rank = (x) => (x ? (x.ok ? 0 : 2) : 1);
+  // najpierw zwykłe filmy (z wokalem) – polecany jest zwykły; wersje bez wokalu (podkład, karaoke) osobno, na końcu
   return cur.it.vids.map((v, i) => ({ ...v, i, log: info(v.id) }))
     .filter((v) => !cur.failed[v.id])
-    .sort((a, b) => rank(a.log) - rank(b.log) || a.i - b.i);
+    .sort((a, b) => !!a.kar - !!b.kar || rank(a.log) - rank(b.log) || a.i - b.i);
 }
 // polecany film czeka w odtwarzaczu (miniatura i ▶) – dotknięcie ▶ na filmie też go wybiera
 function lyCueTop() {
@@ -487,10 +488,15 @@ function lyFilmsEl(cur) {
       : tap ? T('Wybierz film i dotknij ▶ na filmie') : T('Wybierz film – dotknij, aby odtworzyć')),
     // lista może się przewijać sama, gdy filmów jest dużo (data-ui6-scroll – zamierzone przewijanie w wyglądzie 6.0)
     list.length || tried.length ? el('div', { class: 'ly-films-list', 'data-ui6-scroll': '' },
-      ...list.map((v, n) => film(v, n, n === 0 ? ' top' : '',
-        v.id === cur.videoId && cur.stall ? el('span', { class: 'ly-film-tag bad' }, T('nie ruszył – dotknij ▶ na filmie'))
-          : v.log ? el('span', { class: `ly-film-tag ${v.log.ok ? 'ok' : 'bad'}` }, v.log.ok ? T('✓ działał') : T('⚠️ wcześniej nie ruszył'))
-            : n === 0 ? el('span', { class: 'ly-film-tag' }, T('polecany')) : '')),
+      ...list.flatMap((v, n) => [
+        // wersje bez wokalu – pod zwykłymi filmami, z nagłówkiem (śpiewasz sam do podkładu)
+        v.kar && (n === 0 || !list[n - 1].kar) ? el('p', { class: 'ly-films-sub' }, T('🎹 Bez wokalu – śpiewasz sam do podkładu')) : null,
+        film(v, n, `${n === 0 ? ' top' : ''}${v.kar ? ' kar' : ''}`,
+          v.id === cur.videoId && cur.stall ? el('span', { class: 'ly-film-tag bad' }, T('nie ruszył – dotknij ▶ na filmie'))
+            : v.log && !v.log.ok ? el('span', { class: 'ly-film-tag bad' }, T('⚠️ wcześniej nie ruszył'))
+              : v.kar ? el('span', { class: 'ly-film-tag kar' }, v.kar === 'k' ? T('karaoke – tekst na filmie') : T('podkład'))
+                : v.log ? el('span', { class: 'ly-film-tag ok' }, T('✓ działał'))
+                  : n === 0 ? el('span', { class: 'ly-film-tag' }, T('polecany')) : '')]),
       ...tried.map((v, n) => film(v, list.length + n, ' failed', el('span', { class: 'ly-film-tag bad' }, lyFailLabel(v.why))))) : '',
     trouble ? el('div', { class: 'ly-film-switch' },
       // druga piosenka z kategorii: krótki opis i tytuł w jednej linijce (pełna nazwa w podpowiedzi)
