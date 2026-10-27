@@ -1102,3 +1102,7 @@ Wersja próbna wyglądu 6.0:
 ## 5.58.7 – 26.10.2026 (`226c8f4`)
 
 - „Tak to leciało!”: przycisk śpiewania jest teraz w samym polu odpowiedzi – ikonka mikrofonu z prawej strony pola, jak w wyszukiwarce. Stuknięcie zaczyna słuchanie (w polu pojawia się „🎤 Słucham…”), ponowne stuknięcie je kończy, a rozpoznane słowa wpisują się do pola. Pod kołami ratunkowymi zostaje tylko „✋ Rezygnuję – zabieram …”.
+
+## 5.58.8 – 27.10.2026 (`…`)
+
+- „Tak to leciało!”: katalog 600 piosenek, +0 (z playlisty „Tak to leciało” 291 z 324); 17 piosenek dostało drugi film do wyboru (z jednym filmem zostało 65).
