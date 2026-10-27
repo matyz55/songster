@@ -1106,3 +1106,7 @@ Wersja próbna wyglądu 6.0:
 ## 5.58.8 – 27.10.2026 (`0291953`)
 
 - „Tak to leciało!”: katalog 600 piosenek, +0 (z playlisty „Tak to leciało” 291 z 324); 17 piosenek dostało drugi film do wyboru (z jednym filmem zostało 65).
+
+## 5.58.9 – 27.10.2026 (`…`)
+
+- Wygląd 6.0, „Tak to leciało!”: po odpowiedzi, gdy piosenka gra dalej, widać kilka wersów karaoke zamiast jednego – na telefonie trzy (wcześniejszy, śpiewany i następny), na niskim telefonie i poziomo dwa (wcześniejszy i śpiewany).
