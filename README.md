@@ -167,7 +167,10 @@ przewija się jak w karaoke, a przed wersem do uzupełnienia muzyka milknie. Odp
 YouTube Data API v3; film musi dać się osadzić, nie może być zablokowany w Polsce, a jego długość musi zgadzać się
 z nagraniem z tekstem ±3 s) i `build`. Wyniki pośrednie (tylko identyfikatory i długości) są w `tools/lyrics-data`, więc kolejne uruchomienia kontynuują pracę (piosenkę bez pasującego filmu narzędzie szuka jeszcze raz najwcześniej po 30 dniach, najwyżej dwa razy). Piosenka może mieć kilka filmów (piosenki z mniej niż dwoma działającymi filmami
 narzędzie co 30 dni szuka ponownie) – przed piosenką gracz wybiera film z listy (miniatura, długość, znaczek „działał”
-albo „wcześniej nie ruszył”), a polecany czeka już w odtwarzaczu (wystarczy dotknąć ▶). Pod zwykłymi filmami są wersje bez wokalu
+albo „wcześniej nie ruszył”), a polecany czeka już w odtwarzaczu (wystarczy dotknąć ▶). Na ekranie trybu można wybrać piosenki: polskie, z angielskim tekstem (bardzo popularne
+zagraniczne przeboje z bazy gry – popularność w Spotify co najmniej 80, tylko z tekstem po angielsku) albo mieszane;
+przerwa wypada wtedy w wersie w języku piosenki, a kategorie tematyczne mają też wzorce angielskie (np. „Noc i dzień”:
+night, tonight). Wybór jest dostępny, gdy w katalogu jest co najmniej 40 takich piosenek. Pod zwykłymi filmami są wersje bez wokalu
 („podkład” albo „karaoke – tekst na filmie”): krok `youtube` szuka ich dziennie dla najwyżej 30 piosenek (bez podkładów
 z wyciętym jednym instrumentem i wersji w innej tonacji), `MAX_SEARCHES=0` – tylko ponowne sprawdzenie zapisanych filmów. Gdy film nie rusza, gra nie zmienia
 piosenki sama: gracz dotyka ▶ na filmie, wybiera inny film albo zmienia piosenkę (druga z kategorii albo inna – bez zużycia

@@ -48,7 +48,9 @@
       const pad = (n) => String(n).padStart(2, '0');
       const lines = Array.from({ length: 40 }, (_, i) => {
         const t = 8 + i * 4;
-        const text = i % 4 === 3 ? 'tak to leciało w naszej starej piosence' : `wers ${i} ${id} ${'la '.repeat(i % 5)}śpiewamy`.replace(/\s+/g, ' ');
+        // teksty od id 5000 – po angielsku (piosenki zagraniczne)
+        const text = Number(id) >= 5000 ? (i % 4 === 3 ? 'this is the way we sing it all night long' : `line ${i} ${id} you know my love is here tonight`)
+          : i % 4 === 3 ? 'tak to leciało w naszej starej piosence' : `wers ${i} ${id} ${'la '.repeat(i % 5)}śpiewamy`.replace(/\s+/g, ' ');
         return `[${pad(Math.floor(t / 60))}:${pad(t % 60)}.00] ${text}`;
       });
       return new Response(JSON.stringify({ id: Number(id), syncedLyrics: lines.join('\n'), duration: 180 }), { headers: { 'content-type': 'application/json' } });

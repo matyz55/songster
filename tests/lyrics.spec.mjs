@@ -798,3 +798,29 @@ test('Tak to leciało!: przy wyborze filmu wersja zwykła albo bez wokalu (podk�
   await expect.poll(() => page.evaluate(() => state.lyrics.cur.videoId)).toMatch(/^ins/);
   await expect.poll(() => page.evaluate(() => state.phase), { timeout: 20000 }).toBe('answer');
 });
+
+test('Tak to leciało!: wybór piosenek – z angielskim tekstem (zagraniczne przeboje), polskie albo mieszane', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    const pl = window.SONGS.filter((s) => s.c === 'PL').slice(0, 120);
+    const en = window.SONGS.filter((s) => s.c !== 'PL' && (s.p || 0) >= 80).slice(0, 120);
+    window.LYRICS_SONGS = Object.fromEntries([...pl.map((s, i) => [songKey(s), [`vid${i}`, 1000 + i, 180]]), ...en.map((s, i) => [songKey(s), [`env${i}`, 5000 + i, 180]])]);
+  });
+  await page.click('#btn-single');
+  await page.click('.mode[data-mode=lyrics]');
+  await expect(page.locator('input[name=ly-lang][value=pl]')).toBeChecked();
+  await expect(page.locator('#ly-lang-info')).toContainText('120');
+  await page.locator('label', { has: page.locator('input[name=ly-lang][value=en]') }).click();
+  await expect(page.locator('#ly-lang-info')).toContainText('angielsku');
+  expect(await page.evaluate(() => [store.get('lyLang'), lyCatalog().every((it) => it.song.c !== 'PL'), lyCatalog().length])).toEqual(['en', true, 120]);
+  await page.click('#btn-start');
+  await expect.poll(() => screen(page)).toBe('lyrics');
+  await page.locator('.ly-cat:not(.done)').first().click();
+  await page.locator('.ly-song').first().click();
+  await pickFilm(page);
+  await toAnswer(page);
+  // zagraniczna piosenka, przerwa w angielskim wersie
+  expect(await page.evaluate(() => { const c = state.lyrics.cur; return [c.it.song.c !== 'PL', window.lyLineLang(c.lines[c.gap.line].text)]; })).toEqual([true, 'en']);
+  // mieszane – w katalogu gry jedne i drugie
+  expect(await page.evaluate(() => { store.set('lyLang', 'mix'); const c = lyCatalog(); return [c.length, c.some((it) => it.song.c === 'PL'), c.some((it) => it.song.c !== 'PL')]; })).toEqual([240, true, true]);
+});

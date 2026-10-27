@@ -10,6 +10,7 @@ function openSetup(mode) {
   $$('[data-for]').forEach((n) => n.classList.toggle('hidden', !n.dataset.for.split(' ').includes(mode)));
   // karty ustawień, które w danym trybie nie mają znaczenia (np. pula piosenek w „Tak to leciało!”)
   $$('[data-hide-for]').forEach((n) => n.classList.toggle('hidden', n.dataset.hideFor.split(' ').includes(mode)));
+  if (['lyrics', 'relay'].includes(mode)) lyLangPaint();
   // opcje tylko dla multiplayera (np. muzyka na telefonie gracza z turą)
   $$('#screen-setup [data-ctx]').forEach((n) => { if (!n.dataset.ctx.split(' ').includes(playCtx)) n.classList.add('hidden'); });
   if (playCtx === 'multi') {
@@ -333,6 +334,21 @@ function updatePlaybackOptions() {
   const avail = { host: true, tv: display, player: playerOk }[cur];
   $$('input[name=audio-out]').forEach((r) => { r.checked = avail ? r.value === cur : r.value === 'host'; });
 }
+// Tak to leciało! i Sztafeta karaoke: piosenki z polskim tekstem, zagraniczne przeboje z angielskim tekstem albo mieszane
+function lyLangPaint() {
+  const cur = lyLangPref();
+  $$('input[name=ly-lang]').forEach((r) => {
+    const n = lyLangCount(r.value);
+    r.checked = r.value === cur;
+    r.disabled = n < 40 && r.value !== cur;
+    r.closest('label').title = T('{0} piosenek', n);
+  });
+  const n = lyLangCount(cur);
+  $('#ly-lang-info').textContent = cur === 'en' ? T('Bardzo popularne zagraniczne przeboje z tekstem po angielsku – w katalogu: {0}.', n)
+    : cur === 'mix' ? T('Polskie piosenki i zagraniczne przeboje z tekstem po angielsku – w katalogu: {0}.', n)
+      : T('Piosenki z polskim tekstem – w katalogu: {0}.', n);
+}
+$$('input[name=ly-lang]').forEach((r) => r.addEventListener('change', () => { store.set('lyLang', r.value); lyLangPaint(); }));
 // bingo: rozmiar planszy (3×3, 4×4, 5×5)
 $$('input[name=bingo-size]').forEach((r) => {
   r.checked = Number(r.value) === (filterState.bingoSize || 3);

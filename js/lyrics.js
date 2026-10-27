@@ -42,11 +42,18 @@ function lyMarkBad(id) {
 // piosenki z katalogu (polskie, z tekstem i filmem) – obiekty z bazy; wpis: [[film, tekst, długość], …] – każdy film
 // ma tekst dopasowany do swojej długości (dawny zapis: [film albo lista filmów, tekst, długość])
 const LY_MAX_DIFF = 3; // tyle sekund może się różnić film od nagrania z tekstem (tak samo w tools/lyrics-catalog.mjs)
+// język piosenek (ustawienie na ekranie trybu): „pl” – z polskim tekstem, „en” – z angielskim (zagraniczne przeboje),
+// „mix” – jedne i drugie; piosenka zagraniczna w katalogu ma tekst po angielsku
+const lyLangOf = (s) => (s.c === 'PL' ? 'pl' : 'en');
+const lyLangCount = (lang) => window.SONGS.filter((s) => (window.LYRICS_SONGS || {})[songKey(s)] && (lang === 'mix' || lyLangOf(s) === lang)).length;
+// wybór z za małą liczbą piosenek (np. katalog zagranicznych dopiero się zapełnia) – polskie
+const lyLangPref = () => { const v = store.get('lyLang', 'pl'); return ['en', 'mix'].includes(v) && lyLangCount(v) >= 40 ? v : 'pl'; };
 function lyCatalog() {
   const cat = window.LYRICS_SONGS || {};
+  const want = lyLangPref();
   const bad = lyBad();
   const log = store.get('lyVidLog', {});
-  return window.SONGS.filter((s) => cat[songKey(s)]).map((s) => {
+  return window.SONGS.filter((s) => cat[songKey(s)] && (want === 'mix' || lyLangOf(s) === want)).map((s) => {
     const raw = cat[songKey(s)];
     const all = typeof raw[1] === 'number' ? (Array.isArray(raw[0]) ? raw[0] : [raw[0]]).map((id) => ({ id, lr: raw[1], d: raw[2] }))
       : raw.map(([id, lr, d, , kind]) => ({ id, lr, d, ...(kind ? { kar: kind } : {}) })); // kind: „i” podkład, „k” karaoke
@@ -68,7 +75,7 @@ function lyCategoryList(items) {
     byArtist.get(a).push(it);
   }
   for (const [a, list] of byArtist) if (list.length >= 2) out.push({ name: a, kind: 'artist', items: list });
-  for (const th of LY_THEMES) out.push({ name: th.name(), kind: 'theme', items: items.filter((it) => th.re.test(it.song.t)) });
+  for (const th of LY_THEMES) out.push({ name: th.name(), kind: 'theme', items: items.filter((it) => window.lyThemeHas(th, it.song)) });
   for (const st of LY_SETS) out.push({ name: st.name(), kind: 'set', items: items.filter((it) => st.test(it.song)) });
   return out.filter((c) => c.items.length >= 2);
 }
@@ -218,7 +225,8 @@ function lyGapLineOk(text) {
   if (ws.filter((w) => LY_INTERJ.has(w)).length >= 1 && ws.length <= 3) return false;
   return ws.filter((w) => LY_INTERJ.has(w)).length < 2;
 }
-function lyPickGap(lines, stage, duration, minT = 0) {
+function lyPickGap(lines, stage, duration, minT = 0, lang = 'pl') {
+  const other = lang === 'en' ? 'pl' : 'en';
   const dur = duration || lines[lines.length - 1].t + 5;
   const [minW, maxW] = LY_WORDS[stage - 1];
   const [from, to] = LY_BANDS[stage - 1];
@@ -232,12 +240,12 @@ function lyPickGap(lines, stage, duration, minT = 0) {
     for (let i = 2; i < lines.length; i++) {
       const t = lines[i].t;
       if (t < Math.max(10, minT) || (strict >= 1 && (t / dur < from || t / dur > to))) continue;
-      // tylko polskie wersy (piosenki bywają z angielskim refrenem albo wtrąceniem)
-      if (!fresh(i) || window.lyLineLang(lines[i].text) === 'en' || !lyGapLineOk(lines[i].text)) continue;
+      // tylko wersy w języku piosenki (polskie piosenki bywają z angielskim refrenem albo wtrąceniem)
+      if (!fresh(i) || window.lyLineLang(lines[i].text) === other || !lyGapLineOk(lines[i].text)) continue;
       let span = [i];
       let n = words(i).length;
       // na wyższych etapach krótki wers + następny (też nowy) – razem
-      if (n < minW && stage >= 8 && i + 1 < lines.length && fresh(i + 1) && window.lyLineLang(lines[i + 1].text) !== 'en' && lyGapLineOk(lines[i + 1].text)) { span = [i, i + 1]; n += words(i + 1).length; }
+      if (n < minW && stage >= 8 && i + 1 < lines.length && fresh(i + 1) && window.lyLineLang(lines[i + 1].text) !== other && lyGapLineOk(lines[i + 1].text)) { span = [i, i + 1]; n += words(i + 1).length; }
       if (n < 2 || (strict >= 2 && (n < minW || n > maxW))) continue;
       out.push(span);
     }
@@ -251,14 +259,14 @@ function lyPickGap(lines, stage, duration, minT = 0) {
     end: lines[span[span.length - 1] + 1] ? lines[span[span.length - 1] + 1].t : lines[span[span.length - 1]].t + 4 };
 }
 // Sztafeta karaoke: kilka przerw w jednej piosence (każda w innej części), co najmniej kilka sekund muzyki między nimi
-function lyRelayGaps(lines, duration, n) {
+function lyRelayGaps(lines, duration, n, lang = 'pl') {
   const dur = duration || lines[lines.length - 1].t + 5;
   const out = [];
   for (let k = 0; k < n; k++) {
     const from = Math.max(15, out.length ? out[out.length - 1].end + 8 : 0, (dur * k) / n);
     const seg = lines.filter((l) => l.t >= from && l.t < Math.max(from + 10, (dur * (k + 1)) / n));
     if (!seg.length) continue;
-    const gap = lyPickGap(lines.filter((l) => l.t < seg[seg.length - 1].t + 0.01), 3, dur, from);
+    const gap = lyPickGap(lines.filter((l) => l.t < seg[seg.length - 1].t + 0.01), 3, dur, from, lang);
     if (gap && gap.pauseAt >= from) out.push(gap);
   }
   return out;
@@ -644,7 +652,7 @@ function lySetupSong(cur, lines) {
   cur.lines = lines;
   if (ly.mini && ly.mini.relay) {
     // sztafeta: przerwa dla każdego gracza po kolei (3–4 w piosence)
-    cur.gaps = lyRelayGaps(lines, cur.dur, Math.min(4, Math.max(3, state.players.length)));
+    cur.gaps = lyRelayGaps(lines, cur.dur, Math.min(4, Math.max(3, state.players.length)), lyLangOf(cur.it.song));
     if (cur.gaps.length < 2) return false;
     cur.gi = 0;
     cur.gap = cur.gaps[0];
@@ -653,7 +661,7 @@ function lySetupSong(cur, lines) {
     // i tak zagrała, zamiast odpaść
     const st = ly.mini ? 2 : lyMe().stage + 1;
     cur.gap = null;
-    for (let k = st; k >= 1 && !cur.gap; k--) cur.gap = lyPickGap(lines, k, cur.dur);
+    for (let k = st; k >= 1 && !cur.gap; k--) cur.gap = lyPickGap(lines, k, cur.dur, 0, lyLangOf(cur.it.song));
   }
   if (!cur.gap) return false;
   cur.given = cur.gap.blanks.map(() => '');
@@ -941,7 +949,7 @@ function lySing() {
   if (cur.listening) { if (lyRec) lyRec.stop(); return; }
   const rec = new LySpeech();
   lyRec = rec;
-  rec.lang = 'pl-PL';
+  rec.lang = lyLangOf(cur.it.song) === 'en' ? 'en-US' : 'pl-PL';
   rec.interimResults = false;
   rec.maxAlternatives = 3;
   cur.listening = true;

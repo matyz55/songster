@@ -7,7 +7,7 @@
 //   node tools/lyrics-catalog.mjs wikidata   – bez klucza: tylko teledyski z Wikidata (niesprawdzone – gra sama
 //                                              porównuje długość filmu w trakcie odtwarzania)
 //   node tools/lyrics-catalog.mjs lang [n]   – sprawdza język tekstów już znalezionych (pole pl: udział polskich wersów)
-//   node tools/lyrics-catalog.mjs build      – zapisuje lyrics-catalog.js (tylko piosenki z polskim tekstem)
+//   node tools/lyrics-catalog.mjs build      – zapisuje lyrics-catalog.js (polskie piosenki z polskim tekstem, zagraniczne przeboje z angielskim)
 // Film jest przyjmowany, gdy można go osadzić, nie jest zablokowany w Polsce, a jego długość różni się od długości
 // nagrania z tekstem o najwyżej 3 s (wtedy czasy wersów pasują do filmu), a kanał jest oficjalny (OFFICIAL_LABELS niżej).
 // Kolejność: najpopularniejsze piosenki.
@@ -82,14 +82,18 @@ const score0 = (s) => (s.p || 0) + (s.y >= 2015 ? 10 : 0) + ((s.f || []).some((f
 // zawsze w kandydatach i szukane jako pierwsze
 const WANTED = new Set(JSON.parse(existsSync(new URL('tools/lyrics-data/wanted.json', dir)) ? readFileSync(new URL('tools/lyrics-data/wanted.json', dir), 'utf8') : '[]'));
 const wantedFirst = (s) => (WANTED.has(`${s.a}|${s.t}`) ? 1000 : 0);
+// piosenki zagraniczne (wybór „angielskie” albo „mieszane” w grze): tylko bardzo popularne – popularność w Spotify
+// co najmniej FOREIGN_P (ok. 640 piosenek z bazy gry); do katalogu trafiają tylko z tekstem po angielsku (EN_MIN)
+const FOREIGN_P = 80;
+const FOREIGN = SONGS.filter((s) => s.c !== 'PL' && (s.p || 0) >= FOREIGN_P && !(s.g || []).includes('klasyczna'));
 const candidates = [...new Set([...SONGS.filter((s) => s.c === 'PL' && WANTED.has(`${s.a}|${s.t}`)),
-  ...SONGS.filter((s) => s.c === 'PL').sort((a, b) => score0(b) - score0(a)).slice(0, TOP || Infinity)])]
+  ...SONGS.filter((s) => s.c === 'PL').sort((a, b) => score0(b) - score0(a)).slice(0, TOP || Infinity), ...FOREIGN])]
   .sort((a, b) => wantedFirst(b) + score0(b) - wantedFirst(a) - score0(a));
 // kategorie gry (lyrics-cats.js) – piosenki z kategorii, które w katalogu mają mało piosenek, wyszukujemy najpierw,
 // żeby plansze były różnorodne (kategoria potrzebuje co najmniej 2 piosenek, a lepiej kilku na kolejne gry)
 const catCtx = { window: {}, T: (x) => x };
 vm.runInNewContext(readFileSync(new URL('lyrics-cats.js', dir), 'utf8'), catCtx);
-const CATS = [...catCtx.window.LY_THEMES.map((c) => ({ name: c.name(), test: (s) => c.re.test(s.t) })),
+const CATS = [...catCtx.window.LY_THEMES.map((c) => ({ name: c.name(), test: (s) => catCtx.window.lyThemeHas(c, s) })),
   ...catCtx.window.LY_SETS.map((c) => ({ name: c.name(), test: c.test }))];
 const THIN = 6;
 function thinBonus(s, have) {
@@ -105,6 +109,11 @@ function catalogCounts(lr, yt) {
 const lrcTexts = (lrc) => lrc.split('\n').filter((l) => /^\[\d+:\d+/.test(l)).map((l) => l.replace(/^(\[[^\]]*\])+/, '').trim()).filter(Boolean);
 const plShare = (texts) => Math.round(catCtx.window.lyPolishShare(texts) * 100) / 100;
 const PL_MIN = catCtx.window.LY_PL_MIN;
+// tekst angielski: co najmniej EN_MIN wersów rozpoznanych jako angielskie – rozpoznawanie zna tylko popularne słowa, więc próg jest niski; piosenki po hiszpańsku czy niemiecku mają ich mniej
+const EN_MIN = 0.25;
+const enShare = (texts) => Math.round(texts.filter((t) => catCtx.window.lyLineLang(t) === 'en').length / Math.max(1, texts.length) * 100) / 100;
+// tekst w języku piosenki: polska – polskie wersy (PL_MIN), zagraniczna – angielskie (EN_MIN)
+const langOk = (s, l) => !!l && (s.c === 'PL' ? (l.pl === undefined || l.pl >= PL_MIN) : (l.en !== undefined && l.en >= EN_MIN));
 async function lrclibGet(id) {
   for (let attempt = 0; attempt < 6; attempt++) {
     const res = await fetch(`https://lrclib.net/api/get/${id}`, { headers: { 'User-Agent': UA } }).catch(() => null);
@@ -152,6 +161,9 @@ async function lrclibSearch(s, loose = false) {
     // polska piosenka: tylko teksty po polsku, jeśli takie są (bywają wgrane tłumaczenia albo inna wersja językowa)
     const pol = ok.filter((r) => plShare(lrcTexts(r.syncedLyrics)) >= PL_MIN);
     if (s.c === 'PL' && pol.length) ok = pol;
+    // zagraniczna piosenka: tekst po angielsku, jeśli taki jest
+    const eng = ok.filter((r) => enShare(lrcTexts(r.syncedLyrics)) >= EN_MIN);
+    if (s.c !== 'PL' && eng.length) ok = eng;
     // najczęstsza długość nagrania (różne wydania tej samej wersji) – potem najdłuższy tekst
     ok.sort((a, b) => ok.filter((x) => Math.abs(x.duration - b.duration) < 2).length - ok.filter((x) => Math.abs(x.duration - a.duration) < 2).length
       || b.syncedLyrics.length - a.syncedLyrics.length);
@@ -164,7 +176,7 @@ async function lrclibSearch(s, loose = false) {
       if (lrcTexts(x.syncedLyrics).length < 8 || v.some(([, d]) => Math.abs(d - x.duration) < 1.5)) continue;
       v.push([x.id, Math.round(x.duration)]);
     }
-    return { id: r.id, d: Math.round(r.duration), lines: texts.length, pl: plShare(texts), v };
+    return { id: r.id, d: Math.round(r.duration), lines: texts.length, pl: plShare(texts), ...(s.c === 'PL' ? {} : { en: enShare(texts) }), v };
   }
   return undefined; // nie udało się zapytać – spróbujemy następnym razem
 }
@@ -183,11 +195,11 @@ async function stepLrclib() {
   const due = (k) => !none[k] || Date.now() - Date.parse(none[k]) >= 30 * 864e5;
   for (const s of [...candidates].sort((a, b) => wantedFirst(b) - wantedFirst(a) || hasVideo(yt[key(b)]) - hasVideo(yt[key(a)]))) {
     const c = cache[key(s)];
-    if (key(s) in cache && ((c === null && !due(key(s))) || (c && c.v && !(c.pl < PL_MIN && !c.plChecked)))) continue;
+    if (key(s) in cache && ((c === null && !due(key(s))) || (c && c.v && !(!langOk(s, c) && !c.plChecked)))) continue;
     if (left-- <= 0) break;
     const r = await lrclibSearch(s);
     if (r === null) none[key(s)] = today;
-    if (r && c && c.pl < PL_MIN) r.plChecked = true;
+    if (r && c && !langOk(s, c)) r.plChecked = true;
     if (r !== undefined) cache[key(s)] = r;
     await sleep(1100);
     if (++n % 25 === 0) { save('lrclib-pl.json', cache); process.stdout.write(`\rLRCLIB: ${n}`); }
@@ -269,15 +281,28 @@ const entry = (v, src, alts, infos) => ({ id: v.id, src, channel: v.channel, tit
   dur: Object.fromEntries((infos || [v]).filter((x) => (alts || [v.id]).includes(x.id)).map((x) => [x.id, x.d])) });
 // wszystkie polskie piosenki (także spoza listy kandydatów – piosenki już w katalogu zostają)
 const ALL_PL = SONGS.filter((s) => s.c === 'PL');
-const songByKey = new Map(ALL_PL.map((s) => [key(s), s]));
+// piosenki, które mogą być w katalogu: wszystkie polskie i bardzo popularne zagraniczne
+const ALL = [...ALL_PL, ...FOREIGN];
+const songByKey = new Map(ALL.map((s) => [key(s), s]));
 
 const WD_YT = `SELECT ?songLabel ?perfLabel ?yt WHERE { ?song wdt:P1651 ?yt ; wdt:P175 ?perf .
     ?perf wdt:P27|wdt:P495 wd:Q36 . SERVICE wikibase:label { bd:serviceParam wikibase:language "pl,en". } }`;
+// teledyski zagranicznych przebojów: wykonawcy z listy kandydatów, po 80 w zapytaniu (nazwa po angielsku)
+async function wikidataForeignRows() {
+  const artists = [...new Set(FOREIGN.map((s) => SongMatch.mainArtist(s).trim()))];
+  const rows = [];
+  for (let i = 0; i < artists.length; i += 80) {
+    const values = artists.slice(i, i + 80).flatMap((n) => ['en', 'mul'].map((l) => `${JSON.stringify(n)}@${l}`)).join(' ');
+    rows.push(...await sparql(`SELECT ?songLabel ?perfLabel ?yt WHERE { VALUES ?name { ${values} } ?perf rdfs:label ?name .
+      ?song wdt:P175 ?perf ; wdt:P1651 ?yt . SERVICE wikibase:label { bd:serviceParam wikibase:language "en". } }`, `yt-int-${i}`));
+  }
+  return rows;
+}
 async function wikidataVideos(lr, yt) {
-  const rows = await sparql(WD_YT, 'yt-pl');
+  const rows = [...await sparql(WD_YT, 'yt-pl'), ...await wikidataForeignRows()];
   const wd = new Map();
   for (const s of candidates) {
-    if (!lr[key(s)] || hasVideo(yt[key(s)])) continue;
+    if (!langOk(s, lr[key(s)]) || hasVideo(yt[key(s)])) continue;
     const r = rows.find((x) => norm(clean(x.songLabel.value)) === norm(clean(s.t)) && SongMatch.artistsOf(s).map(norm).includes(norm(x.perfLabel.value)));
     if (r) wd.set(key(s), r.yt.value);
   }
@@ -292,12 +317,12 @@ async function stepWikidata() {
   console.log(`Wikidata: teledyski dla ${wd.size} piosenek z tekstem (niesprawdzone)`);
 }
 
-const plOk = (l) => l && (l.pl === undefined || l.pl >= PL_MIN);
+
 async function artistSearches(lr, yt, limit) {
   const done = load('artists.json', {});
   const groups = new Map();
   for (const s of candidates) {
-    if (!plOk(lr[key(s)])) continue;
+    if (!langOk(s, lr[key(s)])) continue;
     const a = SongMatch.mainArtist(s);
     if (!groups.has(a)) groups.set(a, []);
     groups.get(a).push(s);
@@ -382,7 +407,7 @@ async function stepYoutube() {
   // blokady osadzania); najpierw nagranie „… – Topic” (wersja z płyty), potem oficjalne kanały, potem pozostałe
   const have = catalogCounts(lr, yt);
   const score = (s) => wantedFirst(s) + (s.p || 0) + (tagged(s) ? 40 : 0) + thinBonus(s, have);
-  const queue = [...candidates.filter((s) => lr[key(s)] && !hasVideo(yt[key(s)]) && retryDue(yt[key(s)])).sort((a, b) => score(b) - score(a)),
+  const queue = [...candidates.filter((s) => langOk(s, lr[key(s)]) && !hasVideo(yt[key(s)]) && retryDue(yt[key(s)])).sort((a, b) => score(b) - score(a)),
     // piosenki, których wszystkie filmy nie działają u graczy (bad-videos.json), potem te z jednym działającym filmem
     ...candidates.filter((s) => lr[key(s)] && hasVideo(yt[key(s)]) && usableIds(yt[key(s)]).length < 2 && altsDue(yt[key(s)]))
       .sort((a, b) => usableIds(yt[key(a)]).length - usableIds(yt[key(b)]).length || score(b) - score(a))];
@@ -420,7 +445,7 @@ async function stepYoutube() {
   // 4) wersje bez wokalu (podkład / karaoke) dla piosenek z filmem – gracz może je wybrać przed piosenką;
   // najpierw piosenki z playlisty i najpopularniejsze; piosenka bez wyniku wraca po RETRY_DAYS dniach
   const karDue = (v) => !v.kar || typeof v.kar.searched !== 'string' || (!(v.kar.ids || []).length && Date.now() - Date.parse(v.kar.searched) >= RETRY_DAYS * 864e5);
-  const karQueue = ALL_PL.filter((s) => lr[key(s)] && hasVideo(yt[key(s)]) && karDue(yt[key(s)])).sort((a, b) => score(b) - score(a));
+  const karQueue = ALL.filter((s) => langOk(s, lr[key(s)]) && hasVideo(yt[key(s)]) && karDue(yt[key(s)])).sort((a, b) => score(b) - score(a));
   let karSearches = 0; let karFound = 0;
   for (const s of karQueue) {
     if (searchCalls >= MAX_SEARCHES || karSearches >= KAR_SEARCHES) break;
@@ -463,13 +488,13 @@ function stepBuild() {
   const lr = load('lrclib-pl.json', {});
   const yt = load('youtube-pl.json', {});
   const out = {};
-  for (const s of ALL_PL) {
+  for (const s of ALL) {
     const l = lr[key(s)]; const v = yt[key(s)];
     // zapisany tytuł filmu nie pasuje do piosenki albo to wersja z tekstem na ekranie – pomijamy (bez zapytań do API)
     if (hasVideo(v) && v.title && !usableVideo(v, s)) continue;
-    // tylko piosenki z polskim tekstem (język sprawdzony krokiem lrclib albo lang); każdy film z tekstem o swojej długości:
+    // tylko piosenki z tekstem w ich języku (polskie – po polsku, zagraniczne – po angielsku); każdy film z tekstem o swojej długości:
     // [[film, tekst, długość], …] – filmy bez znanej długości (stare zapisy) dostają tekst główny
-    if (!l || !hasVideo(v) || l.pl === undefined || l.pl < PL_MIN) continue;
+    if (!l || !hasVideo(v) || l.pl === undefined || !langOk(s, l)) continue;
     const alts = [];
     // nagranie koncertowe (np. „Nieznajomy - Live” z kanału „- Topic”) – na koniec listy, gdy jest inna wersja:
     // gra poleca pierwszy film, a wersja z płyty studyjnej jest bliższa temu, co gracze znają
