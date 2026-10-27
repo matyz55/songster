@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 1353 z 7094 piosenek (ostatnio 2026-10-26, w tym uruchomieniu: 150).
+Sprawdzono dotąd 1503 z 7094 piosenek (ostatnio 2026-10-27, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -239,3 +239,26 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Kuba Badach – Obecny | 2009 | 2026-10-26 |
 | Blenders – Astropunk | 2010 | 2026-10-26 |
 | Jacek Stachursky – Zostańmy Razem | 2010 | 2026-10-26 |
+| Kasia Kowalska – Twój czas | 2010 | 2026-10-27 |
+| Kult – Karinga – Hurra! Suplement | 2010 | 2026-10-27 |
+| Maciej Maleńczuk & Psychodancing – Dawna dziewczyno | 2010 | 2026-10-27 |
+| Sasha Strunin – Ucisz moje serce | 2010 | 2026-10-27 |
+| POE (Projekt Ostry Emade) & Marika – Nie Odejdę Stąd | 2010 | 2026-10-27 |
+| Rahim & Abradab & Grubson – Fejm | 2010 | 2026-10-27 |
+| Doda – Fuck It | 2011 | 2026-10-27 |
+| Edyta Górniak – On the Run | 2011 | 2026-10-27 |
+| Natasza Urbańska – All The Wrong Places | 2011 | 2026-10-27 |
+| Sasha Strunin – Game Over | 2011 | 2026-10-27 |
+| Wojciech Waglewski – Kobiety nam wybaczą | 2011 | 2026-10-27 |
+| Łzy – Bo każdej nocy | 2011 | 2026-10-27 |
+| Sokół & Marysia Starosta – Myśl pozytywnie | 2011 | 2026-10-27 |
+| Buldog – Do prostego człowieka | 2012 | 2026-10-27 |
+| Edyta Górniak – Consequences | 2012 | 2026-10-27 |
+| Edyta Górniak – Nie zapomnij | 2012 | 2026-10-27 |
+| Edyta Górniak – Sens-Is | 2012 | 2026-10-27 |
+| Donguralesko & Dj Cube – Chce Ci Dać | 2012 | 2026-10-27 |
+| Czarny HIFI & Pezet – Niedopowiedzenia | 2012 | 2026-10-27 |
+| Ania Rusowicz – To co było | 2013 | 2026-10-27 |
+| Big Cyc – Berlin Zachodni 2011 | 2013 | 2026-10-27 |
+| Czesław Śpiewa – Baczyński – Pieśń o szczęściu | 2013 | 2026-10-27 |
+| Mela Koteluk – Wielkie nieba / To trop | 2013 | 2026-10-27 |
