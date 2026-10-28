@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 1503 z 7094 piosenek (ostatnio 2026-10-27, w tym uruchomieniu: 150).
+Sprawdzono dotąd 1653 z 7094 piosenek (ostatnio 2026-10-28, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -262,3 +262,14 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Big Cyc – Berlin Zachodni 2011 | 2013 | 2026-10-27 |
 | Czesław Śpiewa – Baczyński – Pieśń o szczęściu | 2013 | 2026-10-27 |
 | Mela Koteluk – Wielkie nieba / To trop | 2013 | 2026-10-27 |
+| Strachy na Lachy – I can’t get no gratisfaction | 2013 | 2026-10-28 |
+| Paluch – Bez Strachu | 2013 | 2026-10-28 |
+| Republika – Tak, Tak ... To Ja | 2014 | 2026-10-28 |
+| Donatan – Pełnia | 2015 | 2026-10-28 |
+| Grzegorz Markowski – Ballada 07 | 2015 | 2026-10-28 |
+| Taco Hemingway – 6 zer | 2015 | 2026-10-28 |
+| Taco Hemingway & Rumak – Następna stacja | 2015 | 2026-10-28 |
+| Cypis – Gdzie jest biały węgorz ? (Zejście) | 2015 | 2026-10-28 |
+| Ania Rusowicz & Adam Nowak – Trudne życzenia | 2016 | 2026-10-28 |
+| Stanisław Soyka – Czas nas uczy pogody | 2016 | 2026-10-28 |
+| Taco Hemingway & Rumak – Deszcz na betonie | 2016 | 2026-10-28 |
