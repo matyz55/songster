@@ -1121,6 +1121,6 @@ Wersja próbna wyglądu 6.0:
 - Kategorie tematyczne działają też dla angielskich tytułów (np. „Noc i dzień”: night, tonight; „Kolory”: red, blue); typowo polskie zestawy (Opole, PRL, Polski Top Wszech Czasów, „Panie przy mikrofonie”) zostają tylko dla polskich piosenek.
 - Katalog: 910 piosenek (600 polskich, 310 zagranicznych).
 
-## 5.60.1 – 28.10.2026 (`…`)
+## 5.60.1 – 28.10.2026 (`10af921`)
 
 - „Tak to leciało!”: katalog 1071 piosenek, +161 – wszystkie nowe to zagraniczne przeboje z tekstem po angielsku (jest ich teraz 471, polskich 600; z playlisty „Tak to leciało” 291 z 324).
