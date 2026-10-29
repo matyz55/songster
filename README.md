@@ -172,7 +172,7 @@ zagraniczne przeboje z bazy gry – popularność w Spotify co najmniej 80, tylk
 przerwa wypada wtedy w wersie w języku piosenki, a kategorie tematyczne mają też wzorce angielskie (np. „Noc i dzień”:
 night, tonight). Wybór jest dostępny, gdy w katalogu jest co najmniej 40 takich piosenek. Pod zwykłymi filmami są wersje bez wokalu
 („podkład” albo „karaoke – tekst na filmie”): krok `youtube` szuka ich dziennie dla najwyżej 30 piosenek (bez podkładów
-z wyciętym jednym instrumentem i wersji w innej tonacji), `MAX_SEARCHES=0` – tylko ponowne sprawdzenie zapisanych filmów. Gdy film nie rusza, gra nie zmienia
+z wyciętym jednym instrumentem i wersji w innej tonacji), `MAX_SEARCHES=0` – tylko ponowne sprawdzenie zapisanych filmów. Krok `karaoke` nie szuka nowych piosenek – cały dzienny limit wyszukiwań przeznacza na wersje bez wokalu dla piosenek z katalogu (najpierw polskich). Gdy film nie rusza, gra nie zmienia
 piosenki sama: gracz dotyka ▶ na filmie, wybiera inny film albo zmienia piosenkę (druga z kategorii albo inna – bez zużycia
 koła). Urządzenie, na którym przeglądarka nie pozwala grze uruchamiać filmów (zdarzenie `onAutoplayBlocked`), dostaje
 odtwarzacz z przyciskami YouTube. Błąd YouTube (100/101/150) zapisuje się dopiero po starcie innego filmu, a film znika

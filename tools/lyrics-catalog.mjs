@@ -2,6 +2,7 @@
 // i działający film na YouTube (odtwarzany od początku do przerwy). Teksty NIE trafiają do repozytorium – gra
 // pobiera je z LRCLIB w trakcie rozgrywki; katalog zawiera tylko identyfikatory i długości.
 //   node tools/lyrics-catalog.mjs lrclib [n] – szuka tekstów z czasami i ich wariantów długości (tools/lyrics-data/lrclib.json)
+//   node tools/lyrics-catalog.mjs karaoke    – tylko wersje bez wokalu dla piosenek z katalogu (cały limit wyszukiwań)
 //   node tools/lyrics-catalog.mjs youtube    – szuka filmów (wymaga YOUTUBE_API_KEY; najpierw identyfikatory z Wikidata,
 //                                              potem wyszukiwarka YouTube – limit 100 wyszukiwań dziennie)
 //   node tools/lyrics-catalog.mjs wikidata   – bez klucza: tylko teledyski z Wikidata (niesprawdzone – gra sama
@@ -362,14 +363,16 @@ async function artistSearches(lr, yt, limit) {
   console.log(`Wyszukiwanie po wykonawcach: ${searches} zapytań, nowe piosenki z filmem: ${found}`);
 }
 
-async function stepYoutube() {
+// karOnly (krok „karaoke”): bez szukania nowych piosenek i filmów zapasowych – cały dzienny limit wyszukiwań na wersje
+// bez wokalu dla piosenek, które są już w katalogu (najpierw polskie); zapisane filmy są sprawdzane jak zwykle
+async function stepYoutube({ karOnly = false } = {}) {
   if (!ytKey) { console.error('Brak zmiennej YOUTUBE_API_KEY – patrz README (Tak to leciało!).'); process.exit(1); }
   const lr = load('lrclib-pl.json', {});
   const yt = load('youtube-pl.json', {});
   // 0) wcześniej przyjęte bez sprawdzenia (krok wikidata) – sprawdzamy jak pozostałe
   for (const k of Object.keys(yt)) if (yt[k] && yt[k].unverified) delete yt[k];
   // 1) teledyski z Wikidata (P1651) – sprawdzenie długości i dostępności kosztuje 1 jednostkę na 50 filmów
-  const wd = await wikidataVideos(lr, yt);
+  const wd = karOnly ? new Map() : await wikidataVideos(lr, yt);
   const wdIds = [...new Set(wd.values())];
   const info = new Map();
   for (let i = 0; i < wdIds.length; i += 50) for (const v of await videoInfo(wdIds.slice(i, i + 50)) || []) info.set(v.id, v);
@@ -402,7 +405,7 @@ async function stepYoutube() {
   }
   // 3) wyszukiwanie po wykonawcy: jedno zapytanie (50 filmów) obejmuje wiele piosenek tego wykonawcy – najpierw wykonawcy
   // z największą liczbą (i popularnością) piosenek z tekstem, ale bez filmu; wykonawca wraca najwcześniej po RETRY_DAYS dniach
-  try { await artistSearches(lr, yt, Math.round(MAX_SEARCHES * 0.7)); } catch (e) { console.error(String(e.message || e)); }
+  if (!karOnly) try { await artistSearches(lr, yt, Math.round(MAX_SEARCHES * 0.7)); } catch (e) { console.error(String(e.message || e)); }
   // 3) wyszukiwarka YouTube – najpopularniejsze piosenki bez filmu, potem te z jednym filmem (zapasowe filmy na wypadek
   // blokady osadzania); najpierw nagranie „… – Topic” (wersja z płyty), potem oficjalne kanały, potem pozostałe
   const have = catalogCounts(lr, yt);
@@ -411,7 +414,7 @@ async function stepYoutube() {
     // piosenki, których wszystkie filmy nie działają u graczy (bad-videos.json), potem te z jednym działającym filmem
     ...candidates.filter((s) => lr[key(s)] && hasVideo(yt[key(s)]) && usableIds(yt[key(s)]).length < 2 && altsDue(yt[key(s)]))
       .sort((a, b) => usableIds(yt[key(a)]).length - usableIds(yt[key(b)]).length || score(b) - score(a))];
-  for (const s of queue) {
+  for (const s of karOnly ? [] : queue) {
     const l = lr[key(s)];
     if (searchCalls >= MAX_SEARCHES) break;
     const q = `${SongMatch.mainArtist(s)} ${clean(s.t)}`;
@@ -445,10 +448,12 @@ async function stepYoutube() {
   // 4) wersje bez wokalu (podkład / karaoke) dla piosenek z filmem – gracz może je wybrać przed piosenką;
   // najpierw piosenki z playlisty i najpopularniejsze; piosenka bez wyniku wraca po RETRY_DAYS dniach
   const karDue = (v) => !v.kar || typeof v.kar.searched !== 'string' || (!(v.kar.ids || []).length && Date.now() - Date.parse(v.kar.searched) >= RETRY_DAYS * 864e5);
-  const karQueue = ALL.filter((s) => langOk(s, lr[key(s)]) && hasVideo(yt[key(s)]) && karDue(yt[key(s)])).sort((a, b) => score(b) - score(a));
+  const karQueue = ALL.filter((s) => langOk(s, lr[key(s)]) && hasVideo(yt[key(s)]) && karDue(yt[key(s)]))
+    .sort((a, b) => (karOnly ? (b.c === 'PL') - (a.c === 'PL') : 0) || score(b) - score(a));
+  const karLimit = karOnly ? MAX_SEARCHES : KAR_SEARCHES;
   let karSearches = 0; let karFound = 0;
   for (const s of karQueue) {
-    if (searchCalls >= MAX_SEARCHES || karSearches >= KAR_SEARCHES) break;
+    if (searchCalls >= MAX_SEARCHES || karSearches >= karLimit) break;
     const l = lr[key(s)];
     await sleep(SEARCH_PAUSE);
     let vids = [];
@@ -530,7 +535,8 @@ function stepBuild() {
 const step = process.argv[2];
 if (step === 'lrclib') await stepLrclib();
 else if (step === 'youtube') await stepYoutube();
+else if (step === 'karaoke') await stepYoutube({ karOnly: true });
 else if (step === 'wikidata') await stepWikidata();
 else if (step === 'lang') await stepLang();
 else if (step === 'build') stepBuild();
-else console.log('Użycie: node tools/lyrics-catalog.mjs lrclib | youtube | lang | build');
+else console.log('Użycie: node tools/lyrics-catalog.mjs lrclib | youtube | karaoke | lang | build');
