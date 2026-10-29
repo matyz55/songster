@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 1653 z 7094 piosenek (ostatnio 2026-10-28, w tym uruchomieniu: 150).
+Sprawdzono dotąd 1803 z 7094 piosenek (ostatnio 2026-10-29, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -273,3 +273,19 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Ania Rusowicz & Adam Nowak – Trudne życzenia | 2016 | 2026-10-28 |
 | Stanisław Soyka – Czas nas uczy pogody | 2016 | 2026-10-28 |
 | Taco Hemingway & Rumak – Deszcz na betonie | 2016 | 2026-10-28 |
+| Bass Astral x Igo – It`s Only Emotion | 2016 | 2026-10-29 |
+| Paluch & PSR – Szaman | 2016 | 2026-10-29 |
+| Bedoes – 05:05 | 2017 | 2026-10-29 |
+| Maciek Czemplik & Aneta Szymczyk – Sen Na Pogodne Dni | 2017 | 2026-10-29 |
+| Męskie Granie Orkiestra & Obywatel G.C. 2.0 – Ciało | 2017 | 2026-10-29 |
+| Otsochodzi – Nowy kolor | 2017 | 2026-10-29 |
+| Young Multi – Plecak | 2017 | 2026-10-29 |
+| Paluch & Szpaku – Kontrola Jakości | 2017 | 2026-10-29 |
+| Artur Rojek – Chciałbym umrzeć z miłości (na żywo) | 2017 | 2026-10-29 |
+| Taco Hemingway – Tlen | 2017 | 2026-10-29 |
+| Big Scythe & Tymek – Język Ciała | 2018 | 2026-10-29 |
+| Taco Hemingway – Fiji | 2018 | 2026-10-29 |
+| Ørganek | ØNA & Nosowska – Kochana | 2018 | 2026-10-29 |
+| O.S.T.R. – Chevy Impala | 2018 | 2026-10-29 |
+| Taco Hemingway – Adieu | 2018 | 2026-10-29 |
+| Męskie Granie Orkiestra – Wspomnienie | 2019 | 2026-10-29 |
