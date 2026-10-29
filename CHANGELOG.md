@@ -1125,6 +1125,6 @@ Wersja próbna wyglądu 6.0:
 
 - „Tak to leciało!”: katalog 1071 piosenek, +161 – wszystkie nowe to zagraniczne przeboje z tekstem po angielsku (jest ich teraz 471, polskich 600; z playlisty „Tak to leciało” 291 z 324).
 
-## 5.60.2 – 29.10.2026 (`…`)
+## 5.60.2 – 29.10.2026 (`0ed5568`)
 
 - „Tak to leciało!”: katalog 1151 piosenek, +80 – nowe to zagraniczne przeboje z tekstem po angielsku (jest ich teraz 551, polskich 600; z playlisty „Tak to leciało” 291 z 324).
