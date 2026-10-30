@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 1803 z 7094 piosenek (ostatnio 2026-10-29, w tym uruchomieniu: 150).
+Sprawdzono dotąd 1953 z 7094 piosenek (ostatnio 2026-10-30, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -289,3 +289,42 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | O.S.T.R. – Chevy Impala | 2018 | 2026-10-29 |
 | Taco Hemingway – Adieu | 2018 | 2026-10-29 |
 | Męskie Granie Orkiestra – Wspomnienie | 2019 | 2026-10-29 |
+| schafter – Double D’s | 2019 | 2026-10-30 |
+| Tymek & C0PIK – Poza kontrolą | 2019 | 2026-10-30 |
+| Wojciech Baranowski – Czułe miejsce | 2019 | 2026-10-30 |
+| Wojciech Baranowski – Luzno | 2019 | 2026-10-30 |
+| Wojciech Baranowski – Dym | 2019 | 2026-10-30 |
+| Abel de Jong & Malik Montana – Pistolet (prod. by Abel de Jong) | 2019 | 2026-10-30 |
+| Belmondo – Scrooge Ebenezer | 2019 | 2026-10-30 |
+| Deys & Big Scythe – Anioły i Demony | 2019 | 2026-10-30 |
+| Sobel – Impreza | 2019 | 2026-10-30 |
+| Sokół & PRO8L3M – Napad na bankiet | 2019 | 2026-10-30 |
+| Męskie Granie Orkiestra – Kocham wolność (na żywo) | 2019 | 2026-10-30 |
+| Cypis – JBĆ PIS | 2020 | 2026-10-30 |
+| Fryderyk Chopin & Natalia Kukulska – Czułe struny [Polonez As-dur] | 2020 | 2026-10-30 |
+| Maciek Czemplik & Natalia Podwin – Małe szczęścia | 2020 | 2026-10-30 |
+| Mata – Patointeligencja | 2019 | 2026-10-30 |
+| Małgorzata Kozłowska – Prosta Piosenka | 2020 | 2026-10-30 |
+| Taco Hemingway & Lanek – POLSKIE TANGO | 2020 | 2026-10-30 |
+| Vito Bambino – Rampage | 2020 | 2026-10-30 |
+| Wojciech Baranowski – Lubię być z nią | 2020 | 2026-10-30 |
+| Artur Rojek & Taco Hemingway – A miało być jak we śnie | 2020 | 2026-10-30 |
+| Lordofon – Opener | 2020 | 2026-10-30 |
+| Lordofon – Grawitacja | 2020 | 2026-10-30 |
+| chillwagon – jumper | 2020 | 2026-10-30 |
+| Guzior & Favst – BLUEBERRY | 2020 | 2026-10-30 |
+| Guzior – TRAPSTAR | 2020 | 2026-10-30 |
+| Guzior & Favst – KUSHKOMA | 2020 | 2026-10-30 |
+| Kukon & Quebonafide – Piję wódę i słucham Ich Troje | 2020 | 2026-10-30 |
+| OKI & Gedz – SIRI | 2020 | 2026-10-30 |
+| PRO8L3M & Andrzej Zaucha – Backstage | 2020 | 2026-10-30 |
+| SB Maffija & Jan-Rapowanie – Hotel Maffija | 2020 | 2026-10-30 |
+| SB Maffija & Mata – A nie pamiętasz jak? | 2020 | 2026-10-30 |
+| SB Maffija & Bedoes 2115 – Dla sióstr | 2020 | 2026-10-30 |
+| Słoń & Chris Carson – Clint Eastwood | 2020 | 2026-10-30 |
+| Guzior & Oskar83 – Fala | 2020 | 2026-10-30 |
+| Ewa Bem – Powrotna bossa nova | 2021 | 2026-10-30 |
+| Fisz Emade Tworzywo – Ok Boomer | 2021 | 2026-10-30 |
+| Jacek Bończyk & Zbigniew Krzywański – Tobie wybaczam | 2021 | 2026-10-30 |
+| Krzysztof Zalewski – Ptaki | 2021 | 2026-10-30 |
+| Mata – Patoreakcja | 2021 | 2026-10-30 |
