@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 1953 z 7094 piosenek (ostatnio 2026-10-30, w tym uruchomieniu: 150).
+Sprawdzono dotąd 2103 z 7094 piosenek (ostatnio 2026-10-31, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -328,3 +328,18 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Jacek Bończyk & Zbigniew Krzywański – Tobie wybaczam | 2021 | 2026-10-30 |
 | Krzysztof Zalewski – Ptaki | 2021 | 2026-10-30 |
 | Mata – Patoreakcja | 2021 | 2026-10-30 |
+| Kacperczyk – Artysta z ASP | 2021 | 2026-10-31 |
+| Janusz Walczuk & Pedro – Sady Żoliborskie | 2021 | 2026-10-31 |
+| Kaz Bałagane & CatchUp – Włóczęga | 2021 | 2026-10-31 |
+| Mata & Trooh Hippi – Szafir | 2021 | 2026-10-31 |
+| OKI & Young Igi – Worki W Tłum | 2021 | 2026-10-31 |
+| PRO8L3M – V | 2021 | 2026-10-31 |
+| Bryska – Odbicie (Mark Neve Remix) | 2021 | 2026-10-31 |
+| Cleo – Za krokiem krok | 2022 | 2026-10-31 |
+| Kabe – Rarara | 2022 | 2026-10-31 |
+| Kabe – Sheraton | 2022 | 2026-10-31 |
+| Mata – Jestem poj384ny | 2022 | 2026-10-31 |
+| Pezet & Auer – Dom Nad Wodą | 2022 | 2026-10-31 |
+| Sobel – Piękni ludzie | 2022 | 2026-10-31 |
+| Igo & Magiera – Nie może być inaczej | 2022 | 2026-10-31 |
+| Jakub Grabowski – Mój przykry lajf (Jakub On Stage) | 2022 | 2026-10-31 |
