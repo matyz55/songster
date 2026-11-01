@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 2103 z 7094 piosenek (ostatnio 2026-10-31, w tym uruchomieniu: 150).
+Sprawdzono dotąd 2253 z 7094 piosenek (ostatnio 2026-11-01, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -343,3 +343,32 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Sobel – Piękni ludzie | 2022 | 2026-10-31 |
 | Igo & Magiera – Nie może być inaczej | 2022 | 2026-10-31 |
 | Jakub Grabowski – Mój przykry lajf (Jakub On Stage) | 2022 | 2026-10-31 |
+| 2115 & Bedoes 2115 – BEDOESIARA | 2022 | 2026-11-01 |
+| 2115 & Bedoes 2115 – DRESSCODE | 2022 | 2026-11-01 |
+| club2020 & Taco Hemingway – club2020 | 2022 | 2026-11-01 |
+| Jakub Grabowski & Patryk MTS – Chrapka (Club Banger) | 2022 | 2026-11-01 |
+| OKI & Nolyrics Beats – Jakie To Uczucie? | 2022 | 2026-11-01 |
+| Quebonafide & Ka-Meal – Refren trochę jak Lana Del Rey | 2022 | 2026-11-01 |
+| Dawid Podsiadło – Bóg | 2022 | 2026-11-01 |
+| Cypis – Putin | 2022 | 2026-11-01 |
+| Brodka – Monika | 2022 | 2026-11-01 |
+| Mrozu & Donguralesko – Poligon | 2022 | 2026-11-01 |
+| L.U.C. – Koniec lata | 2023 | 2026-11-01 |
+| PRO8L3M – Nicea | 2023 | 2026-11-01 |
+| ReTo – Fluid | 2023 | 2026-11-01 |
+| Smolasty & Doda – Nim zajdzie słońce | 2023 | 2026-11-01 |
+| Taco Hemingway & Otsochodzi – Cichosza | 2023 | 2026-11-01 |
+| Vito Bambino – Widzimisie | 2023 | 2026-11-01 |
+| bambi & Young Leosia – BFF | 2023 | 2026-11-01 |
+| Wojciech Baranowski – Sierpień | 2023 | 2026-11-01 |
+| Lordofon – Pętla | 2023 | 2026-11-01 |
+| BABIE LATO & Natalia Kukulska – Cudowne Lata (projekt BABIE LATO) | 2023 | 2026-11-01 |
+| Nosowska – Przytomna | 2023 | 2026-11-01 |
+| Sarsa & Piotr Rogucki – jprdl feat. Piotr Rogucki | 2023 | 2026-11-01 |
+| Zdechły Osa & WaluśKraksaKryzys – JEZUS PO TYGODNIU WE WROCŁAWIU | 2023 | 2026-11-01 |
+| Łona & Andrzej Konieczny – BYM POSZEDŁ | 2023 | 2026-11-01 |
+| Taco Hemingway & Daria Zawiałow – Mix Sałat | 2023 | 2026-11-01 |
+| club2020 & PRO8L3M – Tak naprawdę | 2023 | 2026-11-01 |
+| Taco Hemingway & @atutowy – Może To Coś Zmieni? | 2023 | 2026-11-01 |
+| KOSKA – I Like the Way You Kiss Me | 2024 | 2026-11-01 |
+| Kubi Producent & bambi – Woda księżycowa | 2024 | 2026-11-01 |
