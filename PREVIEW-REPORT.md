@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 2253 z 7094 piosenek (ostatnio 2026-11-01, w tym uruchomieniu: 150).
+Sprawdzono dotąd 2403 z 7094 piosenek (ostatnio 2026-11-02, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -372,3 +372,26 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Taco Hemingway & @atutowy – Może To Coś Zmieni? | 2023 | 2026-11-01 |
 | KOSKA – I Like the Way You Kiss Me | 2024 | 2026-11-01 |
 | Kubi Producent & bambi – Woda księżycowa | 2024 | 2026-11-01 |
+| Mata – Lloret de Mar | 2024 | 2026-11-02 |
+| OKI – Jeremy Sochan | 2024 | 2026-11-02 |
+| OKI & Sobel – Ile lat? | 2024 | 2026-11-02 |
+| Szpaku – Plaster | 2024 | 2026-11-02 |
+| White 2115 – 1 na 100 | 2024 | 2026-11-02 |
+| BABIE LATO & Brodka – Błyszczę (projekt BABIE LATO, Santander Letnie Brzmienia) | 2024 | 2026-11-02 |
+| The Dumplings – W naszym zabetonowanym mieście | 2024 | 2026-11-02 |
+| Łona I Webber & Teatr im. Juliusza Słowackiego w Krakowie – A co, jeśli się uda? | 2024 | 2026-11-02 |
+| PRO8L3M & Daria Zawiałow – Na ostatnią chwilę | 2024 | 2026-11-02 |
+| Sara James & Berre – BLUE ft. Berre | 2024 | 2026-11-02 |
+| Matylda/Łukasiewicz & Matylda – Trzymaj moją głowę nad wodą | 2024 | 2026-11-02 |
+| Bedoes – Kamień z serca | 2025 | 2026-11-02 |
+| Fagata – Mama mówiła | 2025 | 2026-11-02 |
+| Fagata & Dajczman – Pow Pow | 2025 | 2026-11-02 |
+| Fagata & Sentino – Trójkąt | 2025 | 2026-11-02 |
+| Kuban & Zalia – Kyoto | 2025 | 2026-11-02 |
+| Mata – Up! Up! Up! | 2025 | 2026-11-02 |
+| Mata & Maryla Rodowicz – To tylko wiosna | 2025 | 2026-11-02 |
+| Mata & Skolim – Kamikaze | 2025 | 2026-11-02 |
+| Quebonafide – Futurama 3 (fanserwis) | 2024 | 2026-11-02 |
+| Young Leosia – Ej Agatka | 2025 | 2026-11-02 |
+| Igo – 12 zmysłów | 2025 | 2026-11-02 |
+| Lordofon – Cheesy | 2025 | 2026-11-02 |
