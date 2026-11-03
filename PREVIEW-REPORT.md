@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 2403 z 7094 piosenek (ostatnio 2026-11-02, w tym uruchomieniu: 150).
+Sprawdzono dotąd 2553 z 7094 piosenek (ostatnio 2026-11-03, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -395,3 +395,20 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Young Leosia – Ej Agatka | 2025 | 2026-11-02 |
 | Igo – 12 zmysłów | 2025 | 2026-11-02 |
 | Lordofon – Cheesy | 2025 | 2026-11-02 |
+| Quebonafide & Sobel – NORADRENALINA | 2025 | 2026-11-03 |
+| Lordofon & Słoń – Samiec beta | 2025 | 2026-11-03 |
+| Daria ze Śląska – Aureola | 2025 | 2026-11-03 |
+| Bedoes & Maja Mecan – Ciągle tutaj jestem (diss na raka) | 2026 | 2026-11-03 |
+| Gibbs & Kukon – Ty masz | 2026 | 2026-11-03 |
+| OKI – Więcej nieba | 2026 | 2026-11-03 |
+| Otsochodzi – Nienawidzę Warszawy | 2026 | 2026-11-03 |
+| Antonio Vivaldi – Winter (The Four Seasons) | 1725 | 2026-11-03 |
+| Wolfgang Amadeus Mozart – Lacrimosa | 1791 | 2026-11-03 |
+| Ludwig van Beethoven – Symphony No. 5 | 1808 | 2026-11-03 |
+| Gioachino Rossini – William Tell Overture | 1829 | 2026-11-03 |
+| Jacques Offenbach – Galop infernal | 1858 | 2026-11-03 |
+| Piotr Czajkowski – 1812 Overture | 1880 | 2026-11-03 |
+| Giacomo Puccini – Nessun dorma | 1926 | 2026-11-03 |
+| Carl Orff – O Fortuna | 1936 | 2026-11-03 |
+| Kazimierz Wajda & Henryk Vogelfänger – Lwów jest jeden na świecie | 1939 | 2026-11-03 |
+| Maurice Chevalier – Arthur / Paris sera toujours Paris | 1939 | 2026-11-03 |
