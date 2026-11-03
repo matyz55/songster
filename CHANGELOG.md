@@ -1149,6 +1149,6 @@ Wersja próbna wyglądu 6.0:
 
 - „Tak to leciało!”: raport ze sprawdzarki filmów – 59 filmów, które ruszyły u gracza, jest teraz polecanych jako pierwsze; 6 filmów o innej długości niż nagranie z tekstem (m.in. „Sen o Warszawie”, „Królowa łez”, „Zacznij od Bacha”) wypadło z listy – te piosenki mają inne filmy; 34 filmy mają zapisane przesunięcie tekstu ustawione przez graczy (np. dłuższy wstęp w teledysku). Filmy, które tylko nie ruszyły w czasie, zostają do wyboru.
 
-## 5.60.8 – 03.11.2026 (`…`)
+## 5.60.8 – 03.11.2026 (`0af0eec`)
 
 - „Tak to leciało!”: wersję bez wokalu ma już 253 piosenki, +65 (doszło 35 podkładów i 96 filmów karaoke); katalog bez zmian – 1151 piosenek.
