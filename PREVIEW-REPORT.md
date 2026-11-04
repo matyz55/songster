@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 2553 z 7094 piosenek (ostatnio 2026-11-03, w tym uruchomieniu: 150).
+Sprawdzono dotąd 2703 z 7094 piosenek (ostatnio 2026-11-04, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -412,3 +412,4 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Carl Orff – O Fortuna | 1936 | 2026-11-03 |
 | Kazimierz Wajda & Henryk Vogelfänger – Lwów jest jeden na świecie | 1939 | 2026-11-03 |
 | Maurice Chevalier – Arthur / Paris sera toujours Paris | 1939 | 2026-11-03 |
+| Vic Damone – On the Street Where You Live | 1956 | 2026-11-04 |
