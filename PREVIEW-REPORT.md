@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 2703 z 7094 piosenek (ostatnio 2026-11-04, w tym uruchomieniu: 150).
+Sprawdzono dotąd 2853 z 7094 piosenek (ostatnio 2026-11-05, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
