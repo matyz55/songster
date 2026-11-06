@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 2853 z 7094 piosenek (ostatnio 2026-11-05, w tym uruchomieniu: 150).
+Sprawdzono dotąd 3003 z 7094 piosenek (ostatnio 2026-11-06, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -413,3 +413,4 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Kazimierz Wajda & Henryk Vogelfänger – Lwów jest jeden na świecie | 1939 | 2026-11-03 |
 | Maurice Chevalier – Arthur / Paris sera toujours Paris | 1939 | 2026-11-03 |
 | Vic Damone – On the Street Where You Live | 1956 | 2026-11-04 |
+| Martha and the Vandellas – Heat Wave | 1963 | 2026-11-06 |
