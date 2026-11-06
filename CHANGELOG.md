@@ -1161,6 +1161,6 @@ Wersja próbna wyglądu 6.0:
 
 - „Tak to leciało!”: wersję bez wokalu ma już 345 piosenek, +39 (doszło 18 podkładów i 43 filmy karaoke); katalog bez zmian – 1151 piosenek.
 
-## 5.60.11 – 06.11.2026 (`…`)
+## 5.60.11 – 06.11.2026 (`9fd67df`)
 
 - „Tak to leciało!”: wersję bez wokalu ma już 422 piosenki, +77 – wszystkie polskie piosenki są przeszukane, doszły pierwsze zagraniczne (dziś 113 podkładów i 94 filmy karaoke); katalog bez zmian – 1151 piosenek.
