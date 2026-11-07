@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 3003 z 7094 piosenek (ostatnio 2026-11-06, w tym uruchomieniu: 150).
+Sprawdzono dotąd 3153 z 7094 piosenek (ostatnio 2026-11-07, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -414,3 +414,11 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Maurice Chevalier – Arthur / Paris sera toujours Paris | 1939 | 2026-11-03 |
 | Vic Damone – On the Street Where You Live | 1956 | 2026-11-04 |
 | Martha and the Vandellas – Heat Wave | 1963 | 2026-11-06 |
+| Barry Sadler – The Ballad of the Green Berets | 1966 | 2026-11-07 |
+| Jimi Hendrix – Hey Joe | 1966 | 2026-11-07 |
+| Johnny Rivers – Poor Side of Town | 1966 | 2026-11-07 |
+| Eduard Khil – I Am Very Glad, as I'm Finally Returning Back Home | 1966 | 2026-11-07 |
+| Jimi Hendrix – Purple Haze | 1967 | 2026-11-07 |
+| Jimi Hendrix – Crosstown Traffic | 1968 | 2026-11-07 |
+| Tommy James & The Shondells – Crimson & Clover | 1968 | 2026-11-07 |
+| Tiny Tim – Tiptoe Through the Tulips | 1968 | 2026-11-07 |
