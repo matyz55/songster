@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 3153 z 7094 piosenek (ostatnio 2026-11-07, w tym uruchomieniu: 150).
+Sprawdzono dotąd 3303 z 7094 piosenek (ostatnio 2026-11-08, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -422,3 +422,5 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Jimi Hendrix – Crosstown Traffic | 1968 | 2026-11-07 |
 | Tommy James & The Shondells – Crimson & Clover | 1968 | 2026-11-07 |
 | Tiny Tim – Tiptoe Through the Tulips | 1968 | 2026-11-07 |
+| John Lennon – Working Class Hero | 1970 | 2026-11-08 |
+| Yusuf / Cat Stevens – Wild World | 1970 | 2026-11-08 |
