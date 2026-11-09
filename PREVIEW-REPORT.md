@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 3303 z 7094 piosenek (ostatnio 2026-11-08, w tym uruchomieniu: 150).
+Sprawdzono dotąd 3453 z 7094 piosenek (ostatnio 2026-11-09, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -424,3 +424,9 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Tiny Tim – Tiptoe Through the Tulips | 1968 | 2026-11-07 |
 | John Lennon – Working Class Hero | 1970 | 2026-11-08 |
 | Yusuf / Cat Stevens – Wild World | 1970 | 2026-11-08 |
+| Bob Marley & The Wailers – Get Up, Stand Up | 1973 | 2026-11-09 |
+| Gary Glitter – Rock 'n' Roll (Part 2) | 1973 | 2026-11-09 |
+| Genesis – Dancing With The Moonlit Knight | 1973 | 2026-11-09 |
+| Wings – Live And Let Die | 1973 | 2026-11-09 |
+| Bob Marley & The Wailers – I Shot The Sheriff | 1973 | 2026-11-09 |
+| Camel – Lady Fantasy - Medley | 1974 | 2026-11-09 |
