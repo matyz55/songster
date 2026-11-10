@@ -8,6 +8,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -22,8 +25,26 @@ jobs:
       - run: npx playwright test --grep-invert @net
       - run: npx playwright test --grep @net
         continue-on-error: true
+      - name: Usuń stare paczki (limit miejsca na artefakty)
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          KEEP: 2
+        shell: bash
+        run: |
+          gh api --paginate "repos/$REPO/actions/artifacts?per_page=100" \
+            --jq '.artifacts[] | select(.expired | not) | [.name, .created_at, (.id|tostring), (.size_in_bytes|tostring)] | @tsv' \
+            | sort -t$'\t' -k1,1 -k2,2r \
+            | awk -F'\t' -v k="$KEEP" '{n[$1]++; if (n[$1] > k) print $3 "\t" $1 "\t" $2 "\t" $4}' > old.tsv || true
+          echo "Do usunięcia: $(wc -l < old.tsv) paczek, $(awk -F'\t' '{s+=$4} END {printf "%.0f", s/1048576}' old.tsv) MB"
+          while IFS=$'\t' read -r id name created size; do
+            gh api -X DELETE "repos/$REPO/actions/artifacts/$id" >/dev/null && echo "usunięto $name z $created" || echo "nie udało się usunąć $id"
+          done < old.tsv
+          rm -f old.tsv
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: playwright-report
           path: playwright-report/
+          retention-days: 30
