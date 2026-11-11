@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 3603 z 7094 piosenek (ostatnio 2026-11-10, w tym uruchomieniu: 150).
+Sprawdzono dotąd 3753 z 7094 piosenek (ostatnio 2026-11-11, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -430,3 +430,5 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Wings – Live And Let Die | 1973 | 2026-11-09 |
 | Bob Marley & The Wailers – I Shot The Sheriff | 1973 | 2026-11-09 |
 | Camel – Lady Fantasy - Medley | 1974 | 2026-11-09 |
+| Kraftwerk – Das Model | 1978 | 2026-11-11 |
+| The Who – Who Are You | 1978 | 2026-11-11 |
