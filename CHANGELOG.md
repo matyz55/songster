@@ -1180,3 +1180,7 @@ Wersja próbna wyglądu 6.0:
 ## 5.60.15 – 11.11.2026 (`0efb05a`)
 
 - „Tak to leciało!”: wersję bez wokalu ma już 712 piosenek, +52 (doszło 64 podkłady i 71 filmów karaoke, głównie do zagranicznych przebojów); katalog bez zmian – 1151 piosenek.
+
+## 5.60.16 – 12.11.2026 (`cf1ccdb`)
+
+- „Tak to leciało!”: wersję bez wokalu ma już 756 piosenek, +45 (doszło 75 podkładów i 49 filmów karaoke) – wszystkie piosenki z katalogu są już przeszukane. Z YouTube zniknęło 8 zwykłych filmów (m.in. kilka z „Męskiego Grania”), więc piosenka „Tańczę” (Męskie Granie Orkiestra & Igor Herbut) wypadła z katalogu – ma teraz 1150 piosenek.
