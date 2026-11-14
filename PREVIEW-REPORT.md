@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 4053 z 7094 piosenek (ostatnio 2026-11-13, w tym uruchomieniu: 150).
+Sprawdzono dotąd 4203 z 7094 piosenek (ostatnio 2026-11-14, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -438,3 +438,6 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Earth, Wind & Fire – Let's Groove | 1981 | 2026-11-12 |
 | Sisters of Mercy – Temple of Love | 1983 | 2026-11-13 |
 | Paul Engemann – Push It to the Limit | 1983 | 2026-11-13 |
+| Marillion – Fugazi | 1984 | 2026-11-14 |
+| Opus – Live Is Life | 1984 | 2026-11-14 |
+| Tangerine Dream – Poland | 1984 | 2026-11-14 |
