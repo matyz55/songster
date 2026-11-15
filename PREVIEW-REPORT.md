@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 4203 z 7094 piosenek (ostatnio 2026-11-14, w tym uruchomieniu: 150).
+Sprawdzono dotąd 4353 z 7094 piosenek (ostatnio 2026-11-15, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -441,3 +441,6 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Marillion – Fugazi | 1984 | 2026-11-14 |
 | Opus – Live Is Life | 1984 | 2026-11-14 |
 | Tangerine Dream – Poland | 1984 | 2026-11-14 |
+| Queen – Who Wants to Live Forever | 1986 | 2026-11-15 |
+| Koji Kondo – Super Mario World Ending Theme | 1990 | 2026-11-15 |
+| Mark Snow – The X-Files Theme | 1993 | 2026-11-15 |
