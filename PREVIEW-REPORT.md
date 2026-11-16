@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 4353 z 7094 piosenek (ostatnio 2026-11-15, w tym uruchomieniu: 150).
+Sprawdzono dotąd 4503 z 7094 piosenek (ostatnio 2026-11-16, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -444,3 +444,10 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Queen – Who Wants to Live Forever | 1986 | 2026-11-15 |
 | Koji Kondo – Super Mario World Ending Theme | 1990 | 2026-11-15 |
 | Mark Snow – The X-Files Theme | 1993 | 2026-11-15 |
+| Loituma – Ievan Polkka | 1995 | 2026-11-16 |
+| Yoko Takahashi – A Cruel Angel's Thesis | 1995 | 2026-11-16 |
+| John Wetton – Rendezvous 6:02 | 1987 | 2026-11-16 |
+| Paul McCartney & Wings – Live And Let Die - Main Title | 1987 | 2026-11-16 |
+| Roger Waters – The Tide Is Turning | 1987 | 2026-11-16 |
+| Danzig – Mother | 1988 | 2026-11-16 |
+| Dinosaur Jr. – Freak Scene | 1988 | 2026-11-16 |
