@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 4503 z 7094 piosenek (ostatnio 2026-11-16, w tym uruchomieniu: 150).
+Sprawdzono dotąd 4653 z 7094 piosenek (ostatnio 2026-11-17, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -451,3 +451,4 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Roger Waters – The Tide Is Turning | 1987 | 2026-11-16 |
 | Danzig – Mother | 1988 | 2026-11-16 |
 | Dinosaur Jr. – Freak Scene | 1988 | 2026-11-16 |
+| Alice In Chains – Man in the Box | 1990 | 2026-11-17 |
