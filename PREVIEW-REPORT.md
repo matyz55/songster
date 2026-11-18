@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 4653 z 7094 piosenek (ostatnio 2026-11-17, w tym uruchomieniu: 150).
+Sprawdzono dotąd 4803 z 7094 piosenek (ostatnio 2026-11-18, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -452,3 +452,8 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Danzig – Mother | 1988 | 2026-11-16 |
 | Dinosaur Jr. – Freak Scene | 1988 | 2026-11-16 |
 | Alice In Chains – Man in the Box | 1990 | 2026-11-17 |
+| Rage Against The Machine – Killing In The Name | 1991 | 2026-11-18 |
+| TOOL – Sober | 1991 | 2026-11-18 |
+| Koji Kondo – Dire, Dire Docks | 1996 | 2026-11-18 |
+| Radiohead – Creep | 1992 | 2026-11-18 |
+| Porno for Pyros – Pets | 1993 | 2026-11-18 |
