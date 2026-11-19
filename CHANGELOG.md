@@ -1192,3 +1192,7 @@ Wersja próbna wyglądu 6.0:
 ## 5.60.18 – 15.11.2026 (`6669e01`)
 
 - „Tak to leciało!”: sprawdzenie zapisanych filmów – z „Nie będę Julią” i „Hi-Fi” (Wanda i Banda) zniknęło po jednym zwykłym filmie (niedostępne na YouTube); obie piosenki mają jeszcze inne filmy. Katalog – 1150 piosenek, wersję bez wokalu ma 756.
+
+## 5.60.19 – 19.11.2026 (`00820e0`)
+
+- „Tak to leciało!”: z „Under Pressure” (Queen i David Bowie) zniknął ostatni podkład (niedostępny na YouTube) – piosenka ma tylko zwykły film. Wersję bez wokalu ma 755 piosenek, katalog – 1150.
