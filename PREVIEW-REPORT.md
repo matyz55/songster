@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 4803 z 7094 piosenek (ostatnio 2026-11-18, w tym uruchomieniu: 150).
+Sprawdzono dotąd 4953 z 7094 piosenek (ostatnio 2026-11-19, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -457,3 +457,11 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Koji Kondo – Dire, Dire Docks | 1996 | 2026-11-18 |
 | Radiohead – Creep | 1992 | 2026-11-18 |
 | Porno for Pyros – Pets | 1993 | 2026-11-18 |
+| Blur – Girls & Boys | 1994 | 2026-11-19 |
+| Nirvana – The Man Who Sold The World | 1994 | 2026-11-19 |
+| Alanis Morissette – You Oughta Know | 1995 | 2026-11-19 |
+| Marilyn Manson – The Beautiful People | 1995 | 2026-11-19 |
+| Nick Cave & The Bad Seeds & Kylie Minogue – Where the Wild Roses Grow | 1995 | 2026-11-19 |
+| Take That – Back for Good | 1995 | 2026-11-19 |
+| Erykah Badu – On & On | 1996 | 2026-11-19 |
+| George Michael – Fastlove | 1996 | 2026-11-19 |
