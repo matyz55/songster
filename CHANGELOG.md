@@ -1196,3 +1196,7 @@ Wersja próbna wyglądu 6.0:
 ## 5.60.19 – 19.11.2026 (`00820e0`)
 
 - „Tak to leciało!”: z „Under Pressure” (Queen i David Bowie) zniknął ostatni podkład (niedostępny na YouTube) – piosenka ma tylko zwykły film. Wersję bez wokalu ma 755 piosenek, katalog – 1150.
+
+## 5.60.20 – 20.11.2026 (`03cfe4c`)
+
+- „Tak to leciało!”: z „Jestem kobietą” (Edyta Górniak) zniknęły filmy bez wokalu niedostępne już na YouTube – zostało jedno karaoke i cztery zwykłe filmy. Katalog – 1150 piosenek, wersję bez wokalu ma 755.
