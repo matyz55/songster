@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 5103 z 7094 piosenek (ostatnio 2026-11-20, w tym uruchomieniu: 150).
+Sprawdzono dotąd 5253 z 7094 piosenek (ostatnio 2026-11-21, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -472,3 +472,8 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Stardust & Benjamin Diamond – Music Sounds Better With You | 1998 | 2026-11-20 |
 | The Offspring – Why Don't You Get A Job | 1998 | 2026-11-20 |
 | U2 – The Sweetest Thing | 1998 | 2026-11-20 |
+| Red Hot Chili Peppers – Around the World | 1999 | 2026-11-21 |
+| Tenacious D – Tribute | 1999 | 2026-11-21 |
+| Sage Guyton & Jeremy Wakefield – Grass Skirt Chase | 1999 | 2026-11-21 |
+| OutKast – Ms. Jackson | 2000 | 2026-11-21 |
+| t.A.T.u. – Nas nie dogoniat | 2001 | 2026-11-21 |
