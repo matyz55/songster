@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 5253 z 7094 piosenek (ostatnio 2026-11-21, w tym uruchomieniu: 150).
+Sprawdzono dotąd 5403 z 7094 piosenek (ostatnio 2026-11-22, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -477,3 +477,13 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Sage Guyton & Jeremy Wakefield – Grass Skirt Chase | 1999 | 2026-11-21 |
 | OutKast – Ms. Jackson | 2000 | 2026-11-21 |
 | t.A.T.u. – Nas nie dogoniat | 2001 | 2026-11-21 |
+| Gorillaz & Miho Hatori – 19-2000 | 2001 | 2026-11-22 |
+| Half Cocked – Bad Reputation | 2001 | 2026-11-22 |
+| Vitas – The 7th Element | 2001 | 2026-11-22 |
+| Chad Kroeger & Josey Scott – Hero | 2002 | 2026-11-22 |
+| U2 – Miss Sarajevo | 2002 | 2026-11-22 |
+| The Black Eyed Peas – Shut Up | 2003 | 2026-11-22 |
+| J-Kwon – Tipsy | 2003 | 2026-11-22 |
+| OutKast & Sleepy Brown – The Way You Move | 2003 | 2026-11-22 |
+| Usher – Confessions Part II | 2003 | 2026-11-22 |
+| Hans Zimmer & Klaus Badelt – He's a Pirate | 2003 | 2026-11-22 |
