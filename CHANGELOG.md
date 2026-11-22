@@ -1200,3 +1200,7 @@ Wersja próbna wyglądu 6.0:
 ## 5.60.20 – 20.11.2026 (`03cfe4c`)
 
 - „Tak to leciało!”: z „Jestem kobietą” (Edyta Górniak) zniknęły filmy bez wokalu niedostępne już na YouTube – zostało jedno karaoke i cztery zwykłe filmy. Katalog – 1150 piosenek, wersję bez wokalu ma 755.
+
+## 5.60.21 – 22.11.2026 (`396dd48`)
+
+- „Tak to leciało!”: z „Dani California” (Red Hot Chili Peppers) zniknął jeden film bez wokalu (niedostępny na YouTube) – zostały dwa podkłady i dwa zwykłe filmy. Katalog – 1150 piosenek.
