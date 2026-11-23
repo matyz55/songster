@@ -1204,3 +1204,7 @@ Wersja próbna wyglądu 6.0:
 ## 5.60.21 – 22.11.2026 (`396dd48`)
 
 - „Tak to leciało!”: z „Dani California” (Red Hot Chili Peppers) zniknął jeden film bez wokalu (niedostępny na YouTube) – zostały dwa podkłady i dwa zwykłe filmy. Katalog – 1150 piosenek.
+
+## 5.60.22 – 23.11.2026 (`d5d93bf`)
+
+- „Tak to leciało!”: sprawdzenie filmów – z siedmiu piosenek zniknęły filmy niedostępne już na YouTube („Tańcz głupia tańcz”, „Mała wojna”, „Zostawcie titanica” – Lady Pank; „To tylko tango” – Maanam; „Black and White” – Kombi; „Jezioro szczęścia”, „Ta sama chwila” – Bajm; „Naj Story” – Papa Dance). Każda piosenka ma jeszcze co najmniej jeden film; katalog – 1150 piosenek.
