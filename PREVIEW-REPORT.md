@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 5403 z 7094 piosenek (ostatnio 2026-11-22, w tym uruchomieniu: 150).
+Sprawdzono dotąd 5553 z 7094 piosenek (ostatnio 2026-11-23, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -487,3 +487,17 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | OutKast & Sleepy Brown – The Way You Move | 2003 | 2026-11-22 |
 | Usher – Confessions Part II | 2003 | 2026-11-22 |
 | Hans Zimmer & Klaus Badelt – He's a Pirate | 2003 | 2026-11-22 |
+| Eric Prydz – Call on Me | 2004 | 2026-11-23 |
+| Green Day – American Idiot | 2004 | 2026-11-23 |
+| Green Day – Boulevard of Broken Dreams | 2004 | 2026-11-23 |
+| Green Day – Holiday / Boulevard of Broken Dreams | 2004 | 2026-11-23 |
+| Alcazar – This Is the World We Live In | 2004 | 2026-11-23 |
+| Kelly Bailey – Triage at Dawn | 2004 | 2026-11-23 |
+| Michael Hunter – Theme from San Andreas | 2004 | 2026-11-23 |
+| Spider-Man 2 – Pizza Theme (Funiculì, Funiculà) | 2004 | 2026-11-23 |
+| Antony and the Johnsons & ANOHNI – Hope There's Someone | 2005 | 2026-11-23 |
+| The Black Eyed Peas – Pump It | 2005 | 2026-11-23 |
+| Panic! at the Disco – I Write Sins Not Tragedies | 2005 | 2026-11-23 |
+| Kazumi Totaka – Mii Channel Theme | 2006 | 2026-11-23 |
+| Kazumi Totaka – Wii Shop Channel Theme | 2006 | 2026-11-23 |
+| Depeche Mode – John the Revelator / Lilian | 2006 | 2026-11-23 |
