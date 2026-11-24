@@ -1208,3 +1208,7 @@ Wersja próbna wyglądu 6.0:
 ## 5.60.22 – 23.11.2026 (`d5d93bf`)
 
 - „Tak to leciało!”: sprawdzenie filmów – z siedmiu piosenek zniknęły filmy niedostępne już na YouTube („Tańcz głupia tańcz”, „Mała wojna”, „Zostawcie titanica” – Lady Pank; „To tylko tango” – Maanam; „Black and White” – Kombi; „Jezioro szczęścia”, „Ta sama chwila” – Bajm; „Naj Story” – Papa Dance). Każda piosenka ma jeszcze co najmniej jeden film; katalog – 1150 piosenek.
+
+## 5.60.23 – 24.11.2026 (`2fdf6b1`)
+
+- Dane katalogu „Tak to leciało!”: poprawiona wielkość liter w nazwie kanału przy „The Final Countdown” (Europe) – bez wpływu na grę. Katalog – 1150 piosenek.
