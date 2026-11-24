@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 5553 z 7094 piosenek (ostatnio 2026-11-23, w tym uruchomieniu: 150).
+Sprawdzono dotąd 5703 z 7094 piosenek (ostatnio 2026-11-24, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -501,3 +501,8 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Kazumi Totaka – Mii Channel Theme | 2006 | 2026-11-23 |
 | Kazumi Totaka – Wii Shop Channel Theme | 2006 | 2026-11-23 |
 | Depeche Mode – John the Revelator / Lilian | 2006 | 2026-11-23 |
+| The Hit Crew – Tubthumping (I Get Knocked Down) | 2007 | 2026-11-24 |
+| Gummibär – I'm a Gummy Bear (The Gummy Bear Song) | 2007 | 2026-11-24 |
+| Soulja Boy – Crank That (Soulja Boy) | 2007 | 2026-11-24 |
+| Guru Josh Project & Klaas – Infinity 2008 | 2008 | 2026-11-24 |
+| Mumford & Sons – Little Lion Man | 2008 | 2026-11-24 |
