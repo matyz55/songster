@@ -1212,3 +1212,7 @@ Wersja próbna wyglądu 6.0:
 ## 5.60.23 – 24.11.2026 (`2fdf6b1`)
 
 - Dane katalogu „Tak to leciało!”: poprawiona wielkość liter w nazwie kanału przy „The Final Countdown” (Europe) – bez wpływu na grę. Katalog – 1150 piosenek.
+
+## 5.60.24 – 25.11.2026 (`49b216b`)
+
+- „Tak to leciało!”: z „Get Lucky” (Daft Punk) zniknął jeden film karaoke (niedostępny na YouTube). Katalog – 1150 piosenek.
