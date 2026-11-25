@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 5703 z 7094 piosenek (ostatnio 2026-11-24, w tym uruchomieniu: 150).
+Sprawdzono dotąd 5853 z 7094 piosenek (ostatnio 2026-11-25, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -506,3 +506,9 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Soulja Boy – Crank That (Soulja Boy) | 2007 | 2026-11-24 |
 | Guru Josh Project & Klaas – Infinity 2008 | 2008 | 2026-11-24 |
 | Mumford & Sons – Little Lion Man | 2008 | 2026-11-24 |
+| Keri Hilson – I Like | 2009 | 2026-11-25 |
+| Rihanna & Drake – What's My Name? | 2009 | 2026-11-25 |
+| The Black Eyed Peas – Imma Be | 2009 | 2026-11-25 |
+| Kana Hanazawa – Renai Circulation | 2009 | 2026-11-25 |
+| CeeLo Green – Fuck You (Forget You) | 2010 | 2026-11-25 |
+| Lady Antebellum – Need You Now | 2010 | 2026-11-25 |
