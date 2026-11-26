@@ -1216,3 +1216,7 @@ Wersja próbna wyglądu 6.0:
 ## 5.60.24 – 25.11.2026 (`49b216b`)
 
 - „Tak to leciało!”: z „Get Lucky” (Daft Punk) zniknął jeden film karaoke (niedostępny na YouTube). Katalog – 1150 piosenek.
+
+## 5.60.25 – 26.11.2026 (`eac60cc`)
+
+- „Tak to leciało!”: sprawdzenie filmów – niedostępne już na YouTube filmy zniknęły z pięciu piosenek („Błyszczeć” – Maciej Maleńczuk, „Can't Take My Eyes off You” – Frankie Valli, „Purple Rain” – Prince, „I Gotta Feeling” i „Pump It” – The Black Eyed Peas). „Pump It” straciło wszystkie filmy i wypadło z gry, „Błyszczeć” i „Can't Take My Eyes off You” mają po jednym filmie. Katalog – 1149 piosenek, wersję bez wokalu ma 754.
