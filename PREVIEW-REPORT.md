@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 5853 z 7094 piosenek (ostatnio 2026-11-25, w tym uruchomieniu: 150).
+Sprawdzono dotąd 6003 z 7094 piosenek (ostatnio 2026-11-26, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -512,3 +512,12 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Kana Hanazawa – Renai Circulation | 2009 | 2026-11-25 |
 | CeeLo Green – Fuck You (Forget You) | 2010 | 2026-11-25 |
 | Lady Antebellum – Need You Now | 2010 | 2026-11-25 |
+| Red Hot Chili Peppers – The Adventures of Rain Dance Maggie | 2011 | 2026-11-26 |
+| Skrillex & Sirah – Bangarang | 2011 | 2026-11-26 |
+| Macintosh Plus – Lisa Frank 420 / Modern Computing | 2011 | 2026-11-26 |
+| Asaf Avidan – One Day / Reckoning Song (Wankelmut Rmx) | 2012 | 2026-11-26 |
+| Frank Ocean – Lost | 2012 | 2026-11-26 |
+| Oceana – Endless Summer | 2012 | 2026-11-26 |
+| CHVRCHES – The Mother We Share | 2012 | 2026-11-26 |
+| Subway Surfers – Main Theme | 2012 | 2026-11-26 |
+| Britney Spears – Work Bitch | 2013 | 2026-11-26 |
