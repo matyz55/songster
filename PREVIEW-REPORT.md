@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 6003 z 7094 piosenek (ostatnio 2026-11-26, w tym uruchomieniu: 150).
+Sprawdzono dotąd 6153 z 7094 piosenek (ostatnio 2026-11-27, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -521,3 +521,17 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | CHVRCHES – The Mother We Share | 2012 | 2026-11-26 |
 | Subway Surfers – Main Theme | 2012 | 2026-11-26 |
 | Britney Spears – Work Bitch | 2013 | 2026-11-26 |
+| Faul & Wad Ad & Pnau – Changes | 2013 | 2026-11-27 |
+| Jamie Scott – You Can't Stop the Beat | 2013 | 2026-11-27 |
+| Pink – Raise Your Glass | 2013 | 2026-11-27 |
+| Stromae – Formidable | 2013 | 2026-11-27 |
+| The National – I Need My Girl | 2013 | 2026-11-27 |
+| The 1975 – Girls | 2013 | 2026-11-27 |
+| Panic! at the Disco – Vegas Lights | 2013 | 2026-11-27 |
+| Tove Lo & Hippie Sabotage – Stay High - Habits Remix | 2013 | 2026-11-27 |
+| Adam Krylik – Fineasz i Ferb (czołówka) | 2013 | 2026-11-27 |
+| Kanye West – On Sight | 2013 | 2026-11-27 |
+| Saint Pepsi – Enjoy Yourself | 2013 | 2026-11-27 |
+| Taku Iwasaki – Awaken (Pillar Men Theme) | 2013 | 2026-11-27 |
+| FKA twigs – Two Weeks | 2014 | 2026-11-27 |
+| Pink Floyd – Louder than Words | 2014 | 2026-11-27 |
