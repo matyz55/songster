@@ -1220,3 +1220,7 @@ Wersja próbna wyglądu 6.0:
 ## 5.60.25 – 26.11.2026 (`eac60cc`)
 
 - „Tak to leciało!”: sprawdzenie filmów – niedostępne już na YouTube filmy zniknęły z pięciu piosenek („Błyszczeć” – Maciej Maleńczuk, „Can't Take My Eyes off You” – Frankie Valli, „Purple Rain” – Prince, „I Gotta Feeling” i „Pump It” – The Black Eyed Peas). „Pump It” straciło wszystkie filmy i wypadło z gry, „Błyszczeć” i „Can't Take My Eyes off You” mają po jednym filmie. Katalog – 1149 piosenek, wersję bez wokalu ma 754.
+
+## 5.60.26 – 27.11.2026 (`fa8e1bd`)
+
+- „Tak to leciało!”: sprawdzenie filmów – niedostępne już na YouTube filmy zniknęły z dziewięciu piosenek (m.in. „Dni, których nie znamy” – Marek Grechuta, „Urke” – Wilki, „Piękniejsza” – K.A.S.A.). Piosenka „Cicho sza” (sanah) straciła wszystkie filmy i wypadła z gry. Katalog – 1148 piosenek, wersję bez wokalu ma 753.
