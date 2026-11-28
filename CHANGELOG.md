@@ -1224,3 +1224,7 @@ Wersja próbna wyglądu 6.0:
 ## 5.60.26 – 27.11.2026 (`fa8e1bd`)
 
 - „Tak to leciało!”: sprawdzenie filmów – niedostępne już na YouTube filmy zniknęły z dziewięciu piosenek (m.in. „Dni, których nie znamy” – Marek Grechuta, „Urke” – Wilki, „Piękniejsza” – K.A.S.A.). Piosenka „Cicho sza” (sanah) straciła wszystkie filmy i wypadła z gry. Katalog – 1148 piosenek, wersję bez wokalu ma 753.
+
+## 5.61.0 – 28.11.2026 (`b087321`)
+
+- „Tak to leciało!”: filmy znikają z YouTube coraz szybciej, więc codzienne wyszukiwania idą teraz na zapasowe filmy dla piosenek, które mają tylko jeden – dziś 65 piosenek dostało co najmniej drugi zwykły film do wyboru. Piosenek z jednym filmem zostało 378 (było 442). Katalog – 1148 piosenek.
