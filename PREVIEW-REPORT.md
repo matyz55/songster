@@ -1,6 +1,6 @@
 # Piosenki bez fragmentu w iTunes
 
-Sprawdzono dotąd 6153 z 7094 piosenek (ostatnio 2026-11-27, w tym uruchomieniu: 150).
+Sprawdzono dotąd 6303 z 7094 piosenek (ostatnio 2026-11-28, w tym uruchomieniu: 150).
 Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – można je usunąć z bazy albo poprawić podpowiedzi dla wyszukiwarki (pola q / ia / m / al w songs.js).
 
 | Piosenka | Rok | Sprawdzono |
@@ -535,3 +535,15 @@ Piosenki poniżej gra pomija (nie ma do nich 30-sekundowego fragmentu) – możn
 | Taku Iwasaki – Awaken (Pillar Men Theme) | 2013 | 2026-11-27 |
 | FKA twigs – Two Weeks | 2014 | 2026-11-27 |
 | Pink Floyd – Louder than Words | 2014 | 2026-11-27 |
+| Duckanon Orkiestra – Souvenir Of China | 2015 | 2026-11-28 |
+| G-Eazy & Bebe Rexha – Me, Myself & I | 2015 | 2026-11-28 |
+| Olly Alexander (Years & Years) – King | 2015 | 2026-11-28 |
+| Tame Impala – The Less I Know The Better | 2015 | 2026-11-28 |
+| American Authors – Pride | 2015 | 2026-11-28 |
+| Olly Alexander (Years & Years) – Gold | 2015 | 2026-11-28 |
+| Leslie Odom Jr. & Original Broadway Cast of Hamilton – Wait for It | 2015 | 2026-11-28 |
+| Leslie Odom Jr. & Lin-Manuel Miranda – Dear Theodosia | 2015 | 2026-11-28 |
+| Childish Gambino – Redbone | 2016 | 2026-11-28 |
+| Die Antwoord & G.O.D. – I FINK YOU FREEKY | 2016 | 2026-11-28 |
+| Metallica – Hardwired | 2016 | 2026-11-28 |
+| Shaggy – I'm Not Rich | 2016 | 2026-11-28 |
